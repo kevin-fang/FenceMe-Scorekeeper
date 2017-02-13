@@ -64,7 +64,7 @@
         android:layout_weight="0.99"
         android:fontFamily="sans-serif-light"
         android:gravity="center"
-        android:text="@string/no_time"
+        android:text="@string/full_time"
         android:textSize="@dimen/timer_size" />
 
     <Button

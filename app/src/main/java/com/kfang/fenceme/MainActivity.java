@@ -1,6 +1,9 @@
 package com.kfang.fenceme;
 
 import android.content.Intent;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -27,10 +30,11 @@ public class MainActivity extends AppCompatActivity {
 
     // keeps track of the time when the timer was started
     long mStartTime = 0;
-    // keeps track of the current timer value
-    private long mCurrentTime = 18000;
+    private long mCurrentTime = 180000;
     private boolean timerRunning = false;
+    private Ringtone mAlarmTone;
 
+    // keeps track of the current timer value
     private TextView mCurrentTimer;
     private Handler mHandler = new Handler();
     private Runnable mUpdateTimeTask = new Runnable() {
@@ -47,10 +51,13 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     mCurrentTimer.setText("" + minutes + ":" + seconds);
                 }
-
                 mHandler.postDelayed(this, 1000);
-            } else {
-                Toast timerUp = Toast.makeText(getApplicationContext(), "Timer's Up!", Toast.LENGTH_SHORT);
+            } else if (mCurrentTime == 0) {
+                Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
+                mAlarmTone = RingtoneManager.getRingtone(getApplicationContext(), notification);
+                mAlarmTone.play();
+                mCurrentTimer.setText(R.string.no_time);
+                Toast timerUp = Toast.makeText(getApplicationContext(), "Time's Up!", Toast.LENGTH_SHORT);
                 timerUp.show();
             }
         }
@@ -96,9 +103,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 mCurrentTime = 180000;
-                mCurrentTimer.setText(R.string.no_time);
+                mCurrentTimer.setText(R.string.full_time);
+                startTimer.setText(R.string.start_timer);
                 mHandler.removeCallbacks(mUpdateTimeTask);
                 timerRunning = false;
+                if (mAlarmTone != null && mAlarmTone.isPlaying()) {
+                    mAlarmTone.stop();
+                }
             }
         });
 

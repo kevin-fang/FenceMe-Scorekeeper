@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="8dp"
+    tools:context="com.kfang.fenceme.MainActivity">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="@drawable/layout_red"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/redSide"
+            android:layout_width="wrap_content"
+            android:layout_height="112dp"
+            android:layout_gravity="center_horizontal"
+            android:fontFamily="sans-serif-light"
+            android:paddingTop="12dp"
+            android:text="@string/red_side"
+            android:textColor="@color/colorNames"
+            android:textSize="@dimen/player_name_size" />
+
+        <Button
+            android:id="@+id/plus_red"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="sans-serif-light"
+            android:text="@string/add_point"
+            android:textSize="@dimen/button_text_size" />
+
+        <TextView
+            android:id="@+id/red_score"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/no_score"
+            android:textSize="@dimen/score_text_size" />
+
+        <Button
+            android:id="@+id/minus_red"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="sans-serif-light"
+            android:text="@string/subtract_point"
+            android:textSize="@dimen/button_text_size" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/timer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:fontFamily="sans-serif-light"
+            android:gravity="center"
+            android:text="@string/full_time"
+            android:textSize="@dimen/timer_size" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="80dp" />
+
+        <Button
+            android:id="@+id/start_timer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/start_timer" />
+
+        <Button
+            android:id="@+id/reset_timer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/reset_timer" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="@drawable/layout_green"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/greenSide"
+            android:layout_width="wrap_content"
+            android:layout_height="112dp"
+            android:layout_gravity="center_horizontal"
+            android:fontFamily="sans-serif-light"
+            android:paddingTop="12dp"
+            android:text="@string/green_side"
+            android:textColor="@color/colorNames"
+            android:textSize="@dimen/player_name_size" />
+
+        <Button
+            android:id="@+id/plus_green"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="sans-serif-light"
+            android:text="@string/add_point"
+            android:textSize="@dimen/button_text_size" />
+
+        <TextView
+            android:id="@+id/green_score"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/no_score"
+            android:textSize="@dimen/score_text_size" />
+
+        <Button
+            android:id="@+id/minus_green"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="sans-serif-light"
+            android:text="@string/subtract_point"
+            android:textSize="@dimen/button_text_size" />
+    </LinearLayout>
+</LinearLayout>
