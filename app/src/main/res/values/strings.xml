@@ -18,4 +18,5 @@
     <string name="yellow_card">Yellow Card</string>
     <string name="dismiss_button">Dismiss</string>
     <string name="card_player">Card a Player</string>
+    <string name="reset_scores">Reset Scores</string>
 </resources>

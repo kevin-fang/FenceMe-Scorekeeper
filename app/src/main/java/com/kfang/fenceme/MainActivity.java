@@ -27,14 +27,16 @@ public class MainActivity extends AppCompatActivity {
     Button addGreen;
     Button subtractGreen;
     Button resetTimer;
-    // keeps track of the current timer value
+
+    TextView greenScore;
+    TextView redScore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        final TextView redScore = (TextView) findViewById(R.id.red_score);
-        final TextView greenScore = (TextView) findViewById(R.id.green_score);
+        redScore = (TextView) findViewById(R.id.red_score);
+        greenScore = (TextView) findViewById(R.id.green_score);
         addRed = (Button) findViewById(R.id.plus_red);
         subtractRed = (Button) findViewById(R.id.minus_red);
         addGreen = (Button) findViewById(R.id.plus_green);
@@ -92,6 +94,11 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }, new IntentFilter(TimerHandler.UPDATE_TOGGLE_BUTTON_INTENT)
         );
+    }
+
+    public void resetScores(View v) {
+        redScore.setText(String.format("%s", 0));
+        greenScore.setText(String.format("%s", 0));
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {

@@ -30,6 +30,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_marginTop="30dp"
             android:fontFamily="sans-serif-light"
             android:text="@string/add_point"
             android:textSize="@dimen/button_text_size" />
@@ -72,6 +73,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_marginTop="30dp"
             android:text="@string/start_timer" />
 
         <Button
@@ -80,6 +82,14 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="@string/reset_timer" />
+
+        <Button
+            android:id="@+id/reset_scores"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:onClick="resetScores"
+            android:text="@string/reset_scores" />
     </LinearLayout>
 
     <LinearLayout
@@ -105,6 +115,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_marginTop="30dp"
             android:fontFamily="sans-serif-light"
             android:text="@string/add_point"
             android:textSize="@dimen/button_text_size" />

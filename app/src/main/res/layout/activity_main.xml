@@ -75,14 +75,30 @@
         android:layout_weight=".35"
         android:text="@string/start_timer" />
 
-    <Button
-        android:id="@+id/reset_timer"
+    <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_gravity="center"
-        android:layout_margin="12dp"
-        android:layout_weight=".35"
-        android:text="@string/reset_timer" />
+        android:layout_height="wrap_content"
+        android:layout_gravity="center">
+
+        <Button
+            android:id="@+id/reset_timer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="12dp"
+            android:layout_weight=".35"
+            android:text="@string/reset_timer" />
+
+        <Button
+            android:id="@+id/reset_scores"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="12dp"
+            android:layout_weight=".35"
+            android:onClick="resetScores"
+            android:text="@string/reset_scores" />
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
