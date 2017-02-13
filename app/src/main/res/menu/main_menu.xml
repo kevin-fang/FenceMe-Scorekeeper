@@ -3,6 +3,12 @@
 
     <!-- "Mark Favorite", should appear as action button if possible -->
     <item
+        android:id="@+id/card"
+        android:gravity="center_horizontal"
+        android:title="@string/card_player"
+        app:showAsAction="never" />
+
+    <item
         android:id="@+id/about"
         android:gravity="center_horizontal"
         android:title="@string/about"

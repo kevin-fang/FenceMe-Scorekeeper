@@ -13,4 +13,9 @@
     <string name="about_text">This Fencing Scorekeeper Application was created by Kevin Fang as a simple, elegant way to keep track of fencing scores.</string>
     <string name="icon_attributes">Icon made by freepik from www.flaticon.com</string>
     <string name="no_time">0:00</string>
+    <string name="black_card">Black Card</string>
+    <string name="red_card">Red Card</string>
+    <string name="yellow_card">Yellow Card</string>
+    <string name="dismiss_button">Dismiss</string>
+    <string name="card_player">Card a Player</string>
 </resources>

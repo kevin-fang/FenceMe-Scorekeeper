@@ -7,5 +7,6 @@
     <dimen name="timer_size_landscape">84sp</dimen>
     <dimen name="player_name_size">45sp</dimen>
     <dimen name="score_text_size">34sp</dimen>
+    <dimen name="card_text_size">24sp</dimen>
 </resources>
 

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_margin="12dp"
+        android:layout_weight="1"
+        android:background="@drawable/yellowcard"
+        android:fontFamily="sans-serif-light"
+        android:onClick="displayYellow"
+        android:text="@string/yellow_card"
+        android:textSize="@dimen/button_text_size" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_margin="12dp"
+        android:layout_weight="1"
+        android:background="@drawable/redcard"
+        android:fontFamily="sans-serif-light"
+        android:onClick="displayRed"
+        android:text="@string/red_card"
+        android:textSize="@dimen/button_text_size" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_margin="12dp"
+        android:layout_weight="1"
+        android:background="@drawable/blackcard"
+        android:fontFamily="sans-serif-light"
+        android:onClick="displayBlack"
+        android:text="@string/black_card"
+        android:textColor="@color/colorNames"
+        android:textSize="@dimen/button_text_size" />
+
+</LinearLayout>

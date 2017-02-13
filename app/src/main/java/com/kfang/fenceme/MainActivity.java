@@ -106,6 +106,9 @@ public class MainActivity extends AppCompatActivity {
             case R.id.about:
                 startActivity(new Intent(this, About.class));
                 return true;
+            case R.id.card:
+                startActivity(new Intent(this, CardPlayer.class));
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }

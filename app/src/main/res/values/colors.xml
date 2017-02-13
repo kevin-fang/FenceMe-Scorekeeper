@@ -6,4 +6,7 @@
     <color name="colorAccent">#FF4081</color>
     <color name="colorRed">#EF5350</color>
     <color name="colorGreen">#8BC34A</color>
+    <color name="blackCard">#212121</color>
+    <color name="yellowCard">#FFEB3B</color>
+    <color name="redCard">#FF3D00</color>
 </resources>
