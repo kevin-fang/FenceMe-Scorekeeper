@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
                 } else if (toAdd == TO_SUBTRACT && value > 0) {
                     value -= 1;
                 }
-                score.setText("" + value);
+                score.setText(String.format("" + value));
             }
 
         };
