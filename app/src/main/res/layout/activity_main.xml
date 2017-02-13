@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:padding="8dp"
     tools:context="com.kfang.fenceme.MainActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:background="@drawable/layout_red"
         android:orientation="vertical">
 
@@ -18,45 +20,65 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
+            android:fontFamily="sans-serif-light"
             android:paddingTop="12dp"
             android:text="@string/red_side"
             android:textColor="@android:color/white"
-            android:textSize="30sp" />
+            android:textSize="@dimen/player_name_size" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dp">
+            android:layout_height="match_parent"
+            android:padding="12dp">
 
             <Button
                 android:id="@+id/minus_red"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:text="@string/subtract_point"
                 android:textSize="@dimen/button_text_size" />
 
             <TextView
                 android:id="@+id/red_score"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="78dp"
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="@string/no_score"
-                android:textSize="40sp" />
+                android:textSize="@dimen/score_text_size" />
 
             <Button
                 android:id="@+id/plus_red"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:text="@string/add_point"
                 android:textSize="@dimen/button_text_size" />
         </LinearLayout>
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/timer"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.99"
+        android:fontFamily="sans-serif-light"
+        android:gravity="center"
+        android:text="@string/no_time"
+        android:textSize="@dimen/timer_size" />
+
+    <Button
+        android:id="@+id/start_timer"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_gravity="center"
+        android:layout_margin="12dp"
+        android:layout_weight=".35"
+        android:text="@string/start_timer" />
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:background="@drawable/layout_green"
         android:orientation="vertical">
 
@@ -65,20 +87,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
+            android:fontFamily="sans-serif-light"
             android:paddingTop="12dp"
             android:text="@string/green_side"
             android:textColor="@android:color/white"
-            android:textSize="30sp" />
+            android:textSize="@dimen/player_name_size" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:padding="10dp">
 
             <Button
                 android:id="@+id/minus_green"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:text="@string/subtract_point"
                 android:textSize="@dimen/button_text_size" />
             <TextView
@@ -93,9 +116,9 @@
             <Button
                 android:id="@+id/plus_green"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:text="@string/add_point"
                 android:textSize="@dimen/button_text_size" />
         </LinearLayout>
     </LinearLayout>
-</RelativeLayout>
+</LinearLayout>

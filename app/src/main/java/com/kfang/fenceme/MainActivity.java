@@ -12,21 +12,20 @@ public class MainActivity extends AppCompatActivity {
     int TO_SUBTRACT = 0;
 
     View.OnClickListener createOnClickListener(final TextView score, final int toAdd) {
-        View.OnClickListener listener = new View.OnClickListener() {
+        return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String valueStr = score.getText().toString();
                 int value = Integer.parseInt(valueStr);
-                if (toAdd == TO_ADD) {
+                if (toAdd == TO_ADD && value < 5) {
                     value += 1;
-                } else if (toAdd == TO_SUBTRACT) {
+                } else if (toAdd == TO_SUBTRACT && value > 0) {
                     value -= 1;
                 }
                 score.setText(Integer.toString(value));
             }
 
         };
-        return listener;
     }
 
     @Override
@@ -44,6 +43,9 @@ public class MainActivity extends AppCompatActivity {
         addGreen.setOnClickListener(createOnClickListener(greenScore, TO_ADD));
         Button subtractGreen = (Button) findViewById(R.id.minus_green);
         subtractGreen.setOnClickListener(createOnClickListener(greenScore, TO_SUBTRACT));
+
+        final TextView currentTimer = (TextView) findViewById(R.id.timer);
+        Button startTimer = (Button) findViewById(R.id.start_timer);
 
 
     }
