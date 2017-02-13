@@ -9,6 +9,13 @@
         app:showAsAction="never" />
 
     <item
+        android:id="@+id/settings"
+        android:gravity="center_horizontal"
+        android:title="@string/settings"
+
+        app:showAsAction="ifRoom" />
+
+    <item
         android:id="@+id/about"
         android:gravity="center_horizontal"
         android:title="@string/about"

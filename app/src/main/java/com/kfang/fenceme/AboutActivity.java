@@ -7,7 +7,7 @@ import android.support.v7.app.AppCompatActivity;
  * Simple about page.
  */
 
-public class About extends AppCompatActivity {
+public class AboutActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

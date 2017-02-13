@@ -1,0 +1,27 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="PreferenceCategory">
+
+        <EditTextPreference
+            android:inputType="number"
+            android:key="bout_length_points"
+            android:title="Maximum Points Per Bout" />
+
+        <EditTextPreference
+            android:inputType="number"
+            android:key="bout_length_time"
+            android:title="Default Bout Length (time)" />
+
+        <CheckBoxPreference
+            android:key="enable_alarm"
+            android:summary="@string/alarm_end_desc"
+            android:title="@string/alarm_at_end" />
+
+        <CheckBoxPreference
+            android:key="maximum_brightness"
+            android:summary="@string/maximum_brightness_desc"
+            android:title="@string/maximum_brightness" />
+    </PreferenceCategory>
+
+
+</PreferenceScreen>

@@ -6,7 +6,7 @@ import android.support.v4.content.ContextCompat;
 import android.view.View;
 
 
-public class CardPlayer extends Activity {
+public class CardPlayerActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -14,9 +14,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".About">
+        <activity android:name=".AboutActivity">
         </activity>
-        <activity android:name=".CardPlayer"></activity>
+        <activity android:name=".CardPlayerActivity"></activity>
+        <activity android:name=".SettingsActivity"></activity>
 
         <service android:name=".TimerService" />
     </application>
