@@ -8,29 +8,42 @@ import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
+    int TO_ADD = 1;
+    int TO_SUBTRACT = 0;
+
+    View.OnClickListener createOnClickListener(final TextView score, final int toAdd) {
+        View.OnClickListener listener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String valueStr = score.getText().toString();
+                int value = Integer.parseInt(valueStr);
+                if (toAdd == TO_ADD) {
+                    value += 1;
+                } else if (toAdd == TO_SUBTRACT) {
+                    value -= 1;
+                }
+                score.setText(Integer.toString(value));
+            }
+
+        };
+        return listener;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         final TextView redScore = (TextView) findViewById(R.id.red_score);
-        TextView greenScore = (TextView) findViewById(R.id.green_score);
+        final TextView greenScore = (TextView) findViewById(R.id.green_score);
 
         Button addRed = (Button) findViewById(R.id.plus_red);
-        addRed.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String redValueStr = redScore.getText().toString();
-                int redValue = Integer.parseInt(redValueStr);
-                redValue += 1;
-                redScore.setText(Integer.toString(redValue));
-                /* Context context = getApplicationContext();
-                Toast toast = Toast.makeText(context, redValue, Toast.LENGTH_SHORT);
-                toast.show(); */
-            }
-        });
+        addRed.setOnClickListener(createOnClickListener(redScore, TO_ADD));
         Button subtractRed = (Button) findViewById(R.id.minus_red);
+        subtractRed.setOnClickListener(createOnClickListener(redScore, TO_SUBTRACT));
         Button addGreen = (Button) findViewById(R.id.plus_green);
+        addGreen.setOnClickListener(createOnClickListener(greenScore, TO_ADD));
         Button subtractGreen = (Button) findViewById(R.id.minus_green);
+        subtractGreen.setOnClickListener(createOnClickListener(greenScore, TO_SUBTRACT));
 
 
     }
