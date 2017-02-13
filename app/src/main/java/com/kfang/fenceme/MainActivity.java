@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -15,28 +16,36 @@ public class MainActivity extends AppCompatActivity {
     Button addRed;
     Button subtractRed;
     Button addGreen;
-    long mStartTime = 0;
     Button subtractGreen;
     Button startTimer;
-    Button stopTimer;
+    Button resetTimer;
+
+    long mStartTime = 0;
     private long mCurrentTime = 180000;
+    private boolean timerRunning = false;
+
     private TextView mCurrentTimer;
     private Handler mHandler = new Handler();
     private Runnable mUpdateTimeTask = new Runnable() {
         public void run() {
             mCurrentTime = (int) (mCurrentTime - 1000);
 
-            int newTime = (int) mCurrentTime / 1000;
-            int seconds = newTime % 60;
-            int minutes = newTime / 60;
+            if (mCurrentTime > 0) {
+                int newTime = (int) mCurrentTime / 1000;
+                int seconds = newTime % 60;
+                int minutes = newTime / 60;
 
-            if (seconds < 10 && seconds >= 0) {
-                mCurrentTimer.setText("" + minutes + ":0" + seconds);
+                if (seconds < 10 && seconds >= 0) {
+                    mCurrentTimer.setText("" + minutes + ":0" + seconds);
+                } else {
+                    mCurrentTimer.setText("" + minutes + ":" + seconds);
+                }
+
+                mHandler.postDelayed(this, 1000);
             } else {
-                mCurrentTimer.setText("" + minutes + ":" + seconds);
+                Toast timerUp = Toast.makeText(getApplicationContext(), "Timer's Up!", Toast.LENGTH_SHORT);
+                timerUp.show();
             }
-
-            mHandler.postDelayed(this, 1000);
         }
     };
 
@@ -59,21 +68,32 @@ public class MainActivity extends AppCompatActivity {
 
         final View.OnClickListener mStartListener = new View.OnClickListener() {
             public void onClick(View v) {
-                mStartTime = System.currentTimeMillis();
-                mHandler.removeCallbacks(mUpdateTimeTask);
-                mHandler.postDelayed(mUpdateTimeTask, 1000);
-            }
-        };
-        View.OnClickListener mStopListener = new View.OnClickListener() {
-            public void onClick(View v) {
-                mHandler.removeCallbacks(mUpdateTimeTask);
+                if (!timerRunning) {
+                    mStartTime = System.currentTimeMillis();
+                    mHandler.removeCallbacks(mUpdateTimeTask);
+                    mHandler.postDelayed(mUpdateTimeTask, 1000);
+                    startTimer.setText(R.string.stop_timer);
+                    timerRunning = true;
+                } else {
+                    mHandler.removeCallbacks(mUpdateTimeTask);
+                    startTimer.setText(R.string.start_timer);
+                    timerRunning = false;
+                }
             }
         };
         startTimer = (Button) findViewById(R.id.start_timer);
         startTimer.setOnClickListener(mStartListener);
 
-        stopTimer = (Button) findViewById(R.id.stop_timer);
-        stopTimer.setOnClickListener(mStopListener);
+        resetTimer = (Button) findViewById(R.id.reset_timer);
+        resetTimer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCurrentTime = 180000;
+                mCurrentTimer.setText(R.string.no_time);
+                mHandler.removeCallbacks(mUpdateTimeTask);
+                timerRunning = false;
+            }
+        });
 
     }
 
@@ -88,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
                 } else if (toAdd == TO_SUBTRACT && value > 0) {
                     value -= 1;
                 }
-                score.setText(String.format("" + value));
+                score.setText(String.format("%s", value));
             }
 
         };
