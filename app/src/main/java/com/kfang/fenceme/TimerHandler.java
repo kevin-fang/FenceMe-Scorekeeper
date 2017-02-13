@@ -77,7 +77,12 @@ public class TimerHandler extends Service {
     // update time and fire intents if necessary.
     @Override
     public int onStartCommand(Intent i, int flags, int startId) {
-        int toggleOrReset = i.getIntExtra("TOGGLE", TOGGLE_TIMER);
+        int toggleOrReset;
+        try {
+            toggleOrReset = i.getIntExtra("TOGGLE", TOGGLE_TIMER);
+        } catch (NullPointerException e) {
+            toggleOrReset = RESET_TIMER;
+        }
         if (toggleOrReset == TOGGLE_TIMER) {
             if (!timerRunning) {
                 mStartTime = System.currentTimeMillis();
