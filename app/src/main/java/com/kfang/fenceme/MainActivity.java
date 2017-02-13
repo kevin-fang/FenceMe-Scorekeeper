@@ -1,8 +1,12 @@
 package com.kfang.fenceme;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -13,6 +17,7 @@ public class MainActivity extends AppCompatActivity {
     public static final int TO_ADD = 1;
     public static final int TO_SUBTRACT = 0;
 
+    // buttons in main drawable resource file
     Button addRed;
     Button subtractRed;
     Button addGreen;
@@ -20,8 +25,10 @@ public class MainActivity extends AppCompatActivity {
     Button startTimer;
     Button resetTimer;
 
+    // keeps track of the time when the timer was started
     long mStartTime = 0;
-    private long mCurrentTime = 180000;
+    // keeps track of the current timer value
+    private long mCurrentTime = 18000;
     private boolean timerRunning = false;
 
     private TextView mCurrentTimer;
@@ -95,6 +102,22 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.about:
+                startActivity(new Intent(this, About.class));
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private View.OnClickListener createOnClickListener(final TextView score, final int toAdd) {

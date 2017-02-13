@@ -9,4 +9,6 @@
     <string name="stop_timer">Stop Timer</string>
     <string name="reset_timer">Reset Timer</string>
     <string name="subtract_point">-</string>
+    <string name="about">About this app</string>
+    <string name="about_text">This Fencing Scorekeeper Application was created by Kevin Fang as a simple, elegant way to keep track of fencing scores.</string>
 </resources>
