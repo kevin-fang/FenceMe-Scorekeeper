@@ -18,7 +18,7 @@
         </activity>
         <activity android:name=".CardPlayer"></activity>
 
-        <service android:name=".TimerHandler" />
+        <service android:name=".TimerService" />
     </application>
 
 </manifest>

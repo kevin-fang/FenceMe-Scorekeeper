@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 /*
- * Simple about page
+ * Simple about page.
  */
 
 public class About extends AppCompatActivity {

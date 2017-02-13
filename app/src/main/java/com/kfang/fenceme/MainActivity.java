@@ -35,6 +35,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // set textviews and buttons for scorekeeping
         redScore = (TextView) findViewById(R.id.red_score);
         greenScore = (TextView) findViewById(R.id.green_score);
         addRed = (Button) findViewById(R.id.plus_red);
@@ -42,29 +44,30 @@ public class MainActivity extends AppCompatActivity {
         addGreen = (Button) findViewById(R.id.plus_green);
         subtractGreen = (Button) findViewById(R.id.minus_green);
 
+        // set onclickListeners for buttons
         addRed.setOnClickListener(createOnClickListener(redScore, TO_ADD));
         subtractRed.setOnClickListener(createOnClickListener(redScore, TO_SUBTRACT));
         addGreen.setOnClickListener(createOnClickListener(greenScore, TO_ADD));
         subtractGreen.setOnClickListener(createOnClickListener(greenScore, TO_SUBTRACT));
+
+        // set textviews and buttons for timekeeping
+        mStartTimer = (Button) findViewById(R.id.start_timer);
+        resetTimer = (Button) findViewById(R.id.reset_timer);
         mCurrentTimer = (TextView) findViewById(R.id.timer);
 
-        final View.OnClickListener mStartListener = new View.OnClickListener() {
+        // set onClickListener for start and reset
+        mStartTimer.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent startTimer = new Intent(getApplicationContext(), TimerHandler.class);
-                startTimer.putExtra("TOGGLE", TimerHandler.TOGGLE_TIMER);
+                Intent startTimer = new Intent(getApplicationContext(), TimerService.class);
+                startTimer.putExtra("TOGGLE", TimerService.TOGGLE_TIMER);
                 startService(startTimer);
             }
-        };
-
-        mStartTimer = (Button) findViewById(R.id.start_timer);
-        mStartTimer.setOnClickListener(mStartListener);
-
-        resetTimer = (Button) findViewById(R.id.reset_timer);
+        });
         resetTimer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent stopTimer = new Intent(getApplicationContext(), TimerHandler.class);
-                stopTimer.putExtra("TOGGLE", TimerHandler.RESET_TIMER);
+                Intent stopTimer = new Intent(getApplicationContext(), TimerService.class);
+                stopTimer.putExtra("TOGGLE", TimerService.RESET_TIMER);
                 startService(stopTimer);
             }
         });
@@ -74,40 +77,44 @@ public class MainActivity extends AppCompatActivity {
                 new BroadcastReceiver() {
                     @Override
                     public void onReceive(Context context, Intent intent) {
-                        int minutes = intent.getIntExtra(TimerHandler.MINUTES, 0);
-                        int seconds = intent.getIntExtra(TimerHandler.SECONDS, 0);
+                        // set the text in the textview to corresponding minutes and seconds
+                        int minutes = intent.getIntExtra(TimerService.MINUTES, 0);
+                        int seconds = intent.getIntExtra(TimerService.SECONDS, 0);
                         if (seconds < 10 && seconds >= 0) {
                             mCurrentTimer.setText("" + minutes + ":0" + seconds);
                         } else {
                             mCurrentTimer.setText("" + minutes + ":" + seconds);
                         }
                     }
-                }, new IntentFilter(TimerHandler.UPDATE_TIME_INTENT)
+                }, new IntentFilter(TimerService.UPDATE_TIME_INTENT)
         );
 
         LocalBroadcastManager.getInstance(this).registerReceiver(
                 new BroadcastReceiver() {
                     @Override
                     public void onReceive(Context context, Intent intent) {
-                        String text = intent.getStringExtra(TimerHandler.UPDATE_BUTTON_TEXT);
+                        // set text in button to corresponding value.
+                        String text = intent.getStringExtra(TimerService.UPDATE_BUTTON_TEXT);
                         mStartTimer.setText(text);
                     }
-                }, new IntentFilter(TimerHandler.UPDATE_TOGGLE_BUTTON_INTENT)
+                }, new IntentFilter(TimerService.UPDATE_TOGGLE_BUTTON_INTENT)
         );
     }
 
+    // reset scores
     public void resetScores(View v) {
         redScore.setText(String.format("%s", 0));
         greenScore.setText(String.format("%s", 0));
     }
 
+    // create options menu
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_menu, menu);
         return true;
     }
 
-
+    // create activites for options menu selections
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.about:
