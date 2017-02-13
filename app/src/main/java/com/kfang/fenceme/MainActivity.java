@@ -1,11 +1,7 @@
 package com.kfang.fenceme;
 
 import android.content.Intent;
-import android.media.Ringtone;
-import android.media.RingtoneManager;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -13,55 +9,22 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
     public static final int TO_ADD = 1;
     public static final int TO_SUBTRACT = 0;
-
+    public static Button mStartTimer;
+    public static TextView mCurrentTimer;
     // buttons in main drawable resource file
     Button addRed;
     Button subtractRed;
     Button addGreen;
     Button subtractGreen;
-    Button startTimer;
     Button resetTimer;
 
-    // keeps track of the time when the timer was started
-    long mStartTime = 0;
-    private long mCurrentTime = 180000;
-    private boolean timerRunning = false;
-    private Ringtone mAlarmTone;
 
     // keeps track of the current timer value
-    private TextView mCurrentTimer;
-    private Handler mHandler = new Handler();
-    private Runnable mUpdateTimeTask = new Runnable() {
-        public void run() {
-            mCurrentTime = (int) (mCurrentTime - 1000);
-
-            if (mCurrentTime > 0) {
-                int newTime = (int) mCurrentTime / 1000;
-                int seconds = newTime % 60;
-                int minutes = newTime / 60;
-
-                if (seconds < 10 && seconds >= 0) {
-                    mCurrentTimer.setText("" + minutes + ":0" + seconds);
-                } else {
-                    mCurrentTimer.setText("" + minutes + ":" + seconds);
-                }
-                mHandler.postDelayed(this, 1000);
-            } else if (mCurrentTime == 0) {
-                Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
-                mAlarmTone = RingtoneManager.getRingtone(getApplicationContext(), notification);
-                mAlarmTone.play();
-                mCurrentTimer.setText(R.string.no_time);
-                Toast timerUp = Toast.makeText(getApplicationContext(), "Time's Up!", Toast.LENGTH_SHORT);
-                timerUp.show();
-            }
-        }
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,34 +45,22 @@ public class MainActivity extends AppCompatActivity {
 
         final View.OnClickListener mStartListener = new View.OnClickListener() {
             public void onClick(View v) {
-                if (!timerRunning) {
-                    mStartTime = System.currentTimeMillis();
-                    mHandler.removeCallbacks(mUpdateTimeTask);
-                    mHandler.postDelayed(mUpdateTimeTask, 1000);
-                    startTimer.setText(R.string.stop_timer);
-                    timerRunning = true;
-                } else {
-                    mHandler.removeCallbacks(mUpdateTimeTask);
-                    startTimer.setText(R.string.start_timer);
-                    timerRunning = false;
-                }
+                Intent startTimer = new Intent(getApplicationContext(), TimerHandler.class);
+                startTimer.putExtra("TOGGLE", TimerHandler.TOGGLE_TIMER);
+                startService(startTimer);
             }
         };
-        startTimer = (Button) findViewById(R.id.start_timer);
-        startTimer.setOnClickListener(mStartListener);
+
+        mStartTimer = (Button) findViewById(R.id.start_timer);
+        mStartTimer.setOnClickListener(mStartListener);
 
         resetTimer = (Button) findViewById(R.id.reset_timer);
         resetTimer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mCurrentTime = 180000;
-                mCurrentTimer.setText(R.string.full_time);
-                startTimer.setText(R.string.start_timer);
-                mHandler.removeCallbacks(mUpdateTimeTask);
-                timerRunning = false;
-                if (mAlarmTone != null && mAlarmTone.isPlaying()) {
-                    mAlarmTone.stop();
-                }
+                Intent stopTimer = new Intent(getApplicationContext(), TimerHandler.class);
+                stopTimer.putExtra("TOGGLE", TimerHandler.RESET_TIMER);
+                startService(stopTimer);
             }
         });
 

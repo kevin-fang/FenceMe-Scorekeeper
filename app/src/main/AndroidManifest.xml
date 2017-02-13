@@ -15,8 +15,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".About">
-
         </activity>
+
+        <service android:name=".TimerHandler" />
     </application>
 
 </manifest>
