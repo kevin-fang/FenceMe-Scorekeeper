@@ -1,7 +1,11 @@
 package com.kfang.fenceme;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -10,20 +14,19 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+
 public class MainActivity extends AppCompatActivity {
 
     public static final int TO_ADD = 1;
     public static final int TO_SUBTRACT = 0;
-    public static Button mStartTimer;
-    public static TextView mCurrentTimer;
+    Button mStartTimer;
+    TextView mCurrentTimer;
     // buttons in main drawable resource file
     Button addRed;
     Button subtractRed;
     Button addGreen;
     Button subtractGreen;
     Button resetTimer;
-
-
     // keeps track of the current timer value
 
     @Override
@@ -64,6 +67,31 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // LocalBroadcastManagers to deal with updating time and toggle button text intents.
+        LocalBroadcastManager.getInstance(this).registerReceiver(
+                new BroadcastReceiver() {
+                    @Override
+                    public void onReceive(Context context, Intent intent) {
+                        int minutes = intent.getIntExtra(TimerHandler.MINUTES, 0);
+                        int seconds = intent.getIntExtra(TimerHandler.SECONDS, 0);
+                        if (seconds < 10 && seconds >= 0) {
+                            mCurrentTimer.setText("" + minutes + ":0" + seconds);
+                        } else {
+                            mCurrentTimer.setText("" + minutes + ":" + seconds);
+                        }
+                    }
+                }, new IntentFilter(TimerHandler.UPDATE_TIME_INTENT)
+        );
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(
+                new BroadcastReceiver() {
+                    @Override
+                    public void onReceive(Context context, Intent intent) {
+                        String text = intent.getStringExtra(TimerHandler.UPDATE_BUTTON_TEXT);
+                        mStartTimer.setText(text);
+                    }
+                }, new IntentFilter(TimerHandler.UPDATE_TOGGLE_BUTTON_INTENT)
+        );
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -82,6 +110,7 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    // create an on click listener for each of the plus/minus buttons.
     private View.OnClickListener createOnClickListener(final TextView score, final int toAdd) {
         return new View.OnClickListener() {
             @Override
