@@ -17,7 +17,7 @@
         <TextView
             android:id="@+id/redSide"
             android:layout_width="wrap_content"
-            android:layout_height="112dp"
+            android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:fontFamily="sans-serif-light"
             android:paddingTop="12dp"
@@ -62,15 +62,10 @@
             android:id="@+id/timer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_gravity="center"
             android:fontFamily="sans-serif-light"
-            android:gravity="center"
             android:text="@string/full_time"
-            android:textSize="@dimen/timer_size" />
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="80dp" />
+            android:textSize="@dimen/timer_size_landscape" />
 
         <Button
             android:id="@+id/start_timer"
@@ -97,7 +92,7 @@
         <TextView
             android:id="@+id/greenSide"
             android:layout_width="wrap_content"
-            android:layout_height="112dp"
+            android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:fontFamily="sans-serif-light"
             android:paddingTop="12dp"
