@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">FenceMe!</string>
+    <string name="red_side">Red</string>
+    <string name="green_side">Green</string>
+    <string name="add_point">+</string>
+    <string name="no_score">0</string>
+    <string name="subtract_point">-</string>
+</resources>
