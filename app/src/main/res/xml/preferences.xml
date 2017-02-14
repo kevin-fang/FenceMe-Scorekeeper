@@ -12,12 +12,12 @@
             android:key="bout_length_time"
             android:title="Default Bout Length (minutes)" />
 
-        <!--
         <CheckBoxPreference
             android:key="enable_alarm"
             android:summary="@string/alarm_end_desc"
             android:title="@string/alarm_at_end" />
 
+        <!--
         <CheckBoxPreference
             android:key="maximum_brightness"
             android:summary="@string/maximum_brightness_desc"
