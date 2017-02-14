@@ -27,4 +27,5 @@
     <string name="default_bout_length">Default Bout Length</string>
     <string name="maximum_brightness">Maximum Brightness when Displaying Cards</string>
     <string name="maximum_brightness_desc">Check this box to set brightness to max when giving out red/yellow/black cards</string>
+    <string name="share_app">Share</string>
 </resources>

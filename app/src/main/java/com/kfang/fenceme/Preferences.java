@@ -5,7 +5,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 /**
- * Created by kfang on 2/13/2017.
+ * Class to get preferences.
  */
 
 public class Preferences {

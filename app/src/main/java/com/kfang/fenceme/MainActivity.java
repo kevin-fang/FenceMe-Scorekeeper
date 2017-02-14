@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
         mCurrentTimer = (TextView) findViewById(R.id.timer);
 
         int seconds = (int) (mCurrentTime / 1000) % 60;
-        Toast.makeText(this, "seconds: " + mCurrentTime, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "seconds: " + mCurrentTime, Toast.LENGTH_SHORT).show();
         if (seconds < 10) {
             mCurrentTimer.setText("" + mCurrentTime / 1000 / 60 + ":0" + seconds);
         } else {
