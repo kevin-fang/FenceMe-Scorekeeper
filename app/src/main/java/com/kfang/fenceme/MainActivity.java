@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -21,6 +20,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static final int TO_ADD = 1;
     public static final int TO_SUBTRACT = 0;
+    public static long mCurrentTime = 180000;
     Button mStartTimer;
     TextView mCurrentTimer;
     // buttons in main drawable resource file
@@ -29,16 +29,16 @@ public class MainActivity extends AppCompatActivity {
     Button addGreen;
     Button subtractGreen;
     Button resetTimer;
-
     TextView greenScore;
     TextView redScore;
+    SharedPreferences prefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mCurrentTime = Preferences.updateCurrentTime(this) * 60000;
         // set textviews and buttons for scorekeeping
         redScore = (TextView) findViewById(R.id.red_score);
         greenScore = (TextView) findViewById(R.id.green_score);
@@ -57,6 +57,12 @@ public class MainActivity extends AppCompatActivity {
         mStartTimer = (Button) findViewById(R.id.start_timer);
         resetTimer = (Button) findViewById(R.id.reset_timer);
         mCurrentTimer = (TextView) findViewById(R.id.timer);
+        int seconds = (int) mCurrentTime % 60;
+        if (seconds < 10) {
+            mCurrentTimer.setText("" + mCurrentTime / 1000 / 60 + ":0" + mCurrentTime % 60);
+        } else {
+            mCurrentTimer.setText("" + mCurrentTime / 1000 / 60 + ":" + mCurrentTime % 60);
+        }
 
         // set onClickListener for start and reset
         mStartTimer.setOnClickListener(new View.OnClickListener() {
@@ -102,7 +108,20 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }, new IntentFilter(TimerService.UPDATE_TOGGLE_BUTTON_INTENT)
         );
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(
+                new BroadcastReceiver() {
+                    @Override
+                    public void onReceive(Context context, Intent intent) {
+                        // set the text in the textview to corresponding minutes and seconds
+                        int minutes = Preferences.updateCurrentTime(getApplicationContext());
+                        mCurrentTime = minutes * 60000;
+                        mCurrentTimer.setText("" + minutes + ":00");
+                    }
+                }, new IntentFilter(TimerService.RESET_TIMER_INTENT)
+        );
     }
+
 
     // reset scores
     public void resetScores(View v) {
@@ -140,7 +159,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String valueStr = score.getText().toString();
                 int value = Integer.parseInt(valueStr);
-                if (toAdd == TO_ADD && value < 5) {
+                if (toAdd == TO_ADD && value < Preferences.getIntPreference(getApplicationContext(), Preferences.BOUT_LENGTH_POINTS, Preferences.DEFAULT_POINTS)) {
                     value += 1;
                 } else if (toAdd == TO_SUBTRACT && value > 0) {
                     value -= 1;

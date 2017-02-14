@@ -10,7 +10,7 @@
         <EditTextPreference
             android:inputType="number"
             android:key="bout_length_time"
-            android:title="Default Bout Length (time)" />
+            android:title="Default Bout Length (minutes)" />
 
         <CheckBoxPreference
             android:key="enable_alarm"

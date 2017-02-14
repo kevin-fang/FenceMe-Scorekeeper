@@ -18,7 +18,6 @@
         </activity>
         <activity android:name=".CardPlayerActivity"></activity>
         <activity android:name=".SettingsActivity"></activity>
-
         <service android:name=".TimerService" />
     </application>
 

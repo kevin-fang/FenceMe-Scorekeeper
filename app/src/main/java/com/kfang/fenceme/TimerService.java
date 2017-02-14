@@ -9,6 +9,8 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
 
+import static com.kfang.fenceme.MainActivity.mCurrentTime;
+
 
 /**
  * Timer Service - keep the time calculations off the UI thread.
@@ -22,11 +24,12 @@ public class TimerService extends Service {
     public static String SECONDS = "seconds";
     public static String UPDATE_TIME_INTENT = "com.kfang.fenceme.updatetime";
     public static String UPDATE_TOGGLE_BUTTON_INTENT = "com.kfang.fenceme.updatetimebutton";
+    public static String RESET_TIMER_INTENT = "com.kfang.fenceme.resettimer";
     public static String UPDATE_BUTTON_TEXT = "to_update";
     public boolean timerRunning = false;
     // keep track of start times and end times
     long mStartTime = 0;
-    private long mCurrentTime = 180000;
+
     private Ringtone mAlarmTone;
     private Handler mHandler = new Handler();
 
@@ -96,9 +99,9 @@ public class TimerService extends Service {
             }
         } else if (toggleOrReset == RESET_TIMER) { // reset the timer.
             mHandler.removeCallbacks(mUpdateTimeTask);
-            mCurrentTime = 180000;
 
-            createUpdateTimeIntent(3, 0);
+            Intent intent = new Intent(RESET_TIMER_INTENT);
+            LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
             createUpdateToggleButtonIntent(R.string.start_timer);
 
             timerRunning = false;
