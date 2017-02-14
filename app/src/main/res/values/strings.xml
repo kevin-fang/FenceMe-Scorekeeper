@@ -3,7 +3,7 @@
     <string name="red_side">Red</string>
     <string name="green_side">Green</string>
     <string name="add_point">+</string>
-    <string name="full_time">3:00</string>
+    <string name="full_time"></string>
     <string name="no_score">0</string>
     <string name="start_timer">Start Timer</string>
     <string name="stop_timer">Pause Timer</string>

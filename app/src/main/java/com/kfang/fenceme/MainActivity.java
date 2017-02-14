@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -38,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mCurrentTime = Preferences.updateCurrentTime(this) * 60000;
+        //mCurrentTimePermanent = Preferences.updateCurrentTime(this) * 60000;
         // set textviews and buttons for scorekeeping
         redScore = (TextView) findViewById(R.id.red_score);
         greenScore = (TextView) findViewById(R.id.green_score);
@@ -57,11 +58,13 @@ public class MainActivity extends AppCompatActivity {
         mStartTimer = (Button) findViewById(R.id.start_timer);
         resetTimer = (Button) findViewById(R.id.reset_timer);
         mCurrentTimer = (TextView) findViewById(R.id.timer);
-        int seconds = (int) mCurrentTime % 60;
+
+        int seconds = (int) (mCurrentTime / 1000) % 60;
+        Toast.makeText(this, "seconds: " + mCurrentTime, Toast.LENGTH_SHORT).show();
         if (seconds < 10) {
-            mCurrentTimer.setText("" + mCurrentTime / 1000 / 60 + ":0" + mCurrentTime % 60);
+            mCurrentTimer.setText("" + mCurrentTime / 1000 / 60 + ":0" + seconds);
         } else {
-            mCurrentTimer.setText("" + mCurrentTime / 1000 / 60 + ":" + mCurrentTime % 60);
+            mCurrentTimer.setText("" + mCurrentTime / 1000 / 60 + ":" + seconds);
         }
 
         // set onClickListener for start and reset
