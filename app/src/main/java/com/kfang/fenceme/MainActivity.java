@@ -21,6 +21,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+
 import static com.kfang.fenceme.Preferences.greenName;
 import static com.kfang.fenceme.Preferences.redName;
 
@@ -48,6 +52,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        MobileAds.initialize(getApplicationContext(), "ca-app-pub-6647745358935231~7845605907");
+
+        AdView mAdView = (AdView) findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().addTestDevice("1E4125EDAE1F61B3A38F14662D5C93C7").build();
+        mAdView.loadAd(adRequest);
 
         TextView redNameView = (TextView) findViewById(R.id.redSide);
         TextView greenNameView = (TextView) findViewById(R.id.greenSide);

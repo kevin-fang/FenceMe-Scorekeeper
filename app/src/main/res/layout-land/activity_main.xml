@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:baselineAligned="false"
-    android:padding="8dp"
+    android:padding="4dp"
     tools:context="com.kfang.fenceme.MainActivity">
 
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="1"
+        android:layout_weight=".9"
         android:background="@drawable/layout_red"
         android:orientation="vertical">
 
@@ -60,9 +61,19 @@
 
     <LinearLayout
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_height="match_parent"
+        android:layout_weight="1.95"
         android:orientation="vertical">
+
+        <com.google.android.gms.ads.AdView
+            android:id="@+id/adView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            ads:adSize="BANNER"
+            ads:adUnitId="@string/banner_ad_unit_id">
+
+        </com.google.android.gms.ads.AdView>
 
         <TextView
             android:id="@+id/timer"
@@ -73,46 +84,55 @@
             android:text="@string/full_time"
             android:textSize="@dimen/timer_size_landscape" />
 
+
         <Button
             android:id="@+id/start_timer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="15dp"
             android:text="@string/start_timer" />
 
-        <Button
-            android:id="@+id/reset_timer"
-            style="?android:attr/buttonBarButtonStyle"
+        <LinearLayout
+            style="?android:attr/buttonBarStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="@string/reset_timer"
-            android:textColor="@color/primary_text" />
+            android:layout_gravity="center">
 
+            <Button
+                android:id="@+id/reset_timer"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight=".35"
+                android:text="@string/reset_timer"
+                android:textColor="@color/primary_text" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="2px"
-            android:layout_marginEnd="60dp"
-            android:layout_marginStart="60dp"
-            android:background="#90909090" />
+            <View
+                android:layout_width="2px"
+                android:layout_height="fill_parent"
+                android:layout_marginBottom="4dp"
+                android:layout_marginTop="4dp"
+                android:background="#90909090" />
 
-        <Button
-            android:id="@+id/reset_scores"
-            style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:onClick="resetScores"
-            android:text="@string/reset_scores"
-            android:textColor="@color/primary_text" />
+            <Button
+                android:id="@+id/reset_scores"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight=".35"
+                android:onClick="resetScores"
+                android:text="@string/reset_scores"
+                android:textColor="@color/primary_text" />
+        </LinearLayout>
+
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="1"
+        android:layout_weight=".9"
         android:background="@drawable/layout_green"
         android:orientation="vertical">
 
