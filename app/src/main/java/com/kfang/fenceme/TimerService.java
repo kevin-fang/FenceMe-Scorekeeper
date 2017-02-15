@@ -26,7 +26,7 @@ public class TimerService extends Service {
     public static String UPDATE_TOGGLE_BUTTON_INTENT = "com.kfang.fenceme.updatetimebutton";
     public static String RESET_TIMER_INTENT = "com.kfang.fenceme.resettimer";
     public static String UPDATE_BUTTON_TEXT = "to_update";
-    public boolean timerRunning = false;
+    public static boolean mTimerRunning = false;
     // keep track of start times and end times
     long mStartTime = 0;
 
@@ -86,16 +86,16 @@ public class TimerService extends Service {
             toggleOrReset = RESET_TIMER; // bugfix - when starting the app, onStartCommand will run. Reset the timer when the pap will start.
         }
         if (toggleOrReset == TOGGLE_TIMER) { // toggle the timer.
-            if (!timerRunning) {
+            if (!mTimerRunning) {
                 mStartTime = System.currentTimeMillis();
                 mHandler.removeCallbacks(mUpdateTimeTask);
                 mHandler.postDelayed(mUpdateTimeTask, 1000);
                 createUpdateToggleButtonIntent(R.string.stop_timer);
-                timerRunning = true;
+                mTimerRunning = true;
             } else {
                 mHandler.removeCallbacks(mUpdateTimeTask);
                 createUpdateToggleButtonIntent(R.string.start_timer);
-                timerRunning = false;
+                mTimerRunning = false;
             }
         } else if (toggleOrReset == RESET_TIMER) { // reset the timer.
             mHandler.removeCallbacks(mUpdateTimeTask);
@@ -104,7 +104,7 @@ public class TimerService extends Service {
             LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
             createUpdateToggleButtonIntent(R.string.start_timer);
 
-            timerRunning = false;
+            mTimerRunning = false;
             if (mAlarmTone != null && mAlarmTone.isPlaying()) { // stop the alarm if it is currently playing.
                 mAlarmTone.stop();
             }

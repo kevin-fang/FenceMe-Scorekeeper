@@ -110,6 +110,9 @@ public class MainActivity extends AppCompatActivity {
 
         // set textviews and buttons for timekeeping
         mStartTimer = (Button) findViewById(R.id.start_timer);
+        if (TimerService.mTimerRunning) {
+            mStartTimer.setText(getResources().getString(R.string.stop_timer));
+        }
         resetTimer = (Button) findViewById(R.id.reset_timer);
         mCurrentTimer = (TextView) findViewById(R.id.timer);
 
