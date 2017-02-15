@@ -95,6 +95,13 @@
             android:text="@string/reset_timer"
             android:textColor="@color/primary_text" />
 
+        <View
+            android:layout_width="2px"
+            android:layout_height="fill_parent"
+            android:layout_marginBottom="4dp"
+            android:layout_marginTop="4dp"
+            android:background="#90909090" />
+
         <Button
             android:id="@+id/reset_scores"
             style="?android:attr/buttonBarButtonStyle"

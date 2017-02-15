@@ -83,18 +83,30 @@
 
         <Button
             android:id="@+id/reset_timer"
+            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="@string/reset_timer" />
+            android:text="@string/reset_timer"
+            android:textColor="@color/primary_text" />
+        
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2px"
+            android:layout_marginEnd="60dp"
+            android:layout_marginStart="60dp"
+            android:background="#90909090" />
 
         <Button
             android:id="@+id/reset_scores"
+            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:onClick="resetScores"
-            android:text="@string/reset_scores" />
+            android:text="@string/reset_scores"
+            android:textColor="@color/primary_text" />
     </LinearLayout>
 
     <LinearLayout
