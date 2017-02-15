@@ -2,19 +2,27 @@ package com.kfang.fenceme;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.InputFilter;
+import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import static com.kfang.fenceme.Preferences.greenName;
+import static com.kfang.fenceme.Preferences.redName;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -33,11 +41,25 @@ public class MainActivity extends AppCompatActivity {
     TextView greenScore;
     TextView redScore;
     SharedPreferences prefs;
+    int maxNameLength = 20;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        TextView redNameView = (TextView) findViewById(R.id.redSide);
+        TextView greenNameView = (TextView) findViewById(R.id.greenSide);
+
+        //Toast.makeText(this, "red: " + redName + "green: " + greenName, Toast.LENGTH_SHORT).show();
+
+        if (redName != null) {
+            redNameView.setText(redName);
+        }
+        if (greenName != null) {
+            greenNameView.setText(greenName);
+        }
 
         //mCurrentTimePermanent = Preferences.updateCurrentTime(this) * 60000;
         // set textviews and buttons for scorekeeping
@@ -171,5 +193,51 @@ public class MainActivity extends AppCompatActivity {
             }
 
         };
+    }
+
+    public void changeRedName(View v) {
+        getNewName(v, "Red");
+    }
+
+    public void changeGreenName(View v) {
+        getNewName(v, "Green");
+    }
+
+    private void getNewName(View v, final String defaultName) {
+        final TextView view = (TextView) v;
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Player Name");
+        final EditText inputName = new EditText(this);
+        inputName.setText(view.getText());
+        inputName.setSelectAllOnFocus(true);
+        inputName.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS);
+        inputName.setFilters(new InputFilter[]{new InputFilter.LengthFilter(maxNameLength)});
+        builder.setView(inputName);
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String name;
+                name = inputName.getText().toString();
+                if (name.equals("")) {
+                    name = defaultName;
+                }
+                view.setText(name);
+                if (defaultName.equals("Green")) {
+                    greenName = name;
+                } else if (defaultName.equals("Red")) {
+                    redName = name;
+                }
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        AlertDialog alertToShow = builder.create();
+        alertToShow.getWindow().setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+        alertToShow.show();
     }
 }

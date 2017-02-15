@@ -20,7 +20,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
+            android:clickable="true"
+            android:ellipsize="end"
             android:fontFamily="sans-serif-light"
+            android:lines="1"
+            android:onClick="changeRedName"
             android:paddingTop="12dp"
             android:text="@string/red_side"
             android:textColor="@color/colorNames"
@@ -76,28 +80,31 @@
         android:text="@string/start_timer" />
 
     <LinearLayout
+        style="?android:attr/buttonBarStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center">
 
         <Button
             android:id="@+id/reset_timer"
+            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_margin="12dp"
             android:layout_weight=".35"
-            android:text="@string/reset_timer" />
+            android:text="@string/reset_timer"
+            android:textColor="@color/primary_text" />
 
         <Button
             android:id="@+id/reset_scores"
+            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_margin="12dp"
             android:layout_weight=".35"
             android:onClick="resetScores"
-            android:text="@string/reset_scores" />
+            android:text="@string/reset_scores"
+            android:textColor="@color/primary_text" />
     </LinearLayout>
 
     <LinearLayout
@@ -112,7 +119,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
+            android:clickable="true"
+            android:ellipsize="end"
             android:fontFamily="sans-serif-light"
+            android:lines="1"
+            android:onClick="changeRedName"
             android:paddingTop="12dp"
             android:text="@string/green_side"
             android:textColor="@color/colorNames"
