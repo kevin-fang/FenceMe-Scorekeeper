@@ -9,7 +9,10 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Message;
+import android.os.RemoteException;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -23,11 +26,17 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.vending.billing.IInAppBillingService;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 import static com.kfang.fenceme.Preferences.greenName;
 import static com.kfang.fenceme.Preferences.redName;
@@ -50,6 +59,9 @@ public class MainActivity extends AppCompatActivity {
     TextView redScore;
     SharedPreferences prefs;
     int maxNameLength = 20;
+    protected Bundle skuDetails;
+    public boolean noAds;
+    String mNoAdsPrice;
 
     IInAppBillingService mService;
     ServiceConnection mServiceConn = new ServiceConnection() {
@@ -70,6 +82,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // set up ads and in app purchases
         MobileAds.initialize(getApplicationContext(), "ca-app-pub-6647745358935231~7845605907");
 
         AdView mAdView = (AdView) findViewById(R.id.adView);
@@ -81,6 +94,90 @@ public class MainActivity extends AppCompatActivity {
         serviceIntent.setPackage("com.android.vending");
         bindService(serviceIntent, mServiceConn, Context.BIND_AUTO_CREATE);
 
+        ArrayList<String> skuList = new ArrayList<String>();
+        skuList.add("noAds");
+        final Bundle querySkus = new Bundle();
+        querySkus.putStringArrayList("ITEM_ID_LIST", skuList);
+
+        Thread getInAppPurchases = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    skuDetails = mService.getSkuDetails(3, getPackageName(), "inapp", querySkus);
+                } catch (RemoteException e) {
+                    Toast.makeText(getApplicationContext(), "Cannot verify in-app purchases: Internet unavailable", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        getInAppPurchases.start();
+
+        int response = skuDetails.getInt("RESPONSE_CODE");
+        if (response == 0) {
+            ArrayList<String> responseList
+                    = skuDetails.getStringArrayList("DETAILS_LIST");
+
+            for (String thisResponse : responseList) {
+                String sku;
+                String price;
+                try {
+                    JSONObject object = new JSONObject(thisResponse);
+                    sku = object.getString("productId");
+                    price = object.getString("price");
+                } catch (JSONException e) {
+                    break;
+                }
+                if (sku.equals("noAds")) {
+                    mNoAdsPrice = price;
+                }
+            }
+        }
+
+        // set up views and broadcastmanagers
+        setViews();
+
+        // LocalBroadcastManagers to deal with updating time and toggle button text intents.
+        LocalBroadcastManager.getInstance(this).registerReceiver(
+                new BroadcastReceiver() {
+                    @Override
+                    public void onReceive(Context context, Intent intent) {
+                        // set the text in the textview to corresponding minutes and seconds
+                        int minutes = intent.getIntExtra(TimerService.MINUTES, 0);
+                        int seconds = intent.getIntExtra(TimerService.SECONDS, 0);
+                        if (seconds < 10 && seconds >= 0) {
+                            mCurrentTimer.setText("" + minutes + ":0" + seconds);
+                        } else {
+                            mCurrentTimer.setText("" + minutes + ":" + seconds);
+                        }
+                    }
+                }, new IntentFilter(TimerService.UPDATE_TIME_INTENT)
+        );
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(
+                new BroadcastReceiver() {
+                    @Override
+                    public void onReceive(Context context, Intent intent) {
+                        // set text in button to corresponding value.
+                        String text = intent.getStringExtra(TimerService.UPDATE_BUTTON_TEXT);
+                        mStartTimer.setText(text);
+                    }
+                }, new IntentFilter(TimerService.UPDATE_TOGGLE_BUTTON_INTENT)
+        );
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(
+                new BroadcastReceiver() {
+                    @Override
+                    public void onReceive(Context context, Intent intent) {
+                        // set the text in the textview to corresponding minutes and seconds
+                        int minutes = Preferences.updateCurrentTime(getApplicationContext());
+                        mCurrentTime = minutes * 60000;
+                        mCurrentTimer.setText("" + minutes + ":00");
+                    }
+                }, new IntentFilter(TimerService.RESET_TIMER_INTENT)
+        );
+    }
+
+    private void setViews() {
         TextView redNameView = (TextView) findViewById(R.id.redSide);
         TextView greenNameView = (TextView) findViewById(R.id.greenSide);
 
@@ -137,46 +234,6 @@ public class MainActivity extends AppCompatActivity {
                 startService(stopTimer);
             }
         });
-
-        // LocalBroadcastManagers to deal with updating time and toggle button text intents.
-        LocalBroadcastManager.getInstance(this).registerReceiver(
-                new BroadcastReceiver() {
-                    @Override
-                    public void onReceive(Context context, Intent intent) {
-                        // set the text in the textview to corresponding minutes and seconds
-                        int minutes = intent.getIntExtra(TimerService.MINUTES, 0);
-                        int seconds = intent.getIntExtra(TimerService.SECONDS, 0);
-                        if (seconds < 10 && seconds >= 0) {
-                            mCurrentTimer.setText("" + minutes + ":0" + seconds);
-                        } else {
-                            mCurrentTimer.setText("" + minutes + ":" + seconds);
-                        }
-                    }
-                }, new IntentFilter(TimerService.UPDATE_TIME_INTENT)
-        );
-
-        LocalBroadcastManager.getInstance(this).registerReceiver(
-                new BroadcastReceiver() {
-                    @Override
-                    public void onReceive(Context context, Intent intent) {
-                        // set text in button to corresponding value.
-                        String text = intent.getStringExtra(TimerService.UPDATE_BUTTON_TEXT);
-                        mStartTimer.setText(text);
-                    }
-                }, new IntentFilter(TimerService.UPDATE_TOGGLE_BUTTON_INTENT)
-        );
-
-        LocalBroadcastManager.getInstance(this).registerReceiver(
-                new BroadcastReceiver() {
-                    @Override
-                    public void onReceive(Context context, Intent intent) {
-                        // set the text in the textview to corresponding minutes and seconds
-                        int minutes = Preferences.updateCurrentTime(getApplicationContext());
-                        mCurrentTime = minutes * 60000;
-                        mCurrentTimer.setText("" + minutes + ":00");
-                    }
-                }, new IntentFilter(TimerService.RESET_TIMER_INTENT)
-        );
     }
 
     @Override
@@ -200,7 +257,7 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    // create activites for options menu selections
+    // create activities for options menu selections
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.about:
@@ -242,6 +299,7 @@ public class MainActivity extends AppCompatActivity {
         getNewName(v, "Green");
     }
 
+    // create dialog and request for a new name
     private void getNewName(View v, final String defaultName) {
         final TextView view = (TextView) v;
         AlertDialog.Builder builder = new AlertDialog.Builder(this);

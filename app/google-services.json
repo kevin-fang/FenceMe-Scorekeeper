@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "723573634273",
+    "firebase_url": "https://fenceme-aee35.firebaseio.com",
+    "project_id": "fenceme-aee35",
+    "storage_bucket": "fenceme-aee35.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:723573634273:android:6b22289471157af8",
+        "android_client_info": {
+          "package_name": "com.kfang.fenceme"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "723573634273-2n5leo1mvk30qrg43v3qjp5tcq9ruarp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.kfang.fenceme",
+            "certificate_hash": "1D9BDC71A0883759597F5F9C03406724A20EF4A5"
+          }
+        },
+        {
+          "client_id": "723573634273-ccnrjqhj4nku4k1gp9aejolhpg94bq1n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD04Nw4boPOhKDm3wzMM-8gVvwiKqy6H6Y"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "723573634273-ccnrjqhj4nku4k1gp9aejolhpg94bq1n.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
