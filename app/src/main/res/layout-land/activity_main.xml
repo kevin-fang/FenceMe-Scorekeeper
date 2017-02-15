@@ -89,7 +89,7 @@
             android:layout_gravity="center"
             android:text="@string/reset_timer"
             android:textColor="@color/primary_text" />
-        
+
 
         <View
             android:layout_width="match_parent"
