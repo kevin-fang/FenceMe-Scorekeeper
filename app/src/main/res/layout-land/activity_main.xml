@@ -12,7 +12,7 @@
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight=".9"
+        android:layout_weight="1.1"
         android:background="@drawable/layout_red"
         android:orientation="vertical">
 
@@ -132,7 +132,7 @@
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight=".9"
+        android:layout_weight="1.1"
         android:background="@drawable/layout_green"
         android:orientation="vertical">
 

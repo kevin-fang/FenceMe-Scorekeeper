@@ -8,11 +8,9 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.IBinder;
-import android.os.Message;
-import android.os.RemoteException;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -26,17 +24,11 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.vending.billing.IInAppBillingService;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
 
 import static com.kfang.fenceme.Preferences.greenName;
 import static com.kfang.fenceme.Preferences.redName;
@@ -47,6 +39,8 @@ public class MainActivity extends AppCompatActivity {
     public static final int TO_ADD = 1;
     public static final int TO_SUBTRACT = 0;
     public static long mCurrentTime = 180000;
+    public boolean noAds;
+    protected Bundle skuDetails;
     Button mStartTimer;
     TextView mCurrentTimer;
     // buttons in main drawable resource file
@@ -59,8 +53,6 @@ public class MainActivity extends AppCompatActivity {
     TextView redScore;
     SharedPreferences prefs;
     int maxNameLength = 20;
-    protected Bundle skuDetails;
-    public boolean noAds;
     String mNoAdsPrice;
 
     IInAppBillingService mService;
@@ -115,6 +107,15 @@ public class MainActivity extends AppCompatActivity {
 
         // set up views and broadcastmanagers
         setViews();
+
+        int orientation = getResources().getConfiguration().orientation;
+        View mDecorView = getWindow().getDecorView();
+        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            mDecorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
+                    | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+        } else {
+            //code for landscape mode
+        }
 
         // LocalBroadcastManagers to deal with updating time and toggle button text intents.
         LocalBroadcastManager.getInstance(this).registerReceiver(
