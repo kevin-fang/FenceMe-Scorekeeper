@@ -4,12 +4,12 @@ android {
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
     defaultConfig {
-        applicationId "com.kfang.fenceme"
         minSdkVersion 21
+        applicationId "com.kfang.fenceme"
         targetSdkVersion 25
-        versionCode 3
-        versionName "1.011"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        versionCode 4
+        versionName "1.1"
     }
     buildTypes {
         release {
