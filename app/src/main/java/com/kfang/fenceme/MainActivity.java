@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
         AdView mAdView = (AdView) findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().addTestDevice("1E4125EDAE1F61B3A38F14662D5C93C7").build();
         mAdView.loadAd(adRequest);
-
+        /*
         Intent serviceIntent =
                 new Intent("com.android.vending.billing.InAppBillingService.BIND");
         serviceIntent.setPackage("com.android.vending");
@@ -110,28 +110,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        getInAppPurchases.start();
+        getInAppPurchases.start(); */
 
-        int response = skuDetails.getInt("RESPONSE_CODE");
-        if (response == 0) {
-            ArrayList<String> responseList
-                    = skuDetails.getStringArrayList("DETAILS_LIST");
-
-            for (String thisResponse : responseList) {
-                String sku;
-                String price;
-                try {
-                    JSONObject object = new JSONObject(thisResponse);
-                    sku = object.getString("productId");
-                    price = object.getString("price");
-                } catch (JSONException e) {
-                    break;
-                }
-                if (sku.equals("noAds")) {
-                    mNoAdsPrice = price;
-                }
-            }
-        }
 
         // set up views and broadcastmanagers
         setViews();
