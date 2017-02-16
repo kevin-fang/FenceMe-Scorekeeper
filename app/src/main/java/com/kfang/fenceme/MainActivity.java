@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
@@ -78,8 +77,8 @@ public class MainActivity extends AppCompatActivity {
         MobileAds.initialize(getApplicationContext(), "ca-app-pub-6647745358935231~7845605907");
 
         AdView mAdView = (AdView) findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder().addTestDevice("1E4125EDAE1F61B3A38F14662D5C93C7").build();
-        mAdView.loadAd(adRequest);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        //mAdView.loadAd(adRequest);
         /*
         Intent serviceIntent =
                 new Intent("com.android.vending.billing.InAppBillingService.BIND");
@@ -107,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
 
         // set up views and broadcastmanagers
         setViews();
-
+        /*
         int orientation = getResources().getConfiguration().orientation;
         View mDecorView = getWindow().getDecorView();
         if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
@@ -116,6 +115,7 @@ public class MainActivity extends AppCompatActivity {
         } else {
             //code for landscape mode
         }
+        */
 
         // LocalBroadcastManagers to deal with updating time and toggle button text intents.
         LocalBroadcastManager.getInstance(this).registerReceiver(
@@ -180,11 +180,15 @@ public class MainActivity extends AppCompatActivity {
         addGreen = (Button) findViewById(R.id.plus_green);
         subtractGreen = (Button) findViewById(R.id.minus_green);
 
+        // set values to redScore and greenScore
+        redScore.setText(String.valueOf(Preferences.redScore));
+        greenScore.setText(String.valueOf(Preferences.greenScore));
+
         // set onclickListeners for buttons
-        addRed.setOnClickListener(createOnClickListener(redScore, TO_ADD));
-        subtractRed.setOnClickListener(createOnClickListener(redScore, TO_SUBTRACT));
-        addGreen.setOnClickListener(createOnClickListener(greenScore, TO_ADD));
-        subtractGreen.setOnClickListener(createOnClickListener(greenScore, TO_SUBTRACT));
+        addRed.setOnClickListener(createOnClickListener(redScore, TO_ADD, Preferences.RED_PLAYER));
+        subtractRed.setOnClickListener(createOnClickListener(redScore, TO_SUBTRACT, Preferences.RED_PLAYER));
+        addGreen.setOnClickListener(createOnClickListener(greenScore, TO_ADD, Preferences.GREEN_PLAYER));
+        subtractGreen.setOnClickListener(createOnClickListener(greenScore, TO_SUBTRACT, Preferences.GREEN_PLAYER));
 
         // set textviews and buttons for timekeeping
         mStartTimer = (Button) findViewById(R.id.start_timer);
@@ -218,6 +222,7 @@ public class MainActivity extends AppCompatActivity {
                 startService(stopTimer);
             }
         });
+
     }
 
     @Override
@@ -258,7 +263,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // create an on click listener for each of the plus/minus buttons.
-    private View.OnClickListener createOnClickListener(final TextView score, final int toAdd) {
+    private View.OnClickListener createOnClickListener(final TextView score, final int toAdd, final String player) {
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -270,6 +275,11 @@ public class MainActivity extends AppCompatActivity {
                     value -= 1;
                 }
                 score.setText(String.format("%s", value));
+                if (player.equals(Preferences.GREEN_PLAYER)) {
+                    Preferences.greenScore = value;
+                } else {
+                    Preferences.redScore = value;
+                }
             }
 
         };

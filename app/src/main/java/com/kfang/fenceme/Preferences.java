@@ -14,8 +14,12 @@ public class Preferences {
     public static final String MAX_BRIGHTNESS = "maximum_brightness";
     static final String BOUT_LENGTH_POINTS = "bout_length_points";
     static final String BOUT_LENGTH_MINUTES = "bout_length_time";
+    static final String RED_PLAYER = "player.red";
+    static final String GREEN_PLAYER = "player.green";
     static final String DEFAULT_POINTS = "5";
     static final String DEFAULT_MINUTES = "3";
+    static int redScore = 0;
+    static int greenScore = 0;
     static String redName;
     static String greenName;
     private static SharedPreferences prefs;
