@@ -77,8 +77,9 @@ public class MainActivity extends AppCompatActivity {
         MobileAds.initialize(getApplicationContext(), "ca-app-pub-6647745358935231~7845605907");
 
         AdView mAdView = (AdView) findViewById(R.id.adView);
+        //AdRequest adRequest = new AdRequest.Builder().addTestDevice("1E4125EDAE1F61B3A38F14662D5C93C7").build();
         AdRequest adRequest = new AdRequest.Builder().build();
-        //mAdView.loadAd(adRequest);
+        mAdView.loadAd(adRequest);
         /*
         Intent serviceIntent =
                 new Intent("com.android.vending.billing.InAppBillingService.BIND");

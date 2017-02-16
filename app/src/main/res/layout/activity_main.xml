@@ -26,15 +26,14 @@
             android:fontFamily="sans-serif-light"
             android:lines="1"
             android:onClick="changeRedName"
-            android:paddingTop="12dp"
+            android:paddingTop="6dp"
             android:text="@string/red_side"
             android:textColor="@color/colorNames"
             android:textSize="@dimen/player_name_size" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="8dp">
+            android:layout_height="match_parent">
 
             <Button
                 android:id="@+id/minus_red"
@@ -144,15 +143,14 @@
             android:fontFamily="sans-serif-light"
             android:lines="1"
             android:onClick="changeRedName"
-            android:paddingTop="12dp"
+            android:paddingTop="6dp"
             android:text="@string/green_side"
             android:textColor="@color/colorNames"
             android:textSize="@dimen/player_name_size" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="8dp">
+            android:layout_height="match_parent">
 
             <Button
                 android:id="@+id/minus_green"
