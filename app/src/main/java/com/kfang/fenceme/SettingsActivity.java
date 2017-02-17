@@ -12,46 +12,19 @@ import android.view.MenuItem;
  */
 
 public class SettingsActivity extends AppCompatActivity {
+
+    static SharedPreferences prefs;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        prefs = PreferenceManager.getDefaultSharedPreferences(this);
         super.onCreate(savedInstanceState);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
         getFragmentManager().beginTransaction().replace(android.R.id.content, new MyPreferenceFragment()).commit();
     }
 
-
-
-    public static class MyPreferenceFragment extends PreferenceFragment {
-        SharedPreferences prefs;
-        @Override
-        public void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            addPreferencesFromResource(R.xml.preferences);
-            final NumberPickerPreference mBoutMinutesPreference = (NumberPickerPreference) findPreference(Preferences.BOUT_LENGTH_MINUTES);
-            final NumberPickerPreference mBoutPointsPreference = (NumberPickerPreference) findPreference(Preferences.BOUT_LENGTH_POINTS);
-
-                    SharedPreferences.OnSharedPreferenceChangeListener spChanged = new
-                    SharedPreferences.OnSharedPreferenceChangeListener() {
-                        @Override
-                        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
-                                                              String key) {
-                            SharedPreferences.Editor settingsEditor = prefs.edit();
-                            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-                            switch (key) {
-                                case Preferences.BOUT_LENGTH_MINUTES:
-                                    settingsEditor.putInt(Preferences.BOUT_LENGTH_MINUTES, mBoutMinutesPreference.getValue());
-                                    settingsEditor.apply();
-                                    break;
-                                case Preferences.BOUT_LENGTH_POINTS:
-                                    settingsEditor.putInt(Preferences.BOUT_LENGTH_POINTS, mBoutPointsPreference.getValue());
-                                    settingsEditor.apply();
-                                    break;
-                            }
-                        }
-                    };
-            prefs.registerOnSharedPreferenceChangeListener(spChanged);
-        }
-    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // handle arrow click here
@@ -59,6 +32,37 @@ public class SettingsActivity extends AppCompatActivity {
             finish(); // close this activity and return to preview activity (if there is any)
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public static class MyPreferenceFragment extends PreferenceFragment {
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            addPreferencesFromResource(R.xml.preferences);
+            //final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            final NumberPickerPreference mBoutMinutesPreference = (NumberPickerPreference) findPreference(Preferences.BOUT_LENGTH_MINUTES);
+            final NumberPickerPreference mBoutPointsPreference = (NumberPickerPreference) findPreference(Preferences.BOUT_LENGTH_POINTS);
+            final SharedPreferences.Editor settingsEditor = prefs.edit();
+
+                    SharedPreferences.OnSharedPreferenceChangeListener spChanged = new
+                    SharedPreferences.OnSharedPreferenceChangeListener() {
+                        @Override
+                        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
+                                                              String key) {
+                            switch (key) {
+                                case Preferences.BOUT_LENGTH_MINUTES:
+                                    settingsEditor.putInt(Preferences.BOUT_LENGTH_MINUTES, mBoutMinutesPreference.getValue());
+                                    break;
+                                case Preferences.BOUT_LENGTH_POINTS:
+                                    settingsEditor.putInt(Preferences.BOUT_LENGTH_POINTS, mBoutPointsPreference.getValue());
+                                    break;
+                            }
+
+                        }
+                    };
+            prefs.registerOnSharedPreferenceChangeListener(spChanged);
+            settingsEditor.apply();
+        }
     }
 
 

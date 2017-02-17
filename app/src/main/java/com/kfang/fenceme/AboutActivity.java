@@ -1,8 +1,12 @@
 package com.kfang.fenceme;
 
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 /*
  * Simple about page.
@@ -13,8 +17,17 @@ public class AboutActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.about);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+        TextView versionNumber = (TextView) findViewById(R.id.current_version);
+        try {
+            PackageInfo pinfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+            String versionName = pinfo.versionName;
+            versionNumber.setText(getResources().getText(R.string.current_version) + " " + versionName);
+        } catch (PackageManager.NameNotFoundException e) {
+            versionNumber.setVisibility(View.INVISIBLE);
+        }
     }
 
     @Override

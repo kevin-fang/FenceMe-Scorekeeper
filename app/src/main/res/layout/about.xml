@@ -8,11 +8,20 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="16dp"
-        android:text="@string/about_text" />
+        android:text="@string/about_text"
+        android:textSize="16sp" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="16dp"
         android:text="@string/icon_attributes" />
+
+    <TextView
+        android:id="@+id/current_version"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:text="@string/current_version" />
+
 </LinearLayout>

@@ -1,28 +1,19 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory android:title="Preferences">
+    <PreferenceCategory android:title="Bout Preferences">
 
-        <!-- <EditTextPreference
-            android:inputType="number"
-            android:selectAllOnFocus="true"
-            android:key="bout_length_points"
-            android:title="Maximum Points Per Bout" />
-
-        <EditTextPreference
-            android:inputType="number"
-            android:key="bout_length_time"
-            android:selectAllOnFocus="true"
-            android:title="Default Bout Length (minutes)" /> -->
 
         <com.kfang.fenceme.NumberPickerPreference
+            android:defaultValue="5"
             android:key="bout_length_points"
-            android:title="Maximum Points per Bout"
-            android:defaultValue="5"/>
+            android:summary="@string/change_point_summary"
+            android:title="Maximum Points per Bout" />
 
         <com.kfang.fenceme.NumberPickerPreference
+            android:defaultValue="3"
             android:key="bout_length_time"
-            android:title="Default Bout Length (minutes)"
-            android:defaultValue="3"/>
+            android:summary="@string/change_timer_summary"
+            android:title="Default Bout Length (minutes)" />
         <!--
         <CheckBoxPreference
             android:key="enable_alarm"
