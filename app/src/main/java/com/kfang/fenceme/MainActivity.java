@@ -7,7 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
-import android.content.SharedPreferences;
+import android.content.pm.ApplicationInfo;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
@@ -29,7 +29,6 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 
-import static com.kfang.fenceme.Preferences.getPointsPreference;
 import static com.kfang.fenceme.Preferences.greenName;
 import static com.kfang.fenceme.Preferences.redName;
 
@@ -78,7 +77,8 @@ public class MainActivity extends AppCompatActivity {
         mCurrentTime = Preferences.updateCurrentTime(mContext) * 60000;
 
         // set up ads, views, and BroadcastManagers
-        setupAds(true);
+        boolean isDebuggable = (0 != (getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE));
+        setupAds(isDebuggable);
         setViews();
         setUpBroadcastManagers();
         /*
@@ -333,8 +333,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         AlertDialog alertToShow = builder.create();
-        alertToShow.getWindow().setSoftInputMode(
-                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+        if (alertToShow.getWindow() != null) {
+            alertToShow.getWindow().setSoftInputMode(
+                    WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+        }
         alertToShow.show();
     }
 }
