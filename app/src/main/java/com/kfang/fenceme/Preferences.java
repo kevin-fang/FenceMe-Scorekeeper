@@ -2,6 +2,7 @@ package com.kfang.fenceme;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.preference.Preference;
 import android.preference.PreferenceManager;
 
 /**
@@ -16,26 +17,25 @@ public class Preferences {
     static final String BOUT_LENGTH_MINUTES = "bout_length_time";
     static final String RED_PLAYER = "player.red";
     static final String GREEN_PLAYER = "player.green";
-    static final String DEFAULT_POINTS = "5";
-    static final String DEFAULT_MINUTES = "3";
+    static final int DEFAULT_POINTS = 5;
+    static final int DEFAULT_MINUTES = 3;
     static int redScore = 0;
     static int greenScore = 0;
     static String redName;
     static String greenName;
     private static SharedPreferences prefs;
 
-    static int getIntPreference(Context context, String value, String defaultValue) {
+    static int getPointsPreference(Context context) {
         prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        return Integer.parseInt(prefs.getString(value, defaultValue));
+        return prefs.getInt(BOUT_LENGTH_POINTS, DEFAULT_POINTS);
     }
 
     static boolean getBoolPreference(Context context, String value, String defaultValue) {
-        prefs = PreferenceManager.getDefaultSharedPreferences(context);
         return prefs.getBoolean(value, true);
     }
 
     static int updateCurrentTime(Context context) {
         prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        return Integer.parseInt(prefs.getString(BOUT_LENGTH_MINUTES, DEFAULT_MINUTES));
+        return prefs.getInt(BOUT_LENGTH_MINUTES, DEFAULT_MINUTES);
     }
 }

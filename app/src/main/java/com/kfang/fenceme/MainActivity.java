@@ -29,6 +29,7 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 
+import static com.kfang.fenceme.Preferences.getPointsPreference;
 import static com.kfang.fenceme.Preferences.greenName;
 import static com.kfang.fenceme.Preferences.redName;
 
@@ -50,9 +51,10 @@ public class MainActivity extends AppCompatActivity {
     Button resetTimer;
     TextView greenScore;
     TextView redScore;
-    SharedPreferences prefs;
+
+    AdView mAdView;
     int maxNameLength = 20;
-    String mNoAdsPrice;
+    Context mContext;
 
     IInAppBillingService mService;
     ServiceConnection mServiceConn = new ServiceConnection() {
@@ -71,15 +73,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mContext = MainActivity.this;
         setContentView(R.layout.activity_main);
+        mCurrentTime = Preferences.updateCurrentTime(mContext) * 60000;
 
-        // set up ads and in app purchases
-        MobileAds.initialize(getApplicationContext(), "ca-app-pub-6647745358935231~7845605907");
-
-        AdView mAdView = (AdView) findViewById(R.id.adView);
-        //AdRequest adRequest = new AdRequest.Builder().addTestDevice("1E4125EDAE1F61B3A38F14662D5C93C7").build();
-        AdRequest adRequest = new AdRequest.Builder().build();
-        mAdView.loadAd(adRequest);
+        // set up ads, views, and BroadcastManagers
+        setupAds(true);
+        setViews();
+        setUpBroadcastManagers();
         /*
         Intent serviceIntent =
                 new Intent("com.android.vending.billing.InAppBillingService.BIND");
@@ -105,19 +106,10 @@ public class MainActivity extends AppCompatActivity {
         getInAppPurchases.start(); */
 
 
-        // set up views and broadcastmanagers
-        setViews();
-        /*
-        int orientation = getResources().getConfiguration().orientation;
-        View mDecorView = getWindow().getDecorView();
-        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            mDecorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
-                    | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
-        } else {
-            //code for landscape mode
-        }
-        */
 
+    }
+
+    private void setUpBroadcastManagers() {
         // LocalBroadcastManagers to deal with updating time and toggle button text intents.
         LocalBroadcastManager.getInstance(this).registerReceiver(
                 new BroadcastReceiver() {
@@ -160,10 +152,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setViews() {
+        // find name views and set correspondignly
         TextView redNameView = (TextView) findViewById(R.id.redSide);
         TextView greenNameView = (TextView) findViewById(R.id.greenSide);
-
-        //Toast.makeText(this, "red: " + redName + "green: " + greenName, Toast.LENGTH_SHORT).show();
 
         if (redName != null) {
             redNameView.setText(redName);
@@ -172,7 +163,6 @@ public class MainActivity extends AppCompatActivity {
             greenNameView.setText(greenName);
         }
 
-        //mCurrentTimePermanent = Preferences.updateCurrentTime(this) * 60000;
         // set textviews and buttons for scorekeeping
         redScore = (TextView) findViewById(R.id.red_score);
         greenScore = (TextView) findViewById(R.id.green_score);
@@ -199,6 +189,7 @@ public class MainActivity extends AppCompatActivity {
         resetTimer = (Button) findViewById(R.id.reset_timer);
         mCurrentTimer = (TextView) findViewById(R.id.timer);
 
+
         int seconds = (int) (mCurrentTime / 1000) % 60;
         //Toast.makeText(this, "seconds: " + mCurrentTime, Toast.LENGTH_SHORT).show();
         if (seconds < 10) {
@@ -224,6 +215,20 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void setupAds(boolean test) {
+        // set up ads and in app purchases
+        MobileAds.initialize(getApplicationContext(), "ca-app-pub-6647745358935231~7845605907");
+
+        mAdView = (AdView) findViewById(R.id.adView);
+        AdRequest adRequest;
+        if (test) {
+            adRequest = new AdRequest.Builder().addTestDevice("1E4125EDAE1F61B3A38F14662D5C93C7").build();
+        } else {
+            adRequest = new AdRequest.Builder().build();
+        }
+        mAdView.loadAd(adRequest);
     }
 
     @Override
@@ -270,7 +275,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String valueStr = score.getText().toString();
                 int value = Integer.parseInt(valueStr);
-                if (toAdd == TO_ADD && value < Preferences.getIntPreference(getApplicationContext(), Preferences.BOUT_LENGTH_POINTS, Preferences.DEFAULT_POINTS)) {
+                if (toAdd == TO_ADD && value < Preferences.getPointsPreference(mContext)) {
                     value += 1;
                 } else if (toAdd == TO_SUBTRACT && value > 0) {
                     value -= 1;
