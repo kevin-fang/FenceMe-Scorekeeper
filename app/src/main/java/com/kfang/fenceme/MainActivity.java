@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
-import android.content.pm.ApplicationInfo;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
@@ -77,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
         mCurrentTime = Preferences.updateCurrentTime(mContext) * 60000;
 
         // set up ads, views, and BroadcastManagers
-        boolean isDebuggable = (0 != (getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE));
+        boolean isDebuggable = BuildConfig.DEBUG;
         setupAds(isDebuggable);
         setViews();
         setUpBroadcastManagers();
