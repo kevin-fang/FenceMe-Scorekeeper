@@ -10,8 +10,11 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputFilter;
@@ -21,8 +24,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,6 +36,11 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 
+import java.util.ArrayList;
+import java.util.Random;
+
+import static android.R.id.list;
+import static com.kfang.fenceme.TimerService.SET_TIMER_INTENT;
 import static com.kfang.fenceme.Utility.greenName;
 import static com.kfang.fenceme.Utility.redName;
 
@@ -40,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
     public static final int TO_ADD = 1;
     public static final int TO_SUBTRACT = 0;
     public static long mCurrentTime;
+    static String[] mPreferenceTitles;
     public boolean noAds;
     protected Bundle skuDetails;
     Button mStartTimer;
@@ -52,13 +63,10 @@ public class MainActivity extends AppCompatActivity {
     Button resetTimer;
     TextView greenScore;
     TextView redScore;
-
     FragmentManager mFragmentManager = getSupportFragmentManager();
-
     AdView mAdView;
     int maxNameLength = 20;
     Context mContext;
-
     IInAppBillingService mService;
     ServiceConnection mServiceConn = new ServiceConnection() {
         @Override
@@ -72,6 +80,32 @@ public class MainActivity extends AppCompatActivity {
             mService = IInAppBillingService.Stub.asInterface(service);
         }
     };
+    private DrawerLayout mDrawerLayout;
+    private ListView mDrawerList;
+    private ActionBarDrawerToggle mDrawerToggle;
+
+    public static void makeTieBreaker(final Context context) {
+        Random r = new Random();
+        ArrayList<String> names = new ArrayList<>();
+        names.add(redName);
+        names.add(greenName);
+        String chosenName = names.get(r.nextInt(names.size()));
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("Tiebreaker");
+        builder.setMessage(chosenName + " has priority!");
+        builder.setPositiveButton("Start Tiebreaker", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Toast.makeText(context, "Starting priority session", Toast.LENGTH_SHORT).show();
+                mCurrentTime = 60000;
+                Intent setTimer = new Intent(context, TimerService.class);
+                setTimer.putExtra("TOGGLE", TimerService.SET_TIMER);
+                context.startService(setTimer);
+            }
+        });
+        builder.create().show();
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +119,11 @@ public class MainActivity extends AppCompatActivity {
         setupAds(isDebuggable);
         setViews();
         setUpBroadcastManagers();
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+
+        setupNavigation();
+
         /*
         Intent serviceIntent =
                 new Intent("com.android.vending.billing.InAppBillingService.BIND");
@@ -108,13 +147,49 @@ public class MainActivity extends AppCompatActivity {
         });
 
         getInAppPurchases.start(); */
+    }
 
+    public void setupNavigation() {
+        mPreferenceTitles = getResources().getStringArray(R.array.main_menu_array);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerList = (ListView) findViewById(R.id.left_drawer);
 
+        mDrawerList.setAdapter(new ArrayAdapter<>(this,
+                R.layout.drawer_list_item, mPreferenceTitles));
+
+        mDrawerList.setOnItemClickListener(new DrawerItemClickListener(this, mDrawerLayout, mDrawerList));
+
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
+                R.string.drawer_open, R.string.drawer_close) {
+
+            /**
+             * Called when a drawer has settled in a completely closed state.
+             */
+            public void onDrawerClosed(View view) {
+                super.onDrawerClosed(view);
+                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+            }
+
+            /**
+             * Called when a drawer has settled in a completely open state.
+             */
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+            }
+        };
+
+        mDrawerToggle.setDrawerIndicatorEnabled(true);
+
+        // Set the drawer toggle as the DrawerListener
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
+        getSupportActionBar().setHomeAsUpIndicator(mDrawerToggle.getDrawerArrowDrawable());
     }
 
     private void setUpBroadcastManagers() {
+        LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
         // LocalBroadcastManagers to deal with updating time and toggle button text intents.
-        LocalBroadcastManager.getInstance(this).registerReceiver(
+        lbm.registerReceiver(
                 new BroadcastReceiver() {
                     @Override
                     public void onReceive(Context context, Intent intent) {
@@ -130,7 +205,7 @@ public class MainActivity extends AppCompatActivity {
                 }, new IntentFilter(TimerService.UPDATE_TIME_INTENT)
         );
 
-        LocalBroadcastManager.getInstance(this).registerReceiver(
+        lbm.registerReceiver(
                 new BroadcastReceiver() {
                     @Override
                     public void onReceive(Context context, Intent intent) {
@@ -141,7 +216,7 @@ public class MainActivity extends AppCompatActivity {
                 }, new IntentFilter(TimerService.UPDATE_TOGGLE_BUTTON_INTENT)
         );
 
-        LocalBroadcastManager.getInstance(this).registerReceiver(
+        lbm.registerReceiver(
                 new BroadcastReceiver() {
                     @Override
                     public void onReceive(Context context, Intent intent) {
@@ -153,7 +228,7 @@ public class MainActivity extends AppCompatActivity {
                 }, new IntentFilter(TimerService.RESET_TIMER_INTENT)
         );
 
-        LocalBroadcastManager.getInstance(this).registerReceiver(
+        lbm.registerReceiver(
                 new BroadcastReceiver() {
                     @Override
                     public void onReceive(Context context, Intent intent) {
@@ -169,7 +244,7 @@ public class MainActivity extends AppCompatActivity {
                             mCurrentTimer.setText("" + minutes + ":" + seconds);
                         }
                     }
-                }, new IntentFilter(TimerService.SET_TIMER_INTENT)
+                }, new IntentFilter(SET_TIMER_INTENT)
         );
     }
 
@@ -276,6 +351,10 @@ public class MainActivity extends AppCompatActivity {
 
     // create activities for options menu selections
     public boolean onOptionsItemSelected(MenuItem item) {
+        // Activate the navigation drawer toggle
+        if (mDrawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
         switch (item.getItemId()) {
             case R.id.about:
                 startActivity(new Intent(this, AboutActivity.class));
@@ -283,9 +362,9 @@ public class MainActivity extends AppCompatActivity {
             case R.id.card:
                 startActivity(new Intent(this, CardPlayerActivity.class));
                 return true;
-            case R.id.settings:
+            /* case R.id.settings:
                 startActivity(new Intent(this, SettingsActivity.class));
-                return true;
+                return true; */
         }
         return super.onOptionsItemSelected(item);
     }

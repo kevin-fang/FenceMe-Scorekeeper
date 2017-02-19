@@ -14,14 +14,15 @@ public class Utility {
     public static final String MAX_BRIGHTNESS = "maximum_brightness";
     static final String BOUT_LENGTH_POINTS = "bout_length_points";
     static final String BOUT_LENGTH_MINUTES = "bout_length_time";
+    static final String RESET_BOUT_PREFERENCES = "reset_bout_length";
     static final String RED_PLAYER = "player.red";
     static final String GREEN_PLAYER = "player.green";
     static final int DEFAULT_POINTS = 5;
     static final int DEFAULT_MINUTES = 3;
     static int redScore = 0;
     static int greenScore = 0;
-    static String redName;
-    static String greenName;
+    static String redName = "Red";
+    static String greenName = "Green";
     private static SharedPreferences prefs;
 
     static int getPointsPreference(Context context) {

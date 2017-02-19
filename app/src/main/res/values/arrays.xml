@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="main_menu_array">
+        <item>Scorekeeper</item>
+        <item>Card a Player</item>
+        <item>Tiebreaker</item>
+        <item>Preferences</item>
+    </string-array>
+</resources>

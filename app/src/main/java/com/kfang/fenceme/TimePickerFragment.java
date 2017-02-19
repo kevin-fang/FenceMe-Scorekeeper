@@ -36,7 +36,7 @@ public class TimePickerFragment extends DialogFragment {
         final NumberPicker secondsPicker = (NumberPicker) pickerView.findViewById(R.id.seconds_picker);
 
         minutesPicker.setMinValue(0);
-        minutesPicker.setMaxValue(60);
+        minutesPicker.setMaxValue(59);
         minutesPicker.setValue((int) MainActivity.mCurrentTime / 1000 / 60);
         secondsPicker.setMaxValue(59);
         secondsPicker.setMinValue(0);

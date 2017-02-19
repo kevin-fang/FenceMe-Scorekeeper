@@ -14,6 +14,11 @@
             android:key="bout_length_time"
             android:summary="@string/change_timer_summary"
             android:title="@string/default_bout_length" />
+
+        <Preference
+            android:key="reset_bout_length"
+            android:summary="@string/reset_preferences"
+            android:title="Reset Defaults" />
         <!--
         <CheckBoxPreference
             android:key="enable_alarm"

@@ -2,10 +2,12 @@ package com.kfang.fenceme;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 /**
  * Preference Activity
@@ -39,10 +41,23 @@ public class SettingsActivity extends AppCompatActivity {
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.preferences);
+            prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            final SharedPreferences.Editor settingsEditor = prefs.edit();
             //final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
             final NumberPickerPreference mBoutMinutesPreference = (NumberPickerPreference) findPreference(Utility.BOUT_LENGTH_MINUTES);
             final NumberPickerPreference mBoutPointsPreference = (NumberPickerPreference) findPreference(Utility.BOUT_LENGTH_POINTS);
-            final SharedPreferences.Editor settingsEditor = prefs.edit();
+            final Preference resetPreferences = findPreference(Utility.RESET_BOUT_PREFERENCES);
+
+            resetPreferences.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    mBoutMinutesPreference.setValue(Utility.DEFAULT_MINUTES);
+                    mBoutPointsPreference.setValue(Utility.DEFAULT_POINTS);
+                    settingsEditor.putInt(Utility.BOUT_LENGTH_POINTS, Utility.DEFAULT_POINTS);
+                    settingsEditor.putInt(Utility.BOUT_LENGTH_MINUTES, Utility.DEFAULT_MINUTES);
+                    return true;
+                }
+            });
 
             SharedPreferences.OnSharedPreferenceChangeListener spChanged = new
                     SharedPreferences.OnSharedPreferenceChangeListener() {
