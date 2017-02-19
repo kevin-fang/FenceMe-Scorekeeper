@@ -8,6 +8,8 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
+import android.widget.Toast;
 
 import static com.kfang.fenceme.MainActivity.mCurrentTime;
 
@@ -20,11 +22,13 @@ public class TimerService extends Service {
     // constants used for signaling tents
     public static int TOGGLE_TIMER = 3;
     public static int RESET_TIMER = 4;
+    public static int SET_TIMER = 5;
     public static String MINUTES = "minutes";
     public static String SECONDS = "seconds";
     public static String UPDATE_TIME_INTENT = "com.kfang.fenceme.updatetime";
     public static String UPDATE_TOGGLE_BUTTON_INTENT = "com.kfang.fenceme.updatetimebutton";
     public static String RESET_TIMER_INTENT = "com.kfang.fenceme.resettimer";
+    public static String SET_TIMER_INTENT = "com.kfang.fenceme.settimer";
     public static String UPDATE_BUTTON_TEXT = "to_update";
     public static boolean mTimerRunning = false;
     // keep track of start times and end times
@@ -83,7 +87,8 @@ public class TimerService extends Service {
         try {
             toggleOrReset = i.getIntExtra("TOGGLE", TOGGLE_TIMER);
         } catch (NullPointerException e) {
-            toggleOrReset = RESET_TIMER; // bugfix - when starting the app, onStartCommand will run. Reset the timer when the pap will start.
+
+            toggleOrReset = RESET_TIMER; // bugfix - when starting the app, onStartCommand will run. Reset the timer when the app will start.
         }
         if (toggleOrReset == TOGGLE_TIMER) { // toggle the timer.
             if (!mTimerRunning) {
@@ -108,6 +113,11 @@ public class TimerService extends Service {
             if (mAlarmTone != null && mAlarmTone.isPlaying()) { // stop the alarm if it is currently playing.
                 mAlarmTone.stop();
             }
+        } else if (toggleOrReset == SET_TIMER) { // set timer to value
+            mHandler.removeCallbacks(mUpdateTimeTask);
+            Log.d("MCURERENTTIME", "In TimerService: " + mCurrentTime);
+            Intent intent = new Intent(SET_TIMER_INTENT);
+            LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
         }
 
         return START_STICKY;

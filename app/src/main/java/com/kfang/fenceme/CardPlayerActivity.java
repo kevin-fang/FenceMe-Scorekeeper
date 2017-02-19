@@ -1,7 +1,10 @@
 package com.kfang.fenceme;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
 
@@ -38,4 +41,5 @@ public class CardPlayerActivity extends Activity {
     public void dismissCard(View v) {
         finish();
     }
+
 }

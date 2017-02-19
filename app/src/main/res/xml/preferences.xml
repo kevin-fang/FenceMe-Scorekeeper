@@ -7,13 +7,13 @@
             android:defaultValue="5"
             android:key="bout_length_points"
             android:summary="@string/change_point_summary"
-            android:title="Maximum Points per Bout" />
+            android:title="@string/max_points_per_bout" />
 
         <com.kfang.fenceme.NumberPickerPreference
             android:defaultValue="3"
             android:key="bout_length_time"
             android:summary="@string/change_timer_summary"
-            android:title="Default Bout Length (minutes)" />
+            android:title="@string/default_bout_length" />
         <!--
         <CheckBoxPreference
             android:key="enable_alarm"

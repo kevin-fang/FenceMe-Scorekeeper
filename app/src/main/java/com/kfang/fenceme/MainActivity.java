@@ -9,11 +9,14 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputFilter;
 import android.text.InputType;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -22,6 +25,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.vending.billing.IInAppBillingService;
 import com.google.android.gms.ads.AdRequest;
@@ -36,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static final int TO_ADD = 1;
     public static final int TO_SUBTRACT = 0;
-    public static long mCurrentTime = 180000;
+    public static long mCurrentTime;
     public boolean noAds;
     protected Bundle skuDetails;
     Button mStartTimer;
@@ -49,6 +53,8 @@ public class MainActivity extends AppCompatActivity {
     Button resetTimer;
     TextView greenScore;
     TextView redScore;
+
+    FragmentManager mFragmentManager = getSupportFragmentManager();
 
     AdView mAdView;
     int maxNameLength = 20;
@@ -147,6 +153,25 @@ public class MainActivity extends AppCompatActivity {
                         mCurrentTimer.setText("" + minutes + ":00");
                     }
                 }, new IntentFilter(TimerService.RESET_TIMER_INTENT)
+        );
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(
+                new BroadcastReceiver() {
+                    @Override
+                    public void onReceive(Context context, Intent intent) {
+
+                        // set the text in the textview to corresponding minutes and seconds
+                        int minutes = (int) mCurrentTime / 1000 / 60;
+                        int seconds = (int) mCurrentTime / 1000 % 60;
+
+                        //Log.d("MCURRENTTIME", "In Intent: " + mCurrentTime);
+                        if (seconds < 10) {
+                            mCurrentTimer.setText("" + minutes + ":0" + seconds);
+                        } else {
+                            mCurrentTimer.setText("" + minutes + ":" + seconds);
+                        }
+                    }
+                }, new IntentFilter(TimerService.SET_TIMER_INTENT)
         );
     }
 
@@ -265,6 +290,15 @@ public class MainActivity extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void setTimer(View v) {
+        if (TimerService.mTimerRunning) {
+            Toast.makeText(getApplicationContext(), "Pause timer before changing time", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        DialogFragment newFragment = TimePickerFragment.newInstance(R.string.set_timer);
+        newFragment.show(mFragmentManager, "dialog");
     }
 
     // create an on click listener for each of the plus/minus buttons.
