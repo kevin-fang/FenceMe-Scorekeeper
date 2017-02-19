@@ -12,6 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clickable="true"
+        android:isScrollContainer="false"
         android:orientation="vertical"
         android:padding="8dp">
 
@@ -79,6 +80,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="2dp"
+            android:isScrollContainer="false"
             ads:adSize="BANNER"
             ads:adUnitId="@string/banner_ad_unit_id">
 
@@ -92,6 +94,7 @@
             android:clickable="true"
             android:fontFamily="sans-serif-light"
             android:gravity="center"
+            android:isScrollContainer="false"
             android:onClick="setTimer"
             android:text="@string/full_time"
             android:textSize="@dimen/timer_size" />
@@ -145,6 +148,7 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:background="@drawable/layout_green"
+            android:isScrollContainer="false"
             android:orientation="vertical">
 
             <TextView
