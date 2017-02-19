@@ -1,183 +1,235 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:ads="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_main"
+    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:baselineAligned="false"
-    android:padding="4dp"
     tools:context="com.kfang.fenceme.MainActivity">
 
-    <LinearLayout
-        android:layout_width="0dp"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:ads="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/activity_main"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1.1"
-        android:background="@drawable/layout_red"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/redSide"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:clickable="true"
-            android:ellipsize="end"
-            android:fontFamily="sans-serif-light"
-            android:lines="1"
-            android:onClick="changeRedName"
-            android:paddingTop="12dp"
-            android:text="@string/red_side"
-            android:textColor="@color/colorNames"
-            android:textSize="@dimen/player_name_size" />
-
-        <Button
-            android:id="@+id/plus_red"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="15dp"
-            android:fontFamily="sans-serif-light"
-            android:text="@string/add_point"
-            android:textSize="@dimen/button_text_size" />
-
-        <TextView
-            android:id="@+id/red_score"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="@string/no_score"
-            android:textSize="@dimen/score_text_size" />
-
-        <Button
-            android:id="@+id/minus_red"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:fontFamily="sans-serif-light"
-            android:text="@string/subtract_point"
-            android:textSize="@dimen/button_text_size" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="2.3"
-        android:orientation="vertical">
-
-        <com.google.android.gms.ads.AdView
-            android:id="@+id/adView"
-            android:layout_width="320dp"
-            android:layout_height="50dp"
-            android:layout_gravity="center_horizontal"
-            ads:adSize="BANNER"
-            ads:adUnitId="@string/banner_ad_unit_id">
-
-        </com.google.android.gms.ads.AdView>
-
-        <TextView
-            android:id="@+id/timer"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:clickable="true"
-            android:onClick="setTimer"
-            android:layout_gravity="center"
-            android:fontFamily="sans-serif-light"
-            android:text="@string/full_time"
-            android:textSize="@dimen/timer_size_landscape" />
-
-
-        <Button
-            android:id="@+id/start_timer"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="@string/start_timer" />
+        android:baselineAligned="false"
+        android:padding="4dp"
+        tools:context="com.kfang.fenceme.MainActivity">
 
         <LinearLayout
-            style="?android:attr/buttonBarStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center">
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.1"
+            android:background="@drawable/layout_red"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/redSide"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:clickable="true"
+                android:ellipsize="end"
+                android:fontFamily="sans-serif-light"
+                android:lines="1"
+                android:onClick="changeRedName"
+                android:paddingTop="12dp"
+                android:text="@string/red_side"
+                android:textColor="@color/colorNames"
+                android:textSize="@dimen/player_name_size" />
 
             <Button
-                android:id="@+id/reset_timer"
-                style="?android:attr/buttonBarButtonStyle"
+                android:id="@+id/plus_red"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_weight=".35"
-                android:text="@string/reset_timer"
-                android:textColor="@color/primary_text" />
+                android:layout_marginTop="15dp"
+                android:fontFamily="sans-serif-light"
+                android:text="@string/add_point"
+                android:textSize="@dimen/button_text_size" />
 
-            <View
-                android:layout_width="2px"
-                android:layout_height="fill_parent"
-                android:layout_marginBottom="4dp"
-                android:layout_marginTop="4dp"
-                android:background="#90909090" />
+            <TextView
+                android:id="@+id/red_score"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/no_score"
+                android:textSize="@dimen/score_text_size" />
 
             <Button
-                android:id="@+id/reset_scores"
-                style="?android:attr/buttonBarButtonStyle"
+                android:id="@+id/minus_red"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_weight=".35"
-                android:onClick="resetScores"
-                android:text="@string/reset_scores"
-                android:textColor="@color/primary_text" />
+                android:fontFamily="sans-serif-light"
+                android:text="@string/subtract_point"
+                android:textSize="@dimen/button_text_size" />
         </LinearLayout>
 
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2.3"
+            android:orientation="vertical">
+
+            <com.google.android.gms.ads.AdView
+                android:id="@+id/adView"
+                android:layout_width="320dp"
+                android:layout_height="50dp"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center_horizontal"
+                ads:adSize="BANNER"
+                ads:adUnitId="@string/banner_ad_unit_id">
+
+            </com.google.android.gms.ads.AdView>
+
+            <TextView
+                android:id="@+id/timer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center"
+                android:clickable="true"
+                android:fontFamily="sans-serif-light"
+                android:onClick="setTimer"
+                android:text="@string/full_time"
+                android:textSize="@dimen/timer_size_landscape" />
+
+
+            <Button
+                android:id="@+id/start_timer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/reset_bar"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center"
+                android:text="@string/start_timer" />
+
+            <LinearLayout
+                android:id="@id/reset_bar"
+                style="?android:attr/buttonBarStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center">
+
+                <Button
+                    android:id="@+id/reset_timer"
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight=".35"
+                    android:text="@string/reset_timer"
+                    android:textColor="@color/primary_text" />
+
+                <View
+                    android:layout_width="2px"
+                    android:layout_height="fill_parent"
+                    android:layout_marginBottom="4dp"
+                    android:layout_marginTop="4dp"
+                    android:background="#90909090" />
+
+                <Button
+                    android:id="@+id/reset_scores"
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight=".35"
+                    android:onClick="resetScores"
+                    android:text="@string/reset_scores"
+                    android:textColor="@color/primary_text" />
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.1"
+            android:background="@drawable/layout_green"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/greenSide"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:clickable="true"
+                android:ellipsize="end"
+                android:fontFamily="sans-serif-light"
+                android:lines="1"
+                android:onClick="changeGreenName"
+                android:paddingTop="12dp"
+                android:text="@string/green_side"
+                android:textColor="@color/colorNames"
+                android:textSize="@dimen/player_name_size" />
+
+            <Button
+                android:id="@+id/plus_green"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="15dp"
+                android:fontFamily="sans-serif-light"
+                android:text="@string/add_point"
+                android:textSize="@dimen/button_text_size" />
+
+            <TextView
+                android:id="@+id/green_score"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/no_score"
+                android:textSize="@dimen/score_text_size" />
+
+            <Button
+                android:id="@+id/minus_green"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:fontFamily="sans-serif-light"
+                android:text="@string/subtract_point"
+                android:textSize="@dimen/button_text_size" />
+        </LinearLayout>
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="0dp"
+    <android.support.design.widget.NavigationView
+        android:id="@+id/left_drawer"
+        android:layout_width="240dp"
         android:layout_height="match_parent"
-        android:layout_weight="1.1"
-        android:background="@drawable/layout_green"
-        android:orientation="vertical">
+        android:layout_gravity="start"
+        android:background="@android:color/white"
+        android:choiceMode="singleChoice"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="0dp"
+        android:paddingBottom="24dp"
+        android:paddingTop="24dp"
+        android:theme="@style/NavigationViewStyle">
 
-        <TextView
-            android:id="@+id/greenSide"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:clickable="true"
-            android:ellipsize="end"
-            android:fontFamily="sans-serif-light"
-            android:lines="1"
-            android:onClick="changeGreenName"
-            android:paddingTop="12dp"
-            android:text="@string/green_side"
-            android:textColor="@color/colorNames"
-            android:textSize="@dimen/player_name_size" />
-
-        <Button
-            android:id="@+id/plus_green"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="15dp"
-            android:fontFamily="sans-serif-light"
-            android:text="@string/add_point"
-            android:textSize="@dimen/button_text_size" />
-
-        <TextView
-            android:id="@+id/green_score"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="@string/no_score"
-            android:textSize="@dimen/score_text_size" />
+            android:layout_gravity="bottom"
+            android:paddingEnd="12dp"
+            android:paddingStart="12dp">
 
-        <Button
-            android:id="@+id/minus_green"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:fontFamily="sans-serif-light"
-            android:text="@string/subtract_point"
-            android:textSize="@dimen/button_text_size" />
-    </LinearLayout>
-</LinearLayout>
+            <TextView
+                android:id="@+id/settings"
+                android:layout_width="wrap_content"
+                android:layout_height="24dp"
+                android:layout_gravity="center_vertical"
+                android:clickable="true"
+                android:drawablePadding="8dp"
+                android:drawableStart="@drawable/settings_nav"
+                android:gravity="center_vertical"
+                android:onClick="launchSettings"
+                android:text="@string/settings" />
+        </LinearLayout>
+    </android.support.design.widget.NavigationView>
+</android.support.v4.widget.DrawerLayout>
