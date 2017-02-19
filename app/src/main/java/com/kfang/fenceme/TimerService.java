@@ -9,7 +9,6 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
-import android.widget.Toast;
 
 import static com.kfang.fenceme.MainActivity.mCurrentTime;
 
@@ -60,6 +59,7 @@ public class TimerService extends Service {
             }
         }
     };
+
     @Override
     public IBinder onBind(Intent i) {
         return null;

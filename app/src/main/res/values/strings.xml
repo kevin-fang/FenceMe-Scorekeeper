@@ -26,7 +26,7 @@
     <string name="alarm_at_end">Timer alarm</string>
     <string name="alarm_end_desc">Check this box to enable an alarm at the end of each bout timer</string>
     <string name="max_points_per_bout">Maximum Points in Bout</string>
-    <string name="default_bout_length">Default Bout Length</string>
+    <string name="default_bout_length">Default Bout Length (minutes)</string>
     <string name="maximum_brightness">Maximum Brightness when Displaying Cards</string>
     <string name="maximum_brightness_desc">Check this box to set brightness to max when giving out red/yellow/black cards</string>
     <string name="share_app">Share</string>

@@ -2,14 +2,13 @@ package com.kfang.fenceme;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.preference.Preference;
 import android.preference.PreferenceManager;
 
 /**
  * Class to get preferences.
  */
 
-public class Preferences {
+public class Utility {
 
     public static final String ALARM_AT_END = "enable_alarm";
     public static final String MAX_BRIGHTNESS = "maximum_brightness";

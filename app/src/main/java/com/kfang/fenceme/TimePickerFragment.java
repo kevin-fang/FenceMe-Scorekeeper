@@ -10,7 +10,6 @@ import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.NumberPicker;
-import android.widget.Toast;
 
 /**
  * Time Picker Fragment for setting timer
@@ -18,6 +17,14 @@ import android.widget.Toast;
 
 
 public class TimePickerFragment extends DialogFragment {
+    public static TimePickerFragment newInstance(int title) {
+        TimePickerFragment fragment = new TimePickerFragment();
+        Bundle args = new Bundle();
+        args.putInt("title", title);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -58,14 +65,6 @@ public class TimePickerFragment extends DialogFragment {
                 });
 
         return builder.create();
-    }
-
-    public static TimePickerFragment newInstance(int title) {
-        TimePickerFragment fragment = new TimePickerFragment();
-        Bundle args = new Bundle();
-        args.putInt("title", title);
-        fragment.setArguments(args);
-        return fragment;
     }
 
     public void setTimer(int minutes, int seconds) {

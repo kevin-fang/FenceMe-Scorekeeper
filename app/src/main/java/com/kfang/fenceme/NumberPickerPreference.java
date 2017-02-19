@@ -66,7 +66,7 @@ public class NumberPickerPreference extends DialogPreference {
 
     @Override
     protected Object onGetDefaultValue(TypedArray a, int index) {
-        return a.getInt(index, Preferences.DEFAULT_POINTS);
+        return a.getInt(index, Utility.DEFAULT_POINTS);
     }
 
     @Override
@@ -74,13 +74,13 @@ public class NumberPickerPreference extends DialogPreference {
         setValue(restorePersistedValue ? getPersistedInt(MIN_VALUE) : (Integer) defaultValue);
     }
 
+    public int getValue() {
+        return this.value;
+    }
+
     public void setValue(int value) {
         this.value = value;
         persistInt(this.value);
-    }
-
-    public int getValue() {
-        return this.value;
     }
 
 }

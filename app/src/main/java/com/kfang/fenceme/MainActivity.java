@@ -16,7 +16,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputFilter;
 import android.text.InputType;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -32,8 +31,8 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 
-import static com.kfang.fenceme.Preferences.greenName;
-import static com.kfang.fenceme.Preferences.redName;
+import static com.kfang.fenceme.Utility.greenName;
+import static com.kfang.fenceme.Utility.redName;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -79,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         mContext = MainActivity.this;
         setContentView(R.layout.activity_main);
-        mCurrentTime = Preferences.updateCurrentTime(mContext) * 60000;
+        mCurrentTime = Utility.updateCurrentTime(mContext) * 60000;
 
         // set up ads, views, and BroadcastManagers
         boolean isDebuggable = BuildConfig.DEBUG;
@@ -109,7 +108,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
         getInAppPurchases.start(); */
-
 
 
     }
@@ -148,7 +146,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onReceive(Context context, Intent intent) {
                         // set the text in the textview to corresponding minutes and seconds
-                        int minutes = Preferences.updateCurrentTime(getApplicationContext());
+                        int minutes = Utility.updateCurrentTime(getApplicationContext());
                         mCurrentTime = minutes * 60000;
                         mCurrentTimer.setText("" + minutes + ":00");
                     }
@@ -196,14 +194,14 @@ public class MainActivity extends AppCompatActivity {
         subtractGreen = (Button) findViewById(R.id.minus_green);
 
         // set values to redScore and greenScore
-        redScore.setText(String.valueOf(Preferences.redScore));
-        greenScore.setText(String.valueOf(Preferences.greenScore));
+        redScore.setText(String.valueOf(Utility.redScore));
+        greenScore.setText(String.valueOf(Utility.greenScore));
 
         // set onclickListeners for buttons
-        addRed.setOnClickListener(createOnClickListener(redScore, TO_ADD, Preferences.RED_PLAYER));
-        subtractRed.setOnClickListener(createOnClickListener(redScore, TO_SUBTRACT, Preferences.RED_PLAYER));
-        addGreen.setOnClickListener(createOnClickListener(greenScore, TO_ADD, Preferences.GREEN_PLAYER));
-        subtractGreen.setOnClickListener(createOnClickListener(greenScore, TO_SUBTRACT, Preferences.GREEN_PLAYER));
+        addRed.setOnClickListener(createOnClickListener(redScore, TO_ADD, Utility.RED_PLAYER));
+        subtractRed.setOnClickListener(createOnClickListener(redScore, TO_SUBTRACT, Utility.RED_PLAYER));
+        addGreen.setOnClickListener(createOnClickListener(greenScore, TO_ADD, Utility.GREEN_PLAYER));
+        subtractGreen.setOnClickListener(createOnClickListener(greenScore, TO_SUBTRACT, Utility.GREEN_PLAYER));
 
         // set textviews and buttons for timekeeping
         mStartTimer = (Button) findViewById(R.id.start_timer);
@@ -308,16 +306,16 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String valueStr = score.getText().toString();
                 int value = Integer.parseInt(valueStr);
-                if (toAdd == TO_ADD && value < Preferences.getPointsPreference(mContext)) {
+                if (toAdd == TO_ADD && value < Utility.getPointsPreference(mContext)) {
                     value += 1;
                 } else if (toAdd == TO_SUBTRACT && value > 0) {
                     value -= 1;
                 }
                 score.setText(String.format("%s", value));
-                if (player.equals(Preferences.GREEN_PLAYER)) {
-                    Preferences.greenScore = value;
+                if (player.equals(Utility.GREEN_PLAYER)) {
+                    Utility.greenScore = value;
                 } else {
-                    Preferences.redScore = value;
+                    Utility.redScore = value;
                 }
             }
 

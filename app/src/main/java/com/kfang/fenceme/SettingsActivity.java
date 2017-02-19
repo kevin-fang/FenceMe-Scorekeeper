@@ -40,21 +40,21 @@ public class SettingsActivity extends AppCompatActivity {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.preferences);
             //final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-            final NumberPickerPreference mBoutMinutesPreference = (NumberPickerPreference) findPreference(Preferences.BOUT_LENGTH_MINUTES);
-            final NumberPickerPreference mBoutPointsPreference = (NumberPickerPreference) findPreference(Preferences.BOUT_LENGTH_POINTS);
+            final NumberPickerPreference mBoutMinutesPreference = (NumberPickerPreference) findPreference(Utility.BOUT_LENGTH_MINUTES);
+            final NumberPickerPreference mBoutPointsPreference = (NumberPickerPreference) findPreference(Utility.BOUT_LENGTH_POINTS);
             final SharedPreferences.Editor settingsEditor = prefs.edit();
 
-                    SharedPreferences.OnSharedPreferenceChangeListener spChanged = new
+            SharedPreferences.OnSharedPreferenceChangeListener spChanged = new
                     SharedPreferences.OnSharedPreferenceChangeListener() {
                         @Override
                         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
                                                               String key) {
                             switch (key) {
-                                case Preferences.BOUT_LENGTH_MINUTES:
-                                    settingsEditor.putInt(Preferences.BOUT_LENGTH_MINUTES, mBoutMinutesPreference.getValue());
+                                case Utility.BOUT_LENGTH_MINUTES:
+                                    settingsEditor.putInt(Utility.BOUT_LENGTH_MINUTES, mBoutMinutesPreference.getValue());
                                     break;
-                                case Preferences.BOUT_LENGTH_POINTS:
-                                    settingsEditor.putInt(Preferences.BOUT_LENGTH_POINTS, mBoutPointsPreference.getValue());
+                                case Utility.BOUT_LENGTH_POINTS:
+                                    settingsEditor.putInt(Utility.BOUT_LENGTH_POINTS, mBoutPointsPreference.getValue());
                                     break;
                             }
 
