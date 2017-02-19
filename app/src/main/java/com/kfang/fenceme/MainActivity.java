@@ -9,6 +9,9 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.preference.PreferenceFragment;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -19,14 +22,17 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputFilter;
 import android.text.InputType;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.HeaderViewListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -81,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
         }
     };
     private DrawerLayout mDrawerLayout;
-    private ListView mDrawerList;
+    private NavigationView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
 
     public static void makeTieBreaker(final Context context) {
@@ -119,7 +125,9 @@ public class MainActivity extends AppCompatActivity {
         setupAds(isDebuggable);
         setViews();
         setUpBroadcastManagers();
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
         getSupportActionBar().setHomeButtonEnabled(true);
 
         setupNavigation();
@@ -152,12 +160,27 @@ public class MainActivity extends AppCompatActivity {
     public void setupNavigation() {
         mPreferenceTitles = getResources().getStringArray(R.array.main_menu_array);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerList = (ListView) findViewById(R.id.left_drawer);
+        mDrawerList = (NavigationView) findViewById(R.id.left_drawer);
 
-        mDrawerList.setAdapter(new ArrayAdapter<>(this,
-                R.layout.drawer_list_item, mPreferenceTitles));
+        /* mDrawerList.setAdapter(new ArrayAdapter<>(this,
+                R.layout.drawer_list_item, mPreferenceTitles)); */
 
-        mDrawerList.setOnItemClickListener(new DrawerItemClickListener(this, mDrawerLayout, mDrawerList));
+        mDrawerList.setNavigationItemSelectedListener(new DrawerItemClickListener(this, mDrawerLayout));
+
+        Menu menu = mDrawerList.getMenu();
+        for (String preferenceTitle : mPreferenceTitles) {
+            menu.add(preferenceTitle);
+        }
+
+        for (int i = 0, count = mDrawerList.getChildCount(); i < count; i++) {
+            final View child = mDrawerList.getChildAt(i);
+            if (child != null && child instanceof ListView) {
+                final ListView menuView = (ListView) child;
+                final HeaderViewListAdapter adapter = (HeaderViewListAdapter) menuView.getAdapter();
+                final BaseAdapter wrapped = (BaseAdapter) adapter.getWrappedAdapter();
+                wrapped.notifyDataSetChanged();
+            }
+        }
 
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
                 R.string.drawer_open, R.string.drawer_close) {
@@ -174,16 +197,32 @@ public class MainActivity extends AppCompatActivity {
              * Called when a drawer has settled in a completely open state.
              */
             public void onDrawerOpened(View drawerView) {
+                mDrawerList.bringToFront();
+                mDrawerLayout.requestLayout();
                 super.onDrawerOpened(drawerView);
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
         };
 
         mDrawerToggle.setDrawerIndicatorEnabled(true);
-
+        mDrawerToggle.syncState();
         // Set the drawer toggle as the DrawerListener
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
-        getSupportActionBar().setHomeAsUpIndicator(mDrawerToggle.getDrawerArrowDrawable());
+        mDrawerLayout.addDrawerListener(mDrawerToggle);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setHomeAsUpIndicator(mDrawerToggle.getDrawerArrowDrawable());
+        }
+    }
+
+    public void launchSettings(View v) {
+        mDrawerLayout.closeDrawers();
+        PreferenceFragment fragment = new SettingsActivity.MyPreferenceFragment();
+
+        android.app.FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.popBackStack();
+        fragmentManager.beginTransaction()
+                .add(R.id.content_frame, fragment)
+                .addToBackStack(null)
+                .commit();
     }
 
     private void setUpBroadcastManagers() {

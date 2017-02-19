@@ -197,7 +197,7 @@
         </RelativeLayout>
     </LinearLayout>
 
-    <ListView
+    <android.support.design.widget.NavigationView
         android:id="@+id/left_drawer"
         android:layout_width="240dp"
         android:layout_height="match_parent"
@@ -207,6 +207,28 @@
         android:divider="@android:color/transparent"
         android:dividerHeight="0dp"
         android:paddingBottom="24dp"
-        android:paddingTop="24dp" />
+        android:paddingTop="24dp"
+        android:theme="@style/NavigationViewStyle">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:paddingEnd="12dp"
+            android:paddingStart="12dp">
+
+            <TextView
+                android:id="@+id/settings"
+                android:layout_width="wrap_content"
+                android:layout_height="24dp"
+                android:layout_gravity="center_vertical"
+                android:clickable="true"
+                android:drawablePadding="8dp"
+                android:drawableStart="@drawable/settings_nav"
+                android:gravity="center_vertical"
+                android:onClick="launchSettings"
+                android:text="@string/settings" />
+        </LinearLayout>
+    </android.support.design.widget.NavigationView>
 
 </android.support.v4.widget.DrawerLayout>

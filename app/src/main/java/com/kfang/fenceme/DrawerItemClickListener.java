@@ -5,66 +5,60 @@ import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.preference.PreferenceFragment;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 /**
  * Drawer Item CLick Listener
  */
 
-public class DrawerItemClickListener implements ListView.OnItemClickListener {
-    static String START_SETTINGS = "com.kfang.fenceme.startsettings";
+class DrawerItemClickListener implements NavigationView.OnNavigationItemSelectedListener {
     private Activity mActivity;
     private DrawerLayout mDrawerLayout;
-    private ListView mDrawerList;
 
-    public DrawerItemClickListener(Activity activity, DrawerLayout drawerLayout, ListView drawerList) {
+    DrawerItemClickListener(Activity activity, DrawerLayout drawerLayout) {
         mActivity = activity;
         mDrawerLayout = drawerLayout;
-        mDrawerList = drawerList;
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        selectItem(position);
     }
 
     /**
      * Swaps fragments in the main content view
      */
-    private void selectItem(int position) {
-        mDrawerLayout.closeDrawer(Gravity.START);
-        String selectedItem = MainActivity.mPreferenceTitles[position];
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+        String selectedItem = menuItem.getTitle().toString();
+        //Toast.makeText(mActivity, "selected: " + menuItem.getTitle(), Toast.LENGTH_SHORT).show();
+        mDrawerLayout.closeDrawers();
         FragmentManager fragmentManager = mActivity.getFragmentManager();
+        fragmentManager.popBackStack();
 
         switch (selectedItem) {
-            case "Preferences":
-
+            case "Settings":
                 PreferenceFragment fragment = new SettingsActivity.MyPreferenceFragment();
-                for (int i = 0; i < fragmentManager.getBackStackEntryCount(); i++) {
-                    fragmentManager.popBackStack();
-                }
 
                 fragmentManager.beginTransaction()
                         .add(R.id.content_frame, fragment)
                         .addToBackStack(null)
                         .commit();
 
-                mDrawerList.clearChoices();
                 break;
             case "Card a Player":
                 mActivity.startActivity(new Intent(mActivity, CardPlayerActivity.class));
                 break;
             case "Scorekeeper":
-                fragmentManager.popBackStack();
                 break;
             case "Tiebreaker":
                 MainActivity.makeTieBreaker(mActivity);
                 break;
         }
+        return true;
         /*
         if (selectedItem.equals("Preferences")) {
             PreferenceFragment fragment = new SettingsActivity.MyPreferenceFragment();
