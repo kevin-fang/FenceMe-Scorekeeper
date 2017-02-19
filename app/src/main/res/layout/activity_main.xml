@@ -19,8 +19,8 @@
         <TextView
             android:id="@+id/redSide"
             android:layout_width="wrap_content"
-            android:layout_centerHorizontal="true"
             android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
             android:layout_gravity="center_horizontal"
             android:clickable="true"
             android:ellipsize="end"
@@ -34,13 +34,13 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_alignParentBottom="true"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true">
             <Button
                 android:id="@+id/minus_red"
                 android:layout_width="0dp"
-                android:layout_weight=".5"
                 android:layout_height="wrap_content"
+                android:layout_weight=".5"
                 android:fontFamily="sans-serif-light"
                 android:text="@string/subtract_point"
                 android:textSize="@dimen/button_text_size" />
@@ -48,8 +48,8 @@
             <TextView
                 android:id="@+id/red_score"
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:gravity="center"
                 android:text="@string/no_score"
                 android:textSize="@dimen/score_text_size" />
@@ -57,8 +57,8 @@
             <Button
                 android:id="@+id/plus_red"
                 android:layout_width="0dp"
-                android:layout_weight=".5"
                 android:layout_height="wrap_content"
+                android:layout_weight=".5"
                 android:fontFamily="sans-serif-light"
                 android:text="@string/add_point"
                 android:textSize="@dimen/button_text_size" />
@@ -81,9 +81,9 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.99"
+        android:clickable="true"
         android:fontFamily="sans-serif-light"
         android:gravity="center"
-        android:clickable="true"
         android:onClick="setTimer"
         android:text="@string/full_time"
         android:textSize="@dimen/timer_size" />
@@ -141,8 +141,8 @@
         <TextView
             android:id="@+id/greenSide"
             android:layout_width="wrap_content"
-            android:layout_centerHorizontal="true"
             android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
             android:layout_gravity="center_horizontal"
             android:clickable="true"
             android:ellipsize="end"
@@ -156,13 +156,13 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_alignParentBottom="true"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true">
             <Button
                 android:id="@+id/minus_green"
                 android:layout_width="0dp"
-                android:layout_weight=".5"
                 android:layout_height="wrap_content"
+                android:layout_weight=".5"
                 android:fontFamily="sans-serif-light"
                 android:text="@string/subtract_point"
                 android:textSize="@dimen/button_text_size" />
@@ -170,8 +170,8 @@
             <TextView
                 android:id="@+id/green_score"
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:gravity="center"
                 android:text="@string/no_score"
                 android:textSize="@dimen/score_text_size" />
@@ -179,8 +179,8 @@
             <Button
                 android:id="@+id/plus_green"
                 android:layout_width="0dp"
-                android:layout_weight=".5"
                 android:layout_height="wrap_content"
+                android:layout_weight=".5"
                 android:fontFamily="sans-serif-light"
                 android:text="@string/add_point"
                 android:textSize="@dimen/button_text_size" />
