@@ -32,35 +32,37 @@
             android:textColor="@color/colorNames"
             android:textSize="@dimen/player_name_size" />
 
-        <Button
-            android:id="@+id/minus_red"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-light"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_alignParentBottom="true"
-            android:text="@string/subtract_point"
-            android:layout_alignParentStart="true"
-            android:textSize="@dimen/button_text_size" />
+            android:layout_height="wrap_content">
+            <Button
+                android:id="@+id/minus_red"
+                android:layout_width="0dp"
+                android:layout_weight=".5"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-light"
+                android:text="@string/subtract_point"
+                android:textSize="@dimen/button_text_size" />
 
-        <TextView
-            android:id="@+id/red_score"
-            android:layout_centerHorizontal="true"
-            android:layout_alignParentBottom="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="@string/no_score"
-            android:textSize="@dimen/score_text_size" />
+            <TextView
+                android:id="@+id/red_score"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/no_score"
+                android:textSize="@dimen/score_text_size" />
 
-        <Button
-            android:id="@+id/plus_red"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"
-            android:fontFamily="sans-serif-light"
-            android:text="@string/add_point"
-            android:textSize="@dimen/button_text_size" />
+            <Button
+                android:id="@+id/plus_red"
+                android:layout_width="0dp"
+                android:layout_weight=".5"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-light"
+                android:text="@string/add_point"
+                android:textSize="@dimen/button_text_size" />
+        </LinearLayout>
     </RelativeLayout>
 
     <com.google.android.gms.ads.AdView
@@ -152,34 +154,36 @@
             android:textColor="@color/colorNames"
             android:textSize="@dimen/player_name_size" />
 
-        <Button
-            android:id="@+id/minus_green"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-light"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_alignParentBottom="true"
-            android:text="@string/subtract_point"
-            android:layout_alignParentStart="true"
-            android:textSize="@dimen/button_text_size" />
+            android:layout_height="wrap_content">
+            <Button
+                android:id="@+id/minus_green"
+                android:layout_width="0dp"
+                android:layout_weight=".5"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-light"
+                android:text="@string/subtract_point"
+                android:textSize="@dimen/button_text_size" />
 
-        <TextView
-            android:id="@+id/green_score"
-            android:layout_centerHorizontal="true"
-            android:layout_alignParentBottom="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="@string/no_score"
-            android:textSize="@dimen/score_text_size" />
+            <TextView
+                android:id="@+id/green_score"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/no_score"
+                android:textSize="@dimen/score_text_size" />
 
-        <Button
-            android:id="@+id/plus_green"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"
-            android:fontFamily="sans-serif-light"
-            android:text="@string/add_point"
-            android:textSize="@dimen/button_text_size" />
+            <Button
+                android:id="@+id/plus_green"
+                android:layout_width="0dp"
+                android:layout_weight=".5"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-light"
+                android:text="@string/add_point"
+                android:textSize="@dimen/button_text_size" />
+        </LinearLayout>
     </RelativeLayout>
 </LinearLayout>
