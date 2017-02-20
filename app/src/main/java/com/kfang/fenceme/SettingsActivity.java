@@ -49,6 +49,7 @@ public class SettingsActivity extends AppCompatActivity {
             final NumberPickerPreference mBoutMinutesPreference = (NumberPickerPreference) findPreference(Utility.BOUT_LENGTH_MINUTES);
             final NumberPickerPreference mBoutPointsPreference = (NumberPickerPreference) findPreference(Utility.BOUT_LENGTH_POINTS);
             final CheckBoxPreference mRestorePreference = (CheckBoxPreference) findPreference(Utility.RESTORE_ON_EXIT);
+            final CheckBoxPreference mVibratePreference = (CheckBoxPreference) findPreference(Utility.VIBRATE_AT_END);
             final Preference resetPreferences = findPreference(Utility.RESET_BOUT_PREFERENCES);
 
             resetPreferences.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
@@ -82,6 +83,9 @@ public class SettingsActivity extends AppCompatActivity {
                                     break;
                                 case Utility.RESTORE_ON_EXIT:
                                     settingsEditor.putBoolean(Utility.RESTORE_ON_EXIT, mRestorePreference.isChecked());
+                                    break;
+                                case Utility.VIBRATE_AT_END:
+                                    settingsEditor.putBoolean(Utility.VIBRATE_AT_END, mVibratePreference.isChecked());
                                     break;
                             }
 

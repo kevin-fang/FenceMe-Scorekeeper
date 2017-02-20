@@ -11,7 +11,7 @@ import android.widget.Toast;
 
 class Utility {
 
-    static final String ALARM_AT_END = "enable_alarm";
+    static final String VIBRATE_AT_END = "vibrate_on_finish";
     static final String MAX_BRIGHTNESS = "maximum_brightness";
     static final String BOUT_LENGTH_POINTS = "bout_length_points";
     static final String BOUT_LENGTH_MINUTES = "bout_length_time";
@@ -41,6 +41,11 @@ class Utility {
     static boolean getRestoreStatus(Context context) {
         prefs = PreferenceManager.getDefaultSharedPreferences(context);
         return prefs.getBoolean(RESTORE_ON_EXIT, true);
+    }
+
+    static boolean getVibrateStatus(Context context) {
+        prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        return prefs.getBoolean(VIBRATE_AT_END, true);
     }
 
     static int updateCurrentTime(Context context) {

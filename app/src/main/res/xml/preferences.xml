@@ -21,6 +21,12 @@
             android:summary="@string/restore_status_summary"
             android:title="@string/restore_status_on_exit" />
 
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="vibrate_on_finish"
+            android:summary="@string/vibrate_summary"
+            android:title="@string/vibrate_on_finish" />
+
         <Preference
             android:key="reset_bout_length"
             android:summary="@string/reset_preferences"

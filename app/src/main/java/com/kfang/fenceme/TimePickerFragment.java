@@ -70,7 +70,11 @@ public class TimePickerFragment extends DialogFragment {
     }
 
     public void setTimer(int minutes, int seconds) {
-        MainActivity.mCurrentTime = seconds * 1000 + minutes * 60000;
+        if (minutes == seconds && minutes == 0) {
+            MainActivity.mCurrentTime = Utility.updateCurrentTime(getContext()) * 60000;
+        } else {
+            MainActivity.mCurrentTime = seconds * 1000 + minutes * 60000;
+        }
         Intent setTimer = new Intent(getContext(), TimerService.class);
         setTimer.putExtra(Utility.CHANGE_TIMER, TimerService.SET_TIMER);
         //Toast.makeText(getContext(), "" + MainActivity.mCurrentTime, Toast.LENGTH_SHORT).show();

@@ -7,11 +7,16 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 import android.os.RemoteException;
+import android.os.Vibrator;
 import android.preference.PreferenceFragment;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.LocalBroadcastManager;
@@ -45,6 +50,8 @@ import java.util.Locale;
 import java.util.Random;
 
 import static com.kfang.fenceme.TimerService.SET_TIMER_INTENT;
+import static com.kfang.fenceme.TimerService.TIMER_UP_INTENT;
+import static com.kfang.fenceme.TimerService.mAlarmTone;
 import static com.kfang.fenceme.TimerService.mTimerRunning;
 import static com.kfang.fenceme.Utility.greenName;
 import static com.kfang.fenceme.Utility.redName;
@@ -57,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
     public static long mCurrentTime;
     static String[] mPreferenceTitles;
     public boolean noAds;
+    public DrawerLayout mDrawerLayout;
     protected Bundle skuDetails;
     Button mStartTimer;
     TextView mCurrentTimer;
@@ -73,11 +81,9 @@ public class MainActivity extends AppCompatActivity {
     int maxNameLength = 20;
     Context mContext;
     IInAppBillingService mService;
-
     LinearLayout updateRedScores;
-    LinearLayout updateGreenScores;
     //public static final String LOG_TAG = MainActivity.class.getName();
-
+    LinearLayout updateGreenScores;
     ServiceConnection mServiceConn = new ServiceConnection() {
         @Override
         public void onServiceDisconnected(ComponentName name) {
@@ -90,7 +96,6 @@ public class MainActivity extends AppCompatActivity {
             mService = IInAppBillingService.Stub.asInterface(service);
         }
     };
-    private DrawerLayout mDrawerLayout;
     private NavigationView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
 
@@ -313,6 +318,58 @@ public class MainActivity extends AppCompatActivity {
                         setTime();
                     }
                 }, new IntentFilter(SET_TIMER_INTENT)
+        );
+
+        lbm.registerReceiver(
+                new BroadcastReceiver() {
+                    @Override
+                    public void onReceive(Context context, Intent intent) {
+
+                        final Vibrator vibrator = (Vibrator) getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
+
+                        final Thread alarms = new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                // create alarm
+                                Uri alarm = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
+                                mAlarmTone = RingtoneManager.getRingtone(getApplicationContext(), alarm);
+                                mAlarmTone.play();
+
+                                long[] pattern = {0, 500, 500};
+                                // create vibration
+                                if (Utility.getVibrateStatus(getApplicationContext())) {
+                                    vibrator.vibrate(pattern, 0);
+                                }
+                            }
+
+                        });
+
+                        final Handler alarmHandler = new Handler();
+
+                        alarmHandler.post(alarms);
+
+                        final Snackbar reset = Snackbar.make(mDrawerLayout, "Timer's Up!", Snackbar.LENGTH_INDEFINITE);
+                        reset.setAction("Reset", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                //Toast.makeText(mContext, "dismissed", Toast.LENGTH_SHORT).show();
+                                // reset time and set button to start
+                                int minutes = Utility.updateCurrentTime(getApplicationContext());
+                                mTimerRunning = false;
+                                mCurrentTime = minutes * 60000;
+                                setTime();
+                                mStartTimer.setText(getString(R.string.start_timer));
+                                /* vibrator.cancel();
+                                mAlarmTone.stop(); */
+                                alarmHandler.removeCallbacks(alarms);
+                                vibrator.cancel();
+                            }
+                        });
+                        reset.show();
+
+
+                    }
+                }, new IntentFilter(TIMER_UP_INTENT)
         );
     }
 

@@ -1,14 +1,19 @@
 package com.kfang.fenceme;
 
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.Vibrator;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+import android.view.View;
 
 import static com.kfang.fenceme.MainActivity.mCurrentTime;
 
@@ -27,12 +32,12 @@ public class TimerService extends Service {
     public static String UPDATE_TOGGLE_BUTTON_INTENT = "com.kfang.fenceme.updatetimebutton";
     public static String RESET_TIMER_INTENT = "com.kfang.fenceme.resettimer";
     public static String SET_TIMER_INTENT = "com.kfang.fenceme.settimer";
+    public static String TIMER_UP_INTENT = "com.kfang.fenceme.timerup";
     public static String UPDATE_BUTTON_TEXT = "to_update";
     public static boolean mTimerRunning = false;
+    static Ringtone mAlarmTone;
     // keep track of start times and end times
     long mStartTime = 0;
-
-    private Ringtone mAlarmTone;
     private Handler mHandler = new Handler();
 
     // task to update time and fire intents when needed
@@ -44,12 +49,9 @@ public class TimerService extends Service {
             if (mCurrentTime > 0) {
                 mHandler.postDelayed(this, 1000);
             } else if (mCurrentTime == 0) { // play an alarm if the time is up.
-                Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
-                mAlarmTone = RingtoneManager.getRingtone(getApplicationContext(), notification);
-                mAlarmTone.play();
-
-                /* Toast timerUp = Toast.makeText(getApplicationContext(), "Time's Up!", Toast.LENGTH_SHORT);
-                timerUp.show(); */
+                mHandler.removeCallbacks(mUpdateTimeTask);
+                Intent intent = new Intent(TIMER_UP_INTENT);
+                LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
             }
             createUpdateTimeIntent();
         }
