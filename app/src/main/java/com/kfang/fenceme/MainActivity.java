@@ -10,10 +10,8 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceFragment;
-import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.DrawerLayout;
@@ -22,18 +20,16 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputFilter;
 import android.text.InputType;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.inputmethod.EditorInfo;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.HeaderViewListAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -44,10 +40,11 @@ import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Random;
 
-import static android.R.id.list;
 import static com.kfang.fenceme.TimerService.SET_TIMER_INTENT;
+import static com.kfang.fenceme.TimerService.mTimerRunning;
 import static com.kfang.fenceme.Utility.greenName;
 import static com.kfang.fenceme.Utility.redName;
 
@@ -75,6 +72,10 @@ public class MainActivity extends AppCompatActivity {
     int maxNameLength = 20;
     Context mContext;
     IInAppBillingService mService;
+
+    LinearLayout updateRedScores;
+    LinearLayout updateGreenScores;
+
     ServiceConnection mServiceConn = new ServiceConnection() {
         @Override
         public void onServiceDisconnected(ComponentName name) {
@@ -103,23 +104,30 @@ public class MainActivity extends AppCompatActivity {
         builder.setPositiveButton("Start Tiebreaker", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Toast.makeText(context, "Starting priority session", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Starting Tiebreaker...", Toast.LENGTH_SHORT).show();
                 mCurrentTime = 60000;
+                mTimerRunning = false;
                 Intent setTimer = new Intent(context, TimerService.class);
                 setTimer.putExtra("TOGGLE", TimerService.SET_TIMER);
                 context.startService(setTimer);
+
+                Intent startTimer = new Intent(context, TimerService.class);
+                startTimer.putExtra("TOGGLE", TimerService.TOGGLE_TIMER);
+                context.startService(startTimer);
+
             }
         });
         builder.create().show();
 
     }
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mContext = MainActivity.this;
         setContentView(R.layout.activity_main);
-        mCurrentTime = Utility.updateCurrentTime(mContext) * 60000;
+
 
         // set up ads, views, and BroadcastManagers
         boolean isDebuggable = BuildConfig.DEBUG;
@@ -132,6 +140,9 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
 
         setupNavigation();
+
+        Utility.updateCurrentMatchPreferences(mContext);
+        setTime();
 
         /*
         Intent serviceIntent =
@@ -156,6 +167,22 @@ public class MainActivity extends AppCompatActivity {
         });
 
         getInAppPurchases.start(); */
+    }
+
+    public int getRedScore() {
+        return Integer.parseInt(redScore.getText().toString());
+    }
+
+    public void setRedScore(int score) {
+        redScore.setText(String.valueOf(score));
+    }
+
+    public int getGreenScore() {
+        return Integer.parseInt(greenScore.getText().toString());
+    }
+
+    public void setGreenScore(int score) {
+        greenScore.setText(String.valueOf(score));
     }
 
     public void setupNavigation() {
@@ -234,13 +261,8 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onReceive(Context context, Intent intent) {
                         // set the text in the textview to corresponding minutes and seconds
-                        int minutes = intent.getIntExtra(TimerService.MINUTES, 0);
-                        int seconds = intent.getIntExtra(TimerService.SECONDS, 0);
-                        if (seconds < 10 && seconds >= 0) {
-                            mCurrentTimer.setText("" + minutes + ":0" + seconds);
-                        } else {
-                            mCurrentTimer.setText("" + minutes + ":" + seconds);
-                        }
+                        // mCurrentTime = intent.getLongExtra(TimerService.CURRENT_TIME, 0);
+                        setTime();
                     }
                 }, new IntentFilter(TimerService.UPDATE_TIME_INTENT)
         );
@@ -263,7 +285,7 @@ public class MainActivity extends AppCompatActivity {
                         // set the text in the textview to corresponding minutes and seconds
                         int minutes = Utility.updateCurrentTime(getApplicationContext());
                         mCurrentTime = minutes * 60000;
-                        mCurrentTimer.setText("" + minutes + ":00");
+                        setTime();
                     }
                 }, new IntentFilter(TimerService.RESET_TIMER_INTENT)
         );
@@ -274,22 +296,20 @@ public class MainActivity extends AppCompatActivity {
                     public void onReceive(Context context, Intent intent) {
 
                         // set the text in the textview to corresponding minutes and seconds
-                        int minutes = (int) mCurrentTime / 1000 / 60;
-                        int seconds = (int) mCurrentTime / 1000 % 60;
-
-                        //Log.d("MCURRENTTIME", "In Intent: " + mCurrentTime);
-                        if (seconds < 10) {
-                            mCurrentTimer.setText("" + minutes + ":0" + seconds);
-                        } else {
-                            mCurrentTimer.setText("" + minutes + ":" + seconds);
-                        }
+                        setTime();
                     }
                 }, new IntentFilter(SET_TIMER_INTENT)
         );
     }
 
+    private void setTime() {
+        int minutes = (int) mCurrentTime / 1000 / 60;
+        int seconds = (int) mCurrentTime / 1000 % 60;
+        mCurrentTimer.setText("" + minutes + String.format(Locale.getDefault(), ":%02d", seconds));
+    }
+
     private void setViews() {
-        // find name views and set correspondignly
+        // find name views and set correspondingly
         TextView redNameView = (TextView) findViewById(R.id.redSide);
         TextView greenNameView = (TextView) findViewById(R.id.greenSide);
 
@@ -352,6 +372,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        updateGreenScores = (LinearLayout) findViewById(R.id.update_score_green);
+        updateRedScores = (LinearLayout) findViewById(R.id.update_score_red);
+
     }
 
     private void setupAds(boolean test) {
@@ -370,10 +393,17 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
+        if (mTimerRunning) {
+            Intent startTimer = new Intent(getApplicationContext(), TimerService.class);
+            startTimer.putExtra("TOGGLE", TimerService.TOGGLE_TIMER);
+            startService(startTimer);
+        }
         if (mService != null) {
             unbindService(mServiceConn);
         }
+
+        Utility.saveCurrentMatchPreferences(mContext);
+        super.onDestroy();
     }
 
     // reset scores

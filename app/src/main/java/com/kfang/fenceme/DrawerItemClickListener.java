@@ -47,7 +47,6 @@ class DrawerItemClickListener implements NavigationView.OnNavigationItemSelected
                         .add(R.id.content_frame, fragment)
                         .addToBackStack(null)
                         .commit();
-
                 break;
             case "Card a Player":
                 mActivity.startActivity(new Intent(mActivity, CardPlayerActivity.class));

@@ -1,5 +1,6 @@
 package com.kfang.fenceme;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.Preference;
@@ -55,6 +56,12 @@ public class SettingsActivity extends AppCompatActivity {
                     mBoutPointsPreference.setValue(Utility.DEFAULT_POINTS);
                     settingsEditor.putInt(Utility.BOUT_LENGTH_POINTS, Utility.DEFAULT_POINTS);
                     settingsEditor.putInt(Utility.BOUT_LENGTH_MINUTES, Utility.DEFAULT_MINUTES);
+
+                    Intent stopTimer = new Intent(getActivity(), TimerService.class);
+                    stopTimer.putExtra("TOGGLE", TimerService.RESET_TIMER);
+                    getActivity().startService(stopTimer);
+
+                    ((MainActivity) getActivity()).resetScores(null);
                     return true;
                 }
             });

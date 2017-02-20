@@ -22,8 +22,7 @@ public class TimerService extends Service {
     public static int TOGGLE_TIMER = 3;
     public static int RESET_TIMER = 4;
     public static int SET_TIMER = 5;
-    public static String MINUTES = "minutes";
-    public static String SECONDS = "seconds";
+    public static String CURRENT_TIME = "current_time";
     public static String UPDATE_TIME_INTENT = "com.kfang.fenceme.updatetime";
     public static String UPDATE_TOGGLE_BUTTON_INTENT = "com.kfang.fenceme.updatetimebutton";
     public static String RESET_TIMER_INTENT = "com.kfang.fenceme.resettimer";
@@ -43,20 +42,16 @@ public class TimerService extends Service {
             mCurrentTime = (int) (mCurrentTime - 1000);
 
             if (mCurrentTime > 0) {
-                int newTime = (int) mCurrentTime / 1000;
-                int seconds = newTime % 60;
-                int minutes = newTime / 60;
-                createUpdateTimeIntent(minutes, seconds);
                 mHandler.postDelayed(this, 1000);
             } else if (mCurrentTime == 0) { // play an alarm if the time is up.
                 Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
                 mAlarmTone = RingtoneManager.getRingtone(getApplicationContext(), notification);
                 mAlarmTone.play();
 
-                createUpdateTimeIntent(0, 0);
                 /* Toast timerUp = Toast.makeText(getApplicationContext(), "Time's Up!", Toast.LENGTH_SHORT);
                 timerUp.show(); */
             }
+            createUpdateTimeIntent();
         }
     };
 
@@ -66,10 +61,8 @@ public class TimerService extends Service {
     }
 
     // create an update_time_intent and fire it to the broadcastReceiver
-    private void createUpdateTimeIntent(int minutes, int seconds) {
+    private void createUpdateTimeIntent() {
         Intent intent = new Intent(UPDATE_TIME_INTENT);
-        intent.putExtra(MINUTES, minutes);
-        intent.putExtra(SECONDS, seconds);
         LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
     }
 

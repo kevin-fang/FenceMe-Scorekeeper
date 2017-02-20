@@ -41,6 +41,7 @@
                 android:textSize="@dimen/player_name_size" />
 
             <LinearLayout
+                android:id="@+id/update_score_red"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true">
@@ -168,6 +169,7 @@
                 android:textSize="@dimen/player_name_size" />
 
             <LinearLayout
+                android:id="@+id/update_score_green"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true">
@@ -227,6 +229,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="24dp"
                 android:layout_gravity="center_vertical"
+                android:background="@android:color/white"
                 android:clickable="true"
                 android:drawablePadding="8dp"
                 android:drawableStart="@drawable/settings_nav"
