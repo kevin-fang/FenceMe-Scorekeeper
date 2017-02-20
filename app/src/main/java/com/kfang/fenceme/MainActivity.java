@@ -9,6 +9,7 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.os.RemoteException;
 import android.preference.PreferenceFragment;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.DialogFragment;
@@ -75,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
 
     LinearLayout updateRedScores;
     LinearLayout updateGreenScores;
+    //public static final String LOG_TAG = MainActivity.class.getName();
 
     ServiceConnection mServiceConn = new ServiceConnection() {
         @Override
@@ -92,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
     private NavigationView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
 
+    // create a tiebreaker
     public static void makeTieBreaker(final Context context) {
         Random r = new Random();
         ArrayList<String> names = new ArrayList<>();
@@ -108,19 +111,17 @@ public class MainActivity extends AppCompatActivity {
                 mCurrentTime = 60000;
                 mTimerRunning = false;
                 Intent setTimer = new Intent(context, TimerService.class);
-                setTimer.putExtra("TOGGLE", TimerService.SET_TIMER);
+                setTimer.putExtra(Utility.CHANGE_TIMER, TimerService.SET_TIMER);
                 context.startService(setTimer);
 
                 Intent startTimer = new Intent(context, TimerService.class);
-                startTimer.putExtra("TOGGLE", TimerService.TOGGLE_TIMER);
+                startTimer.putExtra(Utility.CHANGE_TIMER, TimerService.TOGGLE_TIMER);
                 context.startService(startTimer);
-
             }
         });
         builder.create().show();
 
     }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,29 +129,38 @@ public class MainActivity extends AppCompatActivity {
         mContext = MainActivity.this;
         setContentView(R.layout.activity_main);
 
-
         // set up ads, views, and BroadcastManagers
         boolean isDebuggable = BuildConfig.DEBUG;
         setupAds(isDebuggable);
         setViews();
         setUpBroadcastManagers();
+        // set "hamburger" animations
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
         getSupportActionBar().setHomeButtonEnabled(true);
 
+        // set up navigation drawer
         setupNavigation();
 
-        Utility.updateCurrentMatchPreferences(mContext);
+        // restore game status if enabled
+        if (Utility.getRestoreStatus(mContext)) {
+            Utility.updateCurrentMatchPreferences(mContext);
+        } else {
+            mCurrentTime = Utility.updateCurrentTime(mContext) * 60000;
+        }
         setTime();
 
-        /*
+
+    }
+
+    private void setupInAppPurchases() {
         Intent serviceIntent =
                 new Intent("com.android.vending.billing.InAppBillingService.BIND");
         serviceIntent.setPackage("com.android.vending");
         bindService(serviceIntent, mServiceConn, Context.BIND_AUTO_CREATE);
 
-        ArrayList<String> skuList = new ArrayList<String>();
+        ArrayList<String> skuList = new ArrayList<>();
         skuList.add("noAds");
         final Bundle querySkus = new Bundle();
         querySkus.putStringArrayList("ITEM_ID_LIST", skuList);
@@ -166,7 +176,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        getInAppPurchases.start(); */
+        getInAppPurchases.start();
     }
 
     public int getRedScore() {
@@ -241,6 +251,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // launch settings fragment
     public void launchSettings(View v) {
         mDrawerLayout.closeDrawers();
         PreferenceFragment fragment = new SettingsActivity.MyPreferenceFragment();
@@ -255,7 +266,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void setUpBroadcastManagers() {
         LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
-        // LocalBroadcastManagers to deal with updating time and toggle button text intents.
+        // LocalBroadcastManagers to deal with updating time
         lbm.registerReceiver(
                 new BroadcastReceiver() {
                     @Override
@@ -267,6 +278,7 @@ public class MainActivity extends AppCompatActivity {
                 }, new IntentFilter(TimerService.UPDATE_TIME_INTENT)
         );
 
+        // update text on toggle button
         lbm.registerReceiver(
                 new BroadcastReceiver() {
                     @Override
@@ -278,6 +290,7 @@ public class MainActivity extends AppCompatActivity {
                 }, new IntentFilter(TimerService.UPDATE_TOGGLE_BUTTON_INTENT)
         );
 
+        // reset timer
         lbm.registerReceiver(
                 new BroadcastReceiver() {
                     @Override
@@ -290,6 +303,7 @@ public class MainActivity extends AppCompatActivity {
                 }, new IntentFilter(TimerService.RESET_TIMER_INTENT)
         );
 
+        // set timer to whatever mCurrentTime is currently.
         lbm.registerReceiver(
                 new BroadcastReceiver() {
                     @Override
@@ -338,7 +352,7 @@ public class MainActivity extends AppCompatActivity {
         addGreen.setOnClickListener(createOnClickListener(greenScore, TO_ADD, Utility.GREEN_PLAYER));
         subtractGreen.setOnClickListener(createOnClickListener(greenScore, TO_SUBTRACT, Utility.GREEN_PLAYER));
 
-        // set textviews and buttons for timekeeping
+        // set textViews and buttons for timekeeping
         mStartTimer = (Button) findViewById(R.id.start_timer);
         if (TimerService.mTimerRunning) {
             mStartTimer.setText(getResources().getString(R.string.stop_timer));
@@ -346,20 +360,11 @@ public class MainActivity extends AppCompatActivity {
         resetTimer = (Button) findViewById(R.id.reset_timer);
         mCurrentTimer = (TextView) findViewById(R.id.timer);
 
-
-        int seconds = (int) (mCurrentTime / 1000) % 60;
-        //Toast.makeText(this, "seconds: " + mCurrentTime, Toast.LENGTH_SHORT).show();
-        if (seconds < 10) {
-            mCurrentTimer.setText("" + mCurrentTime / 1000 / 60 + ":0" + seconds);
-        } else {
-            mCurrentTimer.setText("" + mCurrentTime / 1000 / 60 + ":" + seconds);
-        }
-
         // set onClickListener for start and reset
         mStartTimer.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent startTimer = new Intent(getApplicationContext(), TimerService.class);
-                startTimer.putExtra("TOGGLE", TimerService.TOGGLE_TIMER);
+                startTimer.putExtra(Utility.CHANGE_TIMER, TimerService.TOGGLE_TIMER);
                 startService(startTimer);
             }
         });
@@ -367,7 +372,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent stopTimer = new Intent(getApplicationContext(), TimerService.class);
-                stopTimer.putExtra("TOGGLE", TimerService.RESET_TIMER);
+                stopTimer.putExtra(Utility.CHANGE_TIMER, TimerService.RESET_TIMER);
                 startService(stopTimer);
             }
         });
@@ -395,7 +400,7 @@ public class MainActivity extends AppCompatActivity {
     public void onDestroy() {
         if (mTimerRunning) {
             Intent startTimer = new Intent(getApplicationContext(), TimerService.class);
-            startTimer.putExtra("TOGGLE", TimerService.TOGGLE_TIMER);
+            startTimer.putExtra(Utility.CHANGE_TIMER, TimerService.TOGGLE_TIMER);
             startService(startTimer);
         }
         if (mService != null) {

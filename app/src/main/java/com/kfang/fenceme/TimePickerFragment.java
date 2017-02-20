@@ -11,6 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.NumberPicker;
 
+import java.util.Locale;
+
 /**
  * Time Picker Fragment for setting timer
  */
@@ -44,7 +46,7 @@ public class TimePickerFragment extends DialogFragment {
         secondsPicker.setFormatter(new NumberPicker.Formatter() {
             @Override
             public String format(int value) {
-                return String.format("%02d", value);
+                return String.format(Locale.getDefault(), "%02d", value);
 
             }
         });
@@ -70,7 +72,7 @@ public class TimePickerFragment extends DialogFragment {
     public void setTimer(int minutes, int seconds) {
         MainActivity.mCurrentTime = seconds * 1000 + minutes * 60000;
         Intent setTimer = new Intent(getContext(), TimerService.class);
-        setTimer.putExtra("TOGGLE", TimerService.SET_TIMER);
+        setTimer.putExtra(Utility.CHANGE_TIMER, TimerService.SET_TIMER);
         //Toast.makeText(getContext(), "" + MainActivity.mCurrentTime, Toast.LENGTH_SHORT).show();
         getActivity().startService(setTimer);
     }

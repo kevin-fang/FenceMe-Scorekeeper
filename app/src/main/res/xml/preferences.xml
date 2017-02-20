@@ -15,6 +15,12 @@
             android:summary="@string/change_timer_summary"
             android:title="@string/default_bout_length" />
 
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="restore_status"
+            android:summary="@string/restore_status_summary"
+            android:title="@string/restore_status_on_exit" />
+
         <Preference
             android:key="reset_bout_length"
             android:summary="@string/reset_preferences"

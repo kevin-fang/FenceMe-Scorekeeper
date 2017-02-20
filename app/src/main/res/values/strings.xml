@@ -43,5 +43,7 @@
     <string name="drawer_close">Close navigation drawer</string>
     <string name="reset_preferences">5 point, 3 minute bouts</string>
     <string name="award_point">Award Point</string>
+    <string name="restore_status_on_exit">Save game status on exit</string>
+    <string name="restore_status_summary">When the app is closed, save the current point and time totals</string>
 
 </resources>

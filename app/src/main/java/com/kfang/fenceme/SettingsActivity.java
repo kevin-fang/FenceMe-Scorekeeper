@@ -3,6 +3,7 @@ package com.kfang.fenceme;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.CheckBoxPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
@@ -47,6 +48,7 @@ public class SettingsActivity extends AppCompatActivity {
             //final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
             final NumberPickerPreference mBoutMinutesPreference = (NumberPickerPreference) findPreference(Utility.BOUT_LENGTH_MINUTES);
             final NumberPickerPreference mBoutPointsPreference = (NumberPickerPreference) findPreference(Utility.BOUT_LENGTH_POINTS);
+            final CheckBoxPreference mRestorePreference = (CheckBoxPreference) findPreference(Utility.RESTORE_ON_EXIT);
             final Preference resetPreferences = findPreference(Utility.RESET_BOUT_PREFERENCES);
 
             resetPreferences.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
@@ -58,7 +60,7 @@ public class SettingsActivity extends AppCompatActivity {
                     settingsEditor.putInt(Utility.BOUT_LENGTH_MINUTES, Utility.DEFAULT_MINUTES);
 
                     Intent stopTimer = new Intent(getActivity(), TimerService.class);
-                    stopTimer.putExtra("TOGGLE", TimerService.RESET_TIMER);
+                    stopTimer.putExtra(Utility.CHANGE_TIMER, TimerService.RESET_TIMER);
                     getActivity().startService(stopTimer);
 
                     ((MainActivity) getActivity()).resetScores(null);
@@ -78,6 +80,9 @@ public class SettingsActivity extends AppCompatActivity {
                                 case Utility.BOUT_LENGTH_POINTS:
                                     settingsEditor.putInt(Utility.BOUT_LENGTH_POINTS, mBoutPointsPreference.getValue());
                                     break;
+                                case Utility.RESTORE_ON_EXIT:
+                                    settingsEditor.putBoolean(Utility.RESTORE_ON_EXIT, mRestorePreference.isChecked());
+                                    break;
                             }
 
                         }
@@ -86,6 +91,5 @@ public class SettingsActivity extends AppCompatActivity {
             settingsEditor.apply();
         }
     }
-
 
 }

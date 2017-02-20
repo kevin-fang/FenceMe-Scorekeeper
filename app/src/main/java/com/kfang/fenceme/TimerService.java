@@ -73,15 +73,14 @@ public class TimerService extends Service {
         LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
     }
 
-    // update time and fire intents to upddate when called.
+    // update time and fire intents to update when called.
     @Override
     public int onStartCommand(Intent i, int flags, int startId) {
         int toggleOrReset; // value to indicate whether the button being pressed is resetting the timer or starting/pausing it.
         try {
-            toggleOrReset = i.getIntExtra("TOGGLE", TOGGLE_TIMER);
+            toggleOrReset = i.getIntExtra(Utility.CHANGE_TIMER, TOGGLE_TIMER);
         } catch (NullPointerException e) {
-
-            toggleOrReset = RESET_TIMER; // bugfix - when starting the app, onStartCommand will run. Reset the timer when the app will start.
+            toggleOrReset = SET_TIMER; // bugfix - when starting the app, onStartCommand will run. Reset the timer when the app will start.
         }
         if (toggleOrReset == TOGGLE_TIMER) { // toggle the timer.
             if (!mTimerRunning) {
@@ -108,7 +107,7 @@ public class TimerService extends Service {
             }
         } else if (toggleOrReset == SET_TIMER) { // set timer to value
             mHandler.removeCallbacks(mUpdateTimeTask);
-            Log.d("MCURERENTTIME", "In TimerService: " + mCurrentTime);
+            //Log.d("MCURERENTTIME", "In TimerService: " + mCurrentTime);
             Intent intent = new Intent(SET_TIMER_INTENT);
             LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
         }
