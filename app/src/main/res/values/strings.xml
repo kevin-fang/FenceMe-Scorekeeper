@@ -47,5 +47,6 @@
     <string name="restore_status_summary">When the app is closed, save the current point and time totals</string>
     <string name="vibrate_on_finish">Vibrate on timer finish</string>
     <string name="vibrate_summary">Vibrate for 500 ms when the timer runs out</string>
+    <string name="currently_carding">Currently carding:</string>
 
 </resources>

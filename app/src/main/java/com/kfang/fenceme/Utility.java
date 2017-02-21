@@ -12,6 +12,13 @@ import android.widget.Toast;
 class Utility {
 
     static final String VIBRATE_AT_END = "vibrate_on_finish";
+    static final int TO_ADD = 1;
+    static final int TO_SUBTRACT = 0;
+    static final String TO_CARD_PLAYER = "card_player";
+    static final String RED_CARDRED = "red_cardred";
+    static final String RED_CARDYELLOW = "red_cardyellow";
+    static final String GREEN_CARDRED = "green_cardred";
+    static final String GREEN_CARDYELLOW = "green_cardyellow";
     static final String MAX_BRIGHTNESS = "maximum_brightness";
     static final String BOUT_LENGTH_POINTS = "bout_length_points";
     static final String BOUT_LENGTH_MINUTES = "bout_length_time";
@@ -26,10 +33,10 @@ class Utility {
     private static final String CURRENT_RED_POINTS = "current_red_points";
     private static final String CURRENT_GREEN_POINTS = "current_green_points";
     private static final String CURRENT_TIME = "current_time";
-    static int redScore = 0;
-    static int greenScore = 0;
     static String redName = "Red";
     static String greenName = "Green";
+    static int redScore = 0;
+    static int greenScore = 0;
     private static SharedPreferences prefs;
     private static SharedPreferences gamePrefs;
 

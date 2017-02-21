@@ -46,6 +46,7 @@ import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Random;
 
@@ -53,16 +54,18 @@ import static com.kfang.fenceme.TimerService.SET_TIMER_INTENT;
 import static com.kfang.fenceme.TimerService.TIMER_UP_INTENT;
 import static com.kfang.fenceme.TimerService.mAlarmTone;
 import static com.kfang.fenceme.TimerService.mTimerRunning;
+import static com.kfang.fenceme.Utility.TO_ADD;
+import static com.kfang.fenceme.Utility.TO_SUBTRACT;
 import static com.kfang.fenceme.Utility.greenName;
 import static com.kfang.fenceme.Utility.redName;
 
 
 public class MainActivity extends AppCompatActivity {
 
-    public static final int TO_ADD = 1;
-    public static final int TO_SUBTRACT = 0;
     public static long mCurrentTime;
     static String[] mPreferenceTitles;
+    static HashMap<String, Integer> redPlayerCards;
+    static HashMap<String, Integer> greenPlayerCards;
     public boolean noAds;
     public DrawerLayout mDrawerLayout;
     protected Bundle skuDetails;
@@ -128,6 +131,15 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public static void resetPlayerCards() {
+        redPlayerCards = new HashMap<>();
+        redPlayerCards.put(Utility.RED_CARDRED, 0);
+        redPlayerCards.put(Utility.RED_CARDYELLOW, 0);
+        greenPlayerCards = new HashMap<>();
+        greenPlayerCards.put(Utility.GREEN_CARDRED, 0);
+        greenPlayerCards.put(Utility.GREEN_CARDYELLOW, 0);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -155,6 +167,7 @@ public class MainActivity extends AppCompatActivity {
             mCurrentTime = Utility.updateCurrentTime(mContext) * 60000;
         }
         setTime();
+        resetPlayerCards();
 
 
     }
@@ -326,13 +339,13 @@ public class MainActivity extends AppCompatActivity {
                     public void onReceive(Context context, Intent intent) {
 
                         final Vibrator vibrator = (Vibrator) getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
+                        Uri alarm = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
+                        mAlarmTone = RingtoneManager.getRingtone(getApplicationContext(), alarm);
 
                         final Thread alarms = new Thread(new Runnable() {
                             @Override
                             public void run() {
                                 // create alarm
-                                Uri alarm = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
-                                mAlarmTone = RingtoneManager.getRingtone(getApplicationContext(), alarm);
                                 mAlarmTone.play();
 
                                 long[] pattern = {0, 500, 500};
@@ -359,9 +372,11 @@ public class MainActivity extends AppCompatActivity {
                                 mCurrentTime = minutes * 60000;
                                 setTime();
                                 mStartTimer.setText(getString(R.string.start_timer));
+                                MainActivity.resetPlayerCards();
                                 /* vibrator.cancel();
                                 mAlarmTone.stop(); */
                                 alarmHandler.removeCallbacks(alarms);
+                                mAlarmTone.stop();
                                 vibrator.cancel();
                             }
                         });

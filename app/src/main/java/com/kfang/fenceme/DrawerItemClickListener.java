@@ -2,7 +2,9 @@ package com.kfang.fenceme;
 
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.FragmentManager;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.preference.PreferenceFragment;
 import android.support.annotation.NonNull;
@@ -14,6 +16,10 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import static com.kfang.fenceme.Utility.TO_CARD_PLAYER;
+import static com.kfang.fenceme.Utility.greenName;
+import static com.kfang.fenceme.Utility.redName;
 
 /**
  * Drawer Item CLick Listener
@@ -49,7 +55,25 @@ class DrawerItemClickListener implements NavigationView.OnNavigationItemSelected
                         .commit();
                 break;
             case "Card a Player":
-                mActivity.startActivity(new Intent(mActivity, CardPlayerActivity.class));
+                AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
+                final String[] playerArray = {redName, greenName, "Reset Cards"};
+                builder.setTitle("Card a player")
+                        .setItems(playerArray, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                String player = playerArray[which];
+                                if (player.equals("Reset Cards")) {
+                                    MainActivity.resetPlayerCards();
+                                    Toast.makeText(mActivity, "Cards have been reset!", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Intent cardPlayer = new Intent(mActivity, CardPlayerActivity.class);
+                                    cardPlayer.putExtra(TO_CARD_PLAYER, player);
+                                    mActivity.startActivity(cardPlayer);
+                                }
+                            }
+                        })
+                        .create()
+                        .show();
                 break;
             case "Scorekeeper":
                 break;
