@@ -4,5 +4,6 @@
         <item>Scorekeeper</item>
         <item>Card a Player</item>
         <item>Tiebreaker</item>
+        <item>Reset Bout</item>
     </string-array>
 </resources>

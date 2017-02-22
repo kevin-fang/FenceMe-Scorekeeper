@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.preference.PreferenceFragment;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Gravity;
 import android.view.MenuItem;
@@ -17,6 +18,8 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import static com.kfang.fenceme.TimerService.RESET_BOUT_INTENT;
+import static com.kfang.fenceme.Utility.RESET_BOUT_PREFERENCES;
 import static com.kfang.fenceme.Utility.TO_CARD_PLAYER;
 import static com.kfang.fenceme.Utility.greenName;
 import static com.kfang.fenceme.Utility.redName;
@@ -79,6 +82,18 @@ class DrawerItemClickListener implements NavigationView.OnNavigationItemSelected
                 break;
             case "Tiebreaker":
                 MainActivity.makeTieBreaker(mActivity);
+                break;
+            case "Reset Bout":
+                AlertDialog.Builder resetBuilder = new AlertDialog.Builder(mActivity);
+                resetBuilder.setTitle("Are you sure?")
+                        .setPositiveButton("Reset", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                LocalBroadcastManager.getInstance(mActivity).sendBroadcast(new Intent(RESET_BOUT_INTENT));
+                            }
+                        })
+                        .setMessage("Resetting will reset all points, the timer, and all cards awarded.")
+                        .create()
+                        .show();
                 break;
         }
         return true;

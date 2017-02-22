@@ -32,6 +32,7 @@ public class TimerService extends Service {
     public static String UPDATE_TOGGLE_BUTTON_INTENT = "com.kfang.fenceme.updatetimebutton";
     public static String RESET_TIMER_INTENT = "com.kfang.fenceme.resettimer";
     public static String SET_TIMER_INTENT = "com.kfang.fenceme.settimer";
+    public static String RESET_BOUT_INTENT = "com.kfang.fenceme.resetbout";
     public static String TIMER_UP_INTENT = "com.kfang.fenceme.timerup";
     public static String UPDATE_BUTTON_TEXT = "to_update";
     public static boolean mTimerRunning = false;

@@ -50,6 +50,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Random;
 
+import static com.kfang.fenceme.TimerService.RESET_BOUT_INTENT;
 import static com.kfang.fenceme.TimerService.SET_TIMER_INTENT;
 import static com.kfang.fenceme.TimerService.TIMER_UP_INTENT;
 import static com.kfang.fenceme.TimerService.mAlarmTone;
@@ -321,7 +322,7 @@ public class MainActivity extends AppCompatActivity {
                 }, new IntentFilter(TimerService.RESET_TIMER_INTENT)
         );
 
-        // set timer to whatever mCurrentTime is currently.
+        // set timer to whatever mCurrentTime is currently - useless with updatetimerintent
         lbm.registerReceiver(
                 new BroadcastReceiver() {
                     @Override
@@ -367,17 +368,18 @@ public class MainActivity extends AppCompatActivity {
                             public void onClick(View v) {
                                 //Toast.makeText(mContext, "dismissed", Toast.LENGTH_SHORT).show();
                                 // reset time and set button to start
-                                int minutes = Utility.updateCurrentTime(getApplicationContext());
+                                //int minutes = Utility.updateCurrentTime(getApplicationContext());
                                 mTimerRunning = false;
-                                mCurrentTime = minutes * 60000;
-                                setTime();
-                                mStartTimer.setText(getString(R.string.start_timer));
-                                MainActivity.resetPlayerCards();
+                                //mCurrentTime = minutes * 60000;
+                                //setTime();
+                                //mStartTimer.setText(getString(R.string.start_timer));
+                                // MainActivity.resetPlayerCards();
                                 /* vibrator.cancel();
                                 mAlarmTone.stop(); */
                                 alarmHandler.removeCallbacks(alarms);
                                 mAlarmTone.stop();
                                 vibrator.cancel();
+                                LocalBroadcastManager.getInstance(mContext).sendBroadcast(new Intent(RESET_BOUT_INTENT));
                             }
                         });
                         reset.show();
@@ -386,6 +388,24 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }, new IntentFilter(TIMER_UP_INTENT)
         );
+
+        // holy grail reset entire bout
+        // cards, timer, player scores
+        lbm.registerReceiver(new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                resetPlayerCards();
+                int minutes = Utility.updateCurrentTime(getApplicationContext());
+                mCurrentTime = minutes * 60000;
+                mStartTimer.setText(getString(R.string.start_timer));
+                setTime();
+                resetScores(null);
+
+                Intent stopTimer = new Intent(getApplicationContext(), TimerService.class);
+                stopTimer.putExtra(Utility.CHANGE_TIMER, TimerService.RESET_TIMER);
+                startService(stopTimer);
+            }
+        }, new IntentFilter(RESET_BOUT_INTENT));
     }
 
     private void setTime() {
@@ -426,7 +446,7 @@ public class MainActivity extends AppCompatActivity {
 
         // set textViews and buttons for timekeeping
         mStartTimer = (Button) findViewById(R.id.start_timer);
-        if (TimerService.mTimerRunning) {
+        if (mTimerRunning) {
             mStartTimer.setText(getResources().getString(R.string.stop_timer));
         }
         resetTimer = (Button) findViewById(R.id.reset_timer);
@@ -487,6 +507,8 @@ public class MainActivity extends AppCompatActivity {
     public void resetScores(View v) {
         redScore.setText(String.format("%s", 0));
         greenScore.setText(String.format("%s", 0));
+        Utility.redScore = 0;
+        Utility.greenScore = 0;
     }
 
     // create options menu

@@ -2,7 +2,6 @@
 
     <PreferenceCategory android:title="Bout Preferences">
 
-
         <com.kfang.fenceme.NumberPickerPreference
             android:defaultValue="5"
             android:key="bout_length_points"
@@ -20,7 +19,9 @@
             android:key="restore_status"
             android:summary="@string/restore_status_summary"
             android:title="@string/restore_status_on_exit" />
+    </PreferenceCategory>
 
+    <PreferenceCategory android:title="Miscellaneous">
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="vibrate_on_finish"
