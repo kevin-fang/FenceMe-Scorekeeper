@@ -66,6 +66,10 @@ class Utility {
         gamePrefsEditor.putInt(CURRENT_RED_POINTS, ((MainActivity) context).getRedScore())
                 .putInt(CURRENT_GREEN_POINTS, ((MainActivity) context).getGreenScore())
                 .putLong(CURRENT_TIME, MainActivity.mCurrentTime)
+                .putInt(RED_CARDRED, MainActivity.redPlayerCards.get(RED_CARDRED))
+                .putInt(GREEN_CARDRED, MainActivity.greenPlayerCards.get(GREEN_CARDRED))
+                .putInt(RED_CARDYELLOW, MainActivity.redPlayerCards.get(RED_CARDYELLOW))
+                .putInt(GREEN_CARDYELLOW, MainActivity.greenPlayerCards.get(GREEN_CARDYELLOW))
                 .apply();
     }
 
@@ -75,5 +79,9 @@ class Utility {
         activity.setRedScore(gamePrefs.getInt(CURRENT_RED_POINTS, 0));
         activity.setGreenScore(gamePrefs.getInt(CURRENT_GREEN_POINTS, 0));
         MainActivity.mCurrentTime = gamePrefs.getLong(CURRENT_TIME, DEFAULT_MINUTES * 60000);
+        MainActivity.redPlayerCards.put(RED_CARDRED, gamePrefs.getInt(RED_CARDRED, 0));
+        MainActivity.redPlayerCards.put(RED_CARDYELLOW, gamePrefs.getInt(RED_CARDYELLOW, 0));
+        MainActivity.greenPlayerCards.put(GREEN_CARDRED, gamePrefs.getInt(GREEN_CARDRED, 0));
+        MainActivity.greenPlayerCards.put(GREEN_CARDYELLOW, gamePrefs.getInt(GREEN_CARDYELLOW, 0));
     }
 }

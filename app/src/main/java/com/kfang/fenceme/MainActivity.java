@@ -161,6 +161,7 @@ public class MainActivity extends AppCompatActivity {
         // set up navigation drawer
         setupNavigation();
 
+        resetPlayerCards();
         // restore game status if enabled
         if (Utility.getRestoreStatus(mContext)) {
             Utility.updateCurrentMatchPreferences(mContext);
@@ -168,7 +169,6 @@ public class MainActivity extends AppCompatActivity {
             mCurrentTime = Utility.updateCurrentTime(mContext) * 60000;
         }
         setTime();
-        resetPlayerCards();
 
 
     }
