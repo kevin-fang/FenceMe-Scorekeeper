@@ -2,6 +2,7 @@ package com.kfang.fenceme;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.Preference;
@@ -94,6 +95,15 @@ public class SettingsActivity extends AppCompatActivity {
             prefs.registerOnSharedPreferenceChangeListener(spChanged);
             settingsEditor.apply();
         }
+
+        @Override
+        public void onActivityCreated(Bundle savedInstanceState) {
+            super.onActivityCreated(savedInstanceState);
+
+            getView().setBackgroundColor(Color.WHITE);
+            getView().setClickable(true);
+        }
+
     }
 
 }

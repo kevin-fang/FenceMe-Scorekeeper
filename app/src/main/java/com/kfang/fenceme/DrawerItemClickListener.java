@@ -94,6 +94,7 @@ class DrawerItemClickListener implements NavigationView.OnNavigationItemSelected
                         .setPositiveButton("Reset", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 LocalBroadcastManager.getInstance(mActivity).sendBroadcast(new Intent(RESET_BOUT_INTENT));
+                                Toast.makeText(mActivity, "Bout reset!", Toast.LENGTH_SHORT);
                             }
                         })
                         .setMessage("Resetting will reset all points, the timer, and all cards awarded.")
