@@ -75,7 +75,7 @@ public class CardPlayerActivity extends AppCompatActivity {
         if (playerToCard.equals(redName)) {
             MainActivity.redPlayerCards.put(RED_CARDRED, MainActivity.redPlayerCards.get(RED_CARDRED) + 1);
         } else if (playerToCard.equals(greenName)) {
-            MainActivity.greenPlayerCards.put(GREEN_CARDRED, MainActivity.redPlayerCards.get(GREEN_CARDRED) + 1);
+            MainActivity.greenPlayerCards.put(GREEN_CARDRED, MainActivity.greenPlayerCards.get(GREEN_CARDRED) + 1);
         }
         setContentView(R.layout.card_display);
         View cardView = findViewById(R.id.card);
@@ -86,7 +86,7 @@ public class CardPlayerActivity extends AppCompatActivity {
         if (playerToCard.equals(redName)) {
             MainActivity.redPlayerCards.put(RED_CARDYELLOW, MainActivity.redPlayerCards.get(RED_CARDYELLOW) + 1);
         } else if (playerToCard.equals(greenName)) {
-            MainActivity.greenPlayerCards.put(GREEN_CARDYELLOW, MainActivity.redPlayerCards.get(GREEN_CARDYELLOW) + 1);
+            MainActivity.greenPlayerCards.put(GREEN_CARDYELLOW, MainActivity.greenPlayerCards.get(GREEN_CARDYELLOW) + 1);
         }
         //Toast.makeText(this, "Clicked Yellow", Toast.LENGTH_SHORT).show();
         setContentView(R.layout.card_display);
