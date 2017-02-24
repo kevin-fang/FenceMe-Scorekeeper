@@ -14,4 +14,8 @@
         <item name="android:fontFamily">sans-serif-light</item>
         <item name="android:listPreferredItemHeightSmall">48dp</item><!-- menu item height-->
     </style>
+
+    <style name="PreferenceTheme">
+        <item name="android:background">@android:color/white</item>
+    </style>
 </resources>

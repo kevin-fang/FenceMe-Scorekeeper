@@ -11,6 +11,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
@@ -51,13 +52,14 @@ class DrawerItemClickListener implements NavigationView.OnNavigationItemSelected
         switch (selectedItem) {
             case "Settings":
                 PreferenceFragment fragment = new SettingsActivity.MyPreferenceFragment();
-
+                Log.d("RUNNING", "Settings");
                 fragmentManager.beginTransaction()
-                        .add(R.id.content_frame, fragment)
+                        .replace(R.id.drawer_layout, fragment)
                         .addToBackStack(null)
                         .commit();
                 break;
             case "Card a Player":
+                Log.d("RUNNING", "Card");
                 AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
                 final String[] playerArray = {redName, greenName, "Reset Cards"};
                 builder.setTitle("Card a player")
@@ -79,11 +81,14 @@ class DrawerItemClickListener implements NavigationView.OnNavigationItemSelected
                         .show();
                 break;
             case "Scorekeeper":
+                Log.d("RUNNING", "Scorekeeper");
                 break;
             case "Tiebreaker":
+                Log.d("RUNNING", "Tiebreaker");
                 MainActivity.makeTieBreaker(mActivity);
                 break;
             case "Reset Bout":
+                Log.d("RUNNING", "reset");
                 AlertDialog.Builder resetBuilder = new AlertDialog.Builder(mActivity);
                 resetBuilder.setTitle("Are you sure?")
                         .setPositiveButton("Reset", new DialogInterface.OnClickListener() {

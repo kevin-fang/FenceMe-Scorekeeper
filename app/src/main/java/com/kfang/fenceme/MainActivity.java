@@ -278,9 +278,10 @@ public class MainActivity extends AppCompatActivity {
         android.app.FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.popBackStack();
         fragmentManager.beginTransaction()
-                .add(R.id.content_frame, fragment)
+                .replace(R.id.drawer_layout, fragment)
                 .addToBackStack(null)
                 .commit();
+
     }
 
     private void setUpBroadcastManagers() {
