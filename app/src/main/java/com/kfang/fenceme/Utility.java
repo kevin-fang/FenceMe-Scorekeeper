@@ -12,6 +12,7 @@ import android.widget.Toast;
 class Utility {
 
     static final String VIBRATE_AT_END = "vibrate_on_finish";
+    static final String PAUSE_ON_SCORE_CHANGE = "pause_on_score_change";
     static final int TO_ADD = 1;
     static final int TO_SUBTRACT = 0;
     static final String TO_CARD_PLAYER = "card_player";
@@ -53,6 +54,11 @@ class Utility {
     static boolean getVibrateStatus(Context context) {
         prefs = PreferenceManager.getDefaultSharedPreferences(context);
         return prefs.getBoolean(VIBRATE_AT_END, true);
+    }
+
+    static boolean getPauseStatus(Context context) {
+        prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        return prefs.getBoolean(PAUSE_ON_SCORE_CHANGE, true);
     }
 
     static int updateCurrentTime(Context context) {

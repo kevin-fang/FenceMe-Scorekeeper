@@ -36,6 +36,8 @@
     <string name="change_timer_summary">Press &quot;reset timer&quot; to activate</string>
     <string name="change_point_summary">Press &quot;reset scores&quot; to activate</string>
     <string name="current_version">Current app version: </string>
+    <string name="pause_on_score_change">Pause timer on score change</string>
+
 
     <string name="set_timer">Set Timer</string>
     <string name="cancel">Cancel</string>
