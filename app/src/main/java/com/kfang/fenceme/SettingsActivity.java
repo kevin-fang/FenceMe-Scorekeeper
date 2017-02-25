@@ -48,17 +48,18 @@ public class SettingsActivity extends AppCompatActivity {
             prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
             final SharedPreferences.Editor settingsEditor = prefs.edit();
             //final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-            final NumberPickerPreference mBoutMinutesPreference = (NumberPickerPreference) findPreference(Utility.BOUT_LENGTH_MINUTES);
-            final NumberPickerPreference mBoutPointsPreference = (NumberPickerPreference) findPreference(Utility.BOUT_LENGTH_POINTS);
-            final CheckBoxPreference mRestorePreference = (CheckBoxPreference) findPreference(Utility.RESTORE_ON_EXIT);
-            final CheckBoxPreference mVibratePreference = (CheckBoxPreference) findPreference(Utility.VIBRATE_AT_END);
+            final NumberPickerPreference boutMinutesPreference = (NumberPickerPreference) findPreference(Utility.BOUT_LENGTH_MINUTES);
+            final NumberPickerPreference boutPointsPreference = (NumberPickerPreference) findPreference(Utility.BOUT_LENGTH_POINTS);
+            final CheckBoxPreference pausePreference = (CheckBoxPreference) findPreference(Utility.PAUSE_ON_SCORE_CHANGE);
+            final CheckBoxPreference restorePreference = (CheckBoxPreference) findPreference(Utility.RESTORE_ON_EXIT);
+            final CheckBoxPreference vibratePreference = (CheckBoxPreference) findPreference(Utility.VIBRATE_AT_END);
             final Preference resetPreferences = findPreference(Utility.RESET_BOUT_PREFERENCES);
 
             resetPreferences.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
-                    mBoutMinutesPreference.setValue(Utility.DEFAULT_MINUTES);
-                    mBoutPointsPreference.setValue(Utility.DEFAULT_POINTS);
+                    boutMinutesPreference.setValue(Utility.DEFAULT_MINUTES);
+                    boutPointsPreference.setValue(Utility.DEFAULT_POINTS);
                     settingsEditor.putInt(Utility.BOUT_LENGTH_POINTS, Utility.DEFAULT_POINTS);
                     settingsEditor.putInt(Utility.BOUT_LENGTH_MINUTES, Utility.DEFAULT_MINUTES);
 
@@ -78,17 +79,19 @@ public class SettingsActivity extends AppCompatActivity {
                                                               String key) {
                             switch (key) {
                                 case Utility.BOUT_LENGTH_MINUTES:
-                                    settingsEditor.putInt(Utility.BOUT_LENGTH_MINUTES, mBoutMinutesPreference.getValue());
+                                    settingsEditor.putInt(Utility.BOUT_LENGTH_MINUTES, boutMinutesPreference.getValue());
                                     break;
                                 case Utility.BOUT_LENGTH_POINTS:
-                                    settingsEditor.putInt(Utility.BOUT_LENGTH_POINTS, mBoutPointsPreference.getValue());
+                                    settingsEditor.putInt(Utility.BOUT_LENGTH_POINTS, boutPointsPreference.getValue());
                                     break;
                                 case Utility.RESTORE_ON_EXIT:
-                                    settingsEditor.putBoolean(Utility.RESTORE_ON_EXIT, mRestorePreference.isChecked());
+                                    settingsEditor.putBoolean(Utility.RESTORE_ON_EXIT, restorePreference.isChecked());
                                     break;
                                 case Utility.VIBRATE_AT_END:
-                                    settingsEditor.putBoolean(Utility.VIBRATE_AT_END, mVibratePreference.isChecked());
+                                    settingsEditor.putBoolean(Utility.VIBRATE_AT_END, vibratePreference.isChecked());
                                     break;
+                                case Utility.PAUSE_ON_SCORE_CHANGE:
+                                    settingsEditor.putBoolean(Utility.PAUSE_ON_SCORE_CHANGE, pausePreference.isChecked());
                             }
 
                         }

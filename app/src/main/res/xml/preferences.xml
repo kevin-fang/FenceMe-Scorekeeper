@@ -20,6 +20,12 @@
             android:key="restore_status"
             android:summary="@string/restore_status_summary"
             android:title="@string/restore_status_on_exit" />
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="pause_on_score_change"
+            android:title="@string/pause_on_score_change" />
+
     </PreferenceCategory>
 
     <PreferenceCategory android:title="Miscellaneous">

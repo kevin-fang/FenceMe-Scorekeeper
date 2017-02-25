@@ -78,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
     Button addGreen;
     Button subtractGreen;
     Button resetTimer;
+
     TextView greenScore;
     TextView redScore;
     FragmentManager mFragmentManager = getSupportFragmentManager();
@@ -88,18 +89,7 @@ public class MainActivity extends AppCompatActivity {
     LinearLayout updateRedScores;
     //public static final String LOG_TAG = MainActivity.class.getName();
     LinearLayout updateGreenScores;
-    ServiceConnection mServiceConn = new ServiceConnection() {
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            mService = null;
-        }
 
-        @Override
-        public void onServiceConnected(ComponentName name,
-                                       IBinder service) {
-            mService = IInAppBillingService.Stub.asInterface(service);
-        }
-    };
     private NavigationView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
 
@@ -172,32 +162,6 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
-
-    private void setupInAppPurchases() {
-        Intent serviceIntent =
-                new Intent("com.android.vending.billing.InAppBillingService.BIND");
-        serviceIntent.setPackage("com.android.vending");
-        bindService(serviceIntent, mServiceConn, Context.BIND_AUTO_CREATE);
-
-        ArrayList<String> skuList = new ArrayList<>();
-        skuList.add("noAds");
-        final Bundle querySkus = new Bundle();
-        querySkus.putStringArrayList("ITEM_ID_LIST", skuList);
-
-        Thread getInAppPurchases = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    skuDetails = mService.getSkuDetails(3, getPackageName(), "inapp", querySkus);
-                } catch (RemoteException e) {
-                    Toast.makeText(getApplicationContext(), "Cannot verify in-app purchases: Internet unavailable", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
-        getInAppPurchases.start();
-    }
-
     public int getRedScore() {
         return Integer.parseInt(redScore.getText().toString());
     }
@@ -440,10 +404,10 @@ public class MainActivity extends AppCompatActivity {
         greenScore.setText(String.valueOf(Utility.greenScore));
 
         // set onclickListeners for buttons
-        addRed.setOnClickListener(createOnClickListener(redScore, TO_ADD, Utility.RED_PLAYER));
-        subtractRed.setOnClickListener(createOnClickListener(redScore, TO_SUBTRACT, Utility.RED_PLAYER));
-        addGreen.setOnClickListener(createOnClickListener(greenScore, TO_ADD, Utility.GREEN_PLAYER));
-        subtractGreen.setOnClickListener(createOnClickListener(greenScore, TO_SUBTRACT, Utility.GREEN_PLAYER));
+        addRed.setOnClickListener(createButtonChangeListener(redScore, TO_ADD, Utility.RED_PLAYER));
+        subtractRed.setOnClickListener(createButtonChangeListener(redScore, TO_SUBTRACT, Utility.RED_PLAYER));
+        addGreen.setOnClickListener(createButtonChangeListener(greenScore, TO_ADD, Utility.GREEN_PLAYER));
+        subtractGreen.setOnClickListener(createButtonChangeListener(greenScore, TO_SUBTRACT, Utility.GREEN_PLAYER));
 
         // set textViews and buttons for timekeeping
         mStartTimer = (Button) findViewById(R.id.start_timer);
@@ -496,9 +460,6 @@ public class MainActivity extends AppCompatActivity {
             startTimer.putExtra(Utility.CHANGE_TIMER, TimerService.TOGGLE_TIMER);
             startService(startTimer);
         }
-        if (mService != null) {
-            unbindService(mServiceConn);
-        }
 
         Utility.saveCurrentMatchPreferences(mContext);
         super.onDestroy();
@@ -549,7 +510,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // create an on click listener for each of the plus/minus buttons.
-    private View.OnClickListener createOnClickListener(final TextView score, final int toAdd, final String player) {
+    private View.OnClickListener createButtonChangeListener(final TextView score, final int toAdd, final String player) {
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -565,6 +526,13 @@ public class MainActivity extends AppCompatActivity {
                     Utility.greenScore = value;
                 } else {
                     Utility.redScore = value;
+                }
+                if (Utility.getPauseStatus(mContext)) {
+                    if (mTimerRunning) {
+                        Intent startTimer = new Intent(getApplicationContext(), TimerService.class);
+                        startTimer.putExtra(Utility.CHANGE_TIMER, TimerService.TOGGLE_TIMER);
+                        startService(startTimer);
+                    }
                 }
             }
 

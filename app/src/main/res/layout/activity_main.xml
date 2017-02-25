@@ -90,6 +90,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
+                    android:paddingBottom="12dp"
                     android:text="@string/no_score"
                     android:textSize="@dimen/score_text_size" />
 
@@ -149,6 +150,7 @@
             android:id="@+id/timer"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
             android:layout_marginEnd="16dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
