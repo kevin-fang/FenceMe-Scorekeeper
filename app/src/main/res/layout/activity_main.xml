@@ -41,7 +41,7 @@
         <RelativeLayout
             android:id="@+id/green_body"
             android:layout_width="0dp"
-            android:layout_height="150dp"
+            android:layout_height="140dp"
             android:layout_marginBottom="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
@@ -131,7 +131,6 @@
                 android:layout_width="2px"
                 android:layout_height="fill_parent"
                 android:layout_marginBottom="4dp"
-                android:layout_marginTop="4dp"
                 android:background="#90909090" />
 
             <Button
@@ -170,7 +169,7 @@
         <RelativeLayout
             android:id="@+id/red_body"
             android:layout_width="0dp"
-            android:layout_height="150dp"
+            android:layout_height="140dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"

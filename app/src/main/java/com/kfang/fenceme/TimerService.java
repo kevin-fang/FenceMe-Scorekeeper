@@ -6,6 +6,7 @@ import android.media.Ringtone;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 
 import static com.kfang.fenceme.MainActivity.mCurrentTime;
 
