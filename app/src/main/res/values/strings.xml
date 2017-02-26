@@ -11,8 +11,8 @@
     <string name="subtract_point">-</string>
     <string name="about">About this app</string>
     <string name="about_text">The FenceMe! Scorekeeper Application was created by Kevin Fang as a
-        simple, elegant way to keep track of fencing scores. It contains many features,
-        including:\nScorekeeping\nNaming Players\nCarding Players\nBout Timers\n\nFenceMe! Scorekeeper is a work in progress, so expect many updates and new features!</string>
+        simple, elegant way to keep track of fencing scores. It contains many great features,
+        including:\n- Score keeping\n- Naming Players\n- Carding Players\n- Custom bout lengths\n- Penalty cards\n\nThis app is a work in progress, so expect many updates and new features!</string>
     <string name="icon_attributes">Icon made by freepik from www.flaticon.com</string>
     <string name="no_time">0:00</string>
     <string name="black_card">Black\nCard</string>
@@ -54,5 +54,6 @@
     <string name="currently_carding">Currently carding:</string>
     <string name="email">Features requests? Questions? Email kfangapps@gmail.com</string>
     <string name="logo_desc">FenceMe! Scorekeeper logo</string>
+    <string name="rate">Rate this app on the Google Play Store</string>
 
 </resources>
