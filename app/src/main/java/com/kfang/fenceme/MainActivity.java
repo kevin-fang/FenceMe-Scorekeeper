@@ -1,18 +1,14 @@
 package com.kfang.fenceme;
 
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.ServiceConnection;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.IBinder;
-import android.os.RemoteException;
 import android.os.Vibrator;
 import android.preference.PreferenceFragment;
 import android.support.design.widget.NavigationView;
@@ -57,16 +53,14 @@ import static com.kfang.fenceme.TimerService.mAlarmTone;
 import static com.kfang.fenceme.TimerService.mTimerRunning;
 import static com.kfang.fenceme.Utility.TO_ADD;
 import static com.kfang.fenceme.Utility.TO_SUBTRACT;
-import static com.kfang.fenceme.Utility.greenName;
-import static com.kfang.fenceme.Utility.redName;
 
 
 public class MainActivity extends AppCompatActivity {
 
     public static long mCurrentTime;
+    public static Fencer mRedFencer;
+    public static Fencer mGreenFencer;
     static String[] mPreferenceTitles;
-    static HashMap<String, Integer> redPlayerCards;
-    static HashMap<String, Integer> greenPlayerCards;
     public boolean noAds;
     public DrawerLayout mDrawerLayout;
     protected Bundle skuDetails;
@@ -78,7 +72,6 @@ public class MainActivity extends AppCompatActivity {
     Button addGreen;
     Button subtractGreen;
     Button resetTimer;
-
     TextView greenScore;
     TextView redScore;
     FragmentManager mFragmentManager = getSupportFragmentManager();
@@ -89,20 +82,20 @@ public class MainActivity extends AppCompatActivity {
     LinearLayout updateRedScores;
     //public static final String LOG_TAG = MainActivity.class.getName();
     LinearLayout updateGreenScores;
-
     private NavigationView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
 
     // create a tiebreaker
     public static void makeTieBreaker(final Context context) {
         Random r = new Random();
-        ArrayList<String> names = new ArrayList<>();
-        names.add(redName);
-        names.add(greenName);
-        String chosenName = names.get(r.nextInt(names.size()));
+        ArrayList<Fencer> fencers = new ArrayList<>();
+        fencers.add(mRedFencer);
+        fencers.add(mGreenFencer);
+        Fencer chosenFencer = fencers.get(r.nextInt(fencers.size()));
+        chosenFencer.assignPriority();
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle("Tiebreaker");
-        builder.setMessage(chosenName + " has priority!");
+        builder.setMessage(chosenFencer.getName() + " has priority!");
         builder.setPositiveButton("Start Tiebreaker", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -123,12 +116,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public static void resetPlayerCards() {
-        redPlayerCards = new HashMap<>();
-        redPlayerCards.put(Utility.RED_CARDRED, 0);
-        redPlayerCards.put(Utility.RED_CARDYELLOW, 0);
-        greenPlayerCards = new HashMap<>();
-        greenPlayerCards.put(Utility.GREEN_CARDRED, 0);
-        greenPlayerCards.put(Utility.GREEN_CARDYELLOW, 0);
+        mRedFencer.resetCards();
+        mGreenFencer.resetCards();
     }
 
     @Override
@@ -136,6 +125,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         mContext = MainActivity.this;
         setContentView(R.layout.activity_main);
+
+        mRedFencer = new Fencer("Red");
+        mGreenFencer = new Fencer("Green");
 
         // set up ads, views, and BroadcastManagers
         boolean isDebuggable = BuildConfig.DEBUG;
@@ -160,7 +152,6 @@ public class MainActivity extends AppCompatActivity {
         }
         setTime();
 
-
     }
     public int getRedScore() {
         return Integer.parseInt(redScore.getText().toString());
@@ -182,9 +173,6 @@ public class MainActivity extends AppCompatActivity {
         mPreferenceTitles = getResources().getStringArray(R.array.main_menu_array);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (NavigationView) findViewById(R.id.left_drawer);
-
-        /* mDrawerList.setAdapter(new ArrayAdapter<>(this,
-                R.layout.drawer_list_item, mPreferenceTitles)); */
 
         mDrawerList.setNavigationItemSelectedListener(new DrawerItemClickListener(this, mDrawerLayout));
 
@@ -287,27 +275,17 @@ public class MainActivity extends AppCompatActivity {
                 }, new IntentFilter(TimerService.RESET_TIMER_INTENT)
         );
 
-        // set timer to whatever mCurrentTime is currently - useless with updatetimerintent
         lbm.registerReceiver(
                 new BroadcastReceiver() {
                     @Override
                     public void onReceive(Context context, Intent intent) {
 
-                        // set the text in the textview to corresponding minutes and seconds
-                        setTime();
-                    }
-                }, new IntentFilter(SET_TIMER_INTENT)
-        );
-
-        lbm.registerReceiver(
-                new BroadcastReceiver() {
-                    @Override
-                    public void onReceive(Context context, Intent intent) {
-
+                        // vibrate phone in 500 ms increments
                         final Vibrator vibrator = (Vibrator) getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
                         Uri alarm = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
                         mAlarmTone = RingtoneManager.getRingtone(getApplicationContext(), alarm);
 
+                        // play alarm in background thread
                         final Thread alarms = new Thread(new Runnable() {
                             @Override
                             public void run() {
@@ -322,25 +300,21 @@ public class MainActivity extends AppCompatActivity {
                             }
 
                         });
+                        // disable keep screen on
+                        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
                         final Handler alarmHandler = new Handler();
-
                         alarmHandler.post(alarms);
 
+                        // create snackbar with reset action
                         final Snackbar reset = Snackbar.make(mDrawerLayout, "Timer's Up!", Snackbar.LENGTH_INDEFINITE);
                         reset.setAction("Reset", new View.OnClickListener() {
+                            private boolean shouldAnimate() {
+                                return true;
+                            }
                             @Override
                             public void onClick(View v) {
-                                //Toast.makeText(mContext, "dismissed", Toast.LENGTH_SHORT).show();
-                                // reset time and set button to start
-                                //int minutes = Utility.updateCurrentTime(getApplicationContext());
                                 mTimerRunning = false;
-                                //mCurrentTime = minutes * 60000;
-                                //setTime();
-                                //mStartTimer.setText(getString(R.string.start_timer));
-                                // MainActivity.resetPlayerCards();
-                                /* vibrator.cancel();
-                                mAlarmTone.stop(); */
                                 alarmHandler.removeCallbacks(alarms);
                                 mAlarmTone.stop();
                                 vibrator.cancel();
@@ -384,11 +358,11 @@ public class MainActivity extends AppCompatActivity {
         TextView redNameView = (TextView) findViewById(R.id.redSide);
         TextView greenNameView = (TextView) findViewById(R.id.greenSide);
 
-        if (redName != null) {
-            redNameView.setText(redName);
+        if (mRedFencer.getName() != null) {
+            redNameView.setText(mRedFencer.getName());
         }
-        if (greenName != null) {
-            greenNameView.setText(greenName);
+        if (mGreenFencer.getName() != null) {
+            greenNameView.setText(mGreenFencer.getName());
         }
 
         // set textviews and buttons for scorekeeping
@@ -400,14 +374,14 @@ public class MainActivity extends AppCompatActivity {
         subtractGreen = (Button) findViewById(R.id.minus_green);
 
         // set values to redScore and greenScore
-        redScore.setText(String.valueOf(Utility.redScore));
-        greenScore.setText(String.valueOf(Utility.greenScore));
+        redScore.setText(String.valueOf(mRedFencer.getPoints()));
+        greenScore.setText(String.valueOf(mGreenFencer.getPoints()));
 
         // set onclickListeners for buttons
-        addRed.setOnClickListener(createButtonChangeListener(redScore, TO_ADD, Utility.RED_PLAYER));
-        subtractRed.setOnClickListener(createButtonChangeListener(redScore, TO_SUBTRACT, Utility.RED_PLAYER));
-        addGreen.setOnClickListener(createButtonChangeListener(greenScore, TO_ADD, Utility.GREEN_PLAYER));
-        subtractGreen.setOnClickListener(createButtonChangeListener(greenScore, TO_SUBTRACT, Utility.GREEN_PLAYER));
+        addRed.setOnClickListener(createButtonChangeListener(redScore, TO_ADD, mRedFencer));
+        subtractRed.setOnClickListener(createButtonChangeListener(redScore, TO_SUBTRACT, mRedFencer));
+        addGreen.setOnClickListener(createButtonChangeListener(greenScore, TO_ADD, mGreenFencer));
+        subtractGreen.setOnClickListener(createButtonChangeListener(greenScore, TO_SUBTRACT, mGreenFencer));
 
         // set textViews and buttons for timekeeping
         mStartTimer = (Button) findViewById(R.id.start_timer);
@@ -420,6 +394,14 @@ public class MainActivity extends AppCompatActivity {
         // set onClickListener for start and reset
         mStartTimer.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                if (Utility.getAwakeStatus(mContext)) {
+                    if (!mTimerRunning) { // if timer isn't running, keep screen on because we want to start the timer
+                        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                    } else { // else, turn screen off
+                        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                    }
+                }
+                // create toggle timer intent and fire
                 Intent startTimer = new Intent(getApplicationContext(), TimerService.class);
                 startTimer.putExtra(Utility.CHANGE_TIMER, TimerService.TOGGLE_TIMER);
                 startService(startTimer);
@@ -434,11 +416,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // set more layouts
         updateGreenScores = (LinearLayout) findViewById(R.id.update_score_green);
         updateRedScores = (LinearLayout) findViewById(R.id.update_score_red);
 
     }
 
+    // set up ads with automatic debug detection
     private void setupAds(boolean test) {
         // set up ads and in app purchases
         MobileAds.initialize(getApplicationContext(), "ca-app-pub-6647745358935231~7845605907");
@@ -469,8 +453,8 @@ public class MainActivity extends AppCompatActivity {
     public void resetScores(View v) {
         redScore.setText(String.format("%s", 0));
         greenScore.setText(String.format("%s", 0));
-        Utility.redScore = 0;
-        Utility.greenScore = 0;
+        mRedFencer.setPoints(0);
+        mGreenFencer.setPoints(0);
     }
 
     // create options menu
@@ -510,23 +494,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // create an on click listener for each of the plus/minus buttons.
-    private View.OnClickListener createButtonChangeListener(final TextView score, final int toAdd, final String player) {
+    private View.OnClickListener createButtonChangeListener(final TextView score, final int toAdd, final Fencer fencer) {
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String valueStr = score.getText().toString();
-                int value = Integer.parseInt(valueStr);
-                if (toAdd == TO_ADD && value < Utility.getPointsPreference(mContext)) {
-                    value += 1;
-                } else if (toAdd == TO_SUBTRACT && value > 0) {
-                    value -= 1;
+                if (toAdd == TO_ADD && fencer.getPoints() < Utility.getPointsPreference(mContext)) {
+                    fencer.incrementNumPoints();
+                } else if (toAdd == TO_SUBTRACT && fencer.getPoints() > 0) {
+                    fencer.decrementNumPoints();
                 }
-                score.setText(String.format("%s", value));
-                if (player.equals(Utility.GREEN_PLAYER)) {
-                    Utility.greenScore = value;
-                } else {
-                    Utility.redScore = value;
-                }
+                score.setText(String.format("%s", fencer.getPoints()));
+
                 if (Utility.getPauseStatus(mContext)) {
                     if (mTimerRunning) {
                         Intent startTimer = new Intent(getApplicationContext(), TimerService.class);
@@ -568,9 +547,9 @@ public class MainActivity extends AppCompatActivity {
                 }
                 view.setText(name);
                 if (defaultName.equals("Green")) {
-                    greenName = name;
+                    mGreenFencer.setName(name);
                 } else if (defaultName.equals("Red")) {
-                    redName = name;
+                    mRedFencer.setName(name);
                 }
             }
         });

@@ -111,7 +111,7 @@ public class TimerService extends Service {
         } else if (toggleOrReset == SET_TIMER) { // set timer to value
             mHandler.removeCallbacks(mUpdateTimeTask);
             //Log.d("MCURERENTTIME", "In TimerService: " + mCurrentTime);
-            Intent intent = new Intent(SET_TIMER_INTENT);
+            Intent intent = new Intent(UPDATE_TIME_INTENT);
             LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
         }
 

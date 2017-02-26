@@ -15,15 +15,17 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import static com.kfang.fenceme.MainActivity.mGreenFencer;
+import static com.kfang.fenceme.MainActivity.mRedFencer;
 import static com.kfang.fenceme.TimerService.RESET_BOUT_INTENT;
+import static com.kfang.fenceme.TimerService.mTimerRunning;
 import static com.kfang.fenceme.Utility.RESET_BOUT_PREFERENCES;
 import static com.kfang.fenceme.Utility.TO_CARD_PLAYER;
-import static com.kfang.fenceme.Utility.greenName;
-import static com.kfang.fenceme.Utility.redName;
 
 /**
  * Drawer Item CLick Listener
@@ -52,16 +54,14 @@ class DrawerItemClickListener implements NavigationView.OnNavigationItemSelected
         switch (selectedItem) {
             case "Settings":
                 PreferenceFragment fragment = new SettingsActivity.MyPreferenceFragment();
-                Log.d("RUNNING", "Settings");
                 fragmentManager.beginTransaction()
                         .replace(R.id.drawer_layout, fragment)
                         .addToBackStack(null)
                         .commit();
                 break;
             case "Card a Player":
-                Log.d("RUNNING", "Card");
                 AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
-                final String[] playerArray = {redName, greenName, "Reset Cards"};
+                final String[] playerArray = {mRedFencer.getName(), mGreenFencer.getName(), "Reset Cards"};
                 builder.setTitle("Card a player")
                         .setItems(playerArray, new DialogInterface.OnClickListener() {
                             @Override
@@ -71,6 +71,12 @@ class DrawerItemClickListener implements NavigationView.OnNavigationItemSelected
                                     MainActivity.resetPlayerCards();
                                     Toast.makeText(mActivity, "Cards have been reset!", Toast.LENGTH_SHORT).show();
                                 } else {
+                                    // create intent to card player and pause timer
+                                    if (mTimerRunning) {
+                                        Intent startTimer = new Intent(mActivity, TimerService.class);
+                                        startTimer.putExtra(Utility.CHANGE_TIMER, TimerService.TOGGLE_TIMER);
+                                        mActivity.startService(startTimer);
+                                    }
                                     Intent cardPlayer = new Intent(mActivity, CardPlayerActivity.class);
                                     cardPlayer.putExtra(TO_CARD_PLAYER, player);
                                     mActivity.startActivity(cardPlayer);
@@ -81,20 +87,17 @@ class DrawerItemClickListener implements NavigationView.OnNavigationItemSelected
                         .show();
                 break;
             case "Scorekeeper":
-                Log.d("RUNNING", "Scorekeeper");
                 break;
             case "Tiebreaker":
-                Log.d("RUNNING", "Tiebreaker");
                 MainActivity.makeTieBreaker(mActivity);
                 break;
             case "Reset Bout":
-                Log.d("RUNNING", "reset");
                 AlertDialog.Builder resetBuilder = new AlertDialog.Builder(mActivity);
                 resetBuilder.setTitle("Are you sure?")
                         .setPositiveButton("Reset", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 LocalBroadcastManager.getInstance(mActivity).sendBroadcast(new Intent(RESET_BOUT_INTENT));
-                                Toast.makeText(mActivity, "Bout reset!", Toast.LENGTH_SHORT);
+                                Toast.makeText(mActivity, "Bout reset!", Toast.LENGTH_SHORT).show();
                             }
                         })
                         .setMessage("Resetting will reset all points, the timer, and all cards awarded.")

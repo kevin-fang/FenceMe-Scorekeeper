@@ -9,9 +9,13 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.view.WindowManager;
 import android.widget.Toast;
+
+import static com.kfang.fenceme.TimerService.mTimerRunning;
 
 /**
  * Preference Activity
@@ -51,6 +55,7 @@ public class SettingsActivity extends AppCompatActivity {
             final NumberPickerPreference boutMinutesPreference = (NumberPickerPreference) findPreference(Utility.BOUT_LENGTH_MINUTES);
             final NumberPickerPreference boutPointsPreference = (NumberPickerPreference) findPreference(Utility.BOUT_LENGTH_POINTS);
             final CheckBoxPreference pausePreference = (CheckBoxPreference) findPreference(Utility.PAUSE_ON_SCORE_CHANGE);
+            final CheckBoxPreference awakePreference = (CheckBoxPreference) findPreference(Utility.KEEP_DEVICE_AWAKE);
             final CheckBoxPreference restorePreference = (CheckBoxPreference) findPreference(Utility.RESTORE_ON_EXIT);
             final CheckBoxPreference vibratePreference = (CheckBoxPreference) findPreference(Utility.VIBRATE_AT_END);
             final Preference resetPreferences = findPreference(Utility.RESET_BOUT_PREFERENCES);
@@ -92,6 +97,12 @@ public class SettingsActivity extends AppCompatActivity {
                                     break;
                                 case Utility.PAUSE_ON_SCORE_CHANGE:
                                     settingsEditor.putBoolean(Utility.PAUSE_ON_SCORE_CHANGE, pausePreference.isChecked());
+                                    break;
+                                case Utility.KEEP_DEVICE_AWAKE:
+                                    if (mTimerRunning) { // if timer is already running, don't let screen turn off
+                                        getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                                    }
+                                    settingsEditor.putBoolean(Utility.KEEP_DEVICE_AWAKE, awakePreference.isChecked());
                             }
 
                         }
@@ -104,7 +115,9 @@ public class SettingsActivity extends AppCompatActivity {
         public void onActivityCreated(Bundle savedInstanceState) {
             super.onActivityCreated(savedInstanceState);
 
-            getView().setBackgroundColor(Color.WHITE);
+            if (getView() != null) {
+                getView().setBackgroundColor(Color.WHITE);
+            }
             getView().setClickable(true);
         }
 

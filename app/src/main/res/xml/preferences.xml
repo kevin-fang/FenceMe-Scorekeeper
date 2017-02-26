@@ -26,6 +26,11 @@
             android:key="pause_on_score_change"
             android:title="@string/pause_on_score_change" />
 
+        <Preference
+            android:key="reset_bout_length"
+            android:summary="@string/reset_preferences"
+            android:title="@string/reset_bout_preferences" />
+
     </PreferenceCategory>
 
     <PreferenceCategory android:title="Miscellaneous">
@@ -35,10 +40,12 @@
             android:summary="@string/vibrate_summary"
             android:title="@string/vibrate_on_finish" />
 
-        <Preference
-            android:key="reset_bout_length"
-            android:summary="@string/reset_preferences"
-            android:title="Reset Defaults" />
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="keep_awake"
+            android:summary="@string/keep_awake_summary"
+            android:title="@string/keep_awake" />
+
         <!--
         <CheckBoxPreference
             android:key="enable_alarm"
