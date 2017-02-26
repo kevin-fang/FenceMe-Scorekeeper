@@ -358,7 +358,16 @@ public class MainActivity extends AppCompatActivity {
                                             enableChangingScore();
                                             makeTieBreaker(mContext);
                                         }
-                                    })
+                                    }).setOnCancelListener(new DialogInterface.OnCancelListener() {
+                                @Override
+                                public void onCancel(DialogInterface dialog) {
+                                    mTimerRunning = false;
+                                    alarmHandler.removeCallbacks(alarms);
+                                    mAlarmTone.stop();
+                                    vibrator.cancel();
+                                    enableChangingScore();
+                                }
+                            })
                                     .create()
                                     .show();
                         }
