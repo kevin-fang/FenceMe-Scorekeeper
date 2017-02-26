@@ -1,16 +1,22 @@
 package com.kfang.fenceme;
 
+import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceManager;
+import android.provider.Telephony;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
@@ -22,6 +28,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputFilter;
 import android.text.InputType;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -40,6 +47,7 @@ import com.android.vending.billing.IInAppBillingService;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
+import com.kobakei.ratethisapp.RateThisApp;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -116,6 +124,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        RateThisApp.onStart(this);
+        RateThisApp.showRateDialogIfNeeded(this);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mContext = MainActivity.this;
@@ -150,6 +165,64 @@ public class MainActivity extends AppCompatActivity {
         }
         setTime();
 
+        checkIfFirstRun();
+    }
+
+    public void checkIfFirstRun() {
+        String versionName;
+        try {
+            PackageInfo pinfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+            versionName = pinfo.versionName;
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+            String lastVersion = prefs.getString(Utility.LAST_VERSION_NUMBER, null);
+            Log.d("lastversion", "lastversion equals: " + lastVersion);
+            if (lastVersion == null || !lastVersion.equals(versionName)) {
+                displayNewDialog(versionName);
+                SharedPreferences.Editor editor = prefs.edit();
+                editor.putString(Utility.LAST_VERSION_NUMBER, versionName);
+                editor.apply();
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void displayNewDialog(String versionName) {
+        AlertDialog.Builder whatsNew = new AlertDialog.Builder(mContext);
+        whatsNew.setTitle("What's new in FenceMe! " + versionName + ":")
+                .setMessage("* Automatic tie and win detection\n* Minor bugfixes\n* Significant internal optimization")
+                .setPositiveButton("Dismiss", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .setNegativeButton("Rate app", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        launchRateApp();
+                        dialog.dismiss();
+                    }
+                })
+                .create()
+                .show();
+    }
+
+    public void launchRateApp() {
+        Uri uri = Uri.parse("market://details?id=" + getApplicationContext().getPackageName());
+        Intent goToMarket = new Intent(Intent.ACTION_VIEW, uri);
+        // To count with Play market backstack, After pressing back button,
+        // to taken back to our application, we need to add following flags to intent.
+        goToMarket.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY |
+                Intent.FLAG_ACTIVITY_NEW_DOCUMENT |
+                Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+        try {
+            startActivity(goToMarket);
+        } catch (ActivityNotFoundException e) {
+            startActivity(new Intent(Intent.ACTION_VIEW,
+                    Uri.parse("http://play.google.com/store/apps/details?id=" + getApplicationContext().getPackageName())));
+        }
     }
 
     public int getRedScore() {
@@ -539,8 +612,13 @@ public class MainActivity extends AppCompatActivity {
             case R.id.about:
                 startActivity(new Intent(this, AboutActivity.class));
                 return true;
-            case R.id.card:
-                startActivity(new Intent(this, CardPlayerActivity.class));
+            case R.id.whats_new:
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+                String lastVersion = prefs.getString(Utility.LAST_VERSION_NUMBER, null);
+                displayNewDialog(lastVersion);
+                return true;
+            case R.id.rate_this_app:
+                RateThisApp.showRateDialog(this);
                 return true;
         }
         return super.onOptionsItemSelected(item);

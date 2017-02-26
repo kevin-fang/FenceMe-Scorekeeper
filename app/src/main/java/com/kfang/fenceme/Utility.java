@@ -28,6 +28,7 @@ class Utility {
     static final String CHANGE_TIMER = "TOGGLE";
     static final int DEFAULT_POINTS = 5;
     static final int DEFAULT_MINUTES = 3;
+    static final String LAST_VERSION_NUMBER = "last_version_number";
     static final String RESTORE_ON_EXIT = "restore_status";
     private static final String RED_CARDRED = "red_cardred";
     private static final String RED_CARDYELLOW = "red_cardyellow";
