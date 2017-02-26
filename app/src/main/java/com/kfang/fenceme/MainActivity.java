@@ -539,7 +539,19 @@ public class MainActivity extends AppCompatActivity {
 
     public void setTimer(View v) {
         if (TimerService.mTimerRunning) {
-            Toast.makeText(getApplicationContext(), "Pause timer before changing time", Toast.LENGTH_SHORT).show();
+            /* Toast.makeText(getApplicationContext(), "Pause timer before changing time", Toast.LENGTH_SHORT).show();*/
+            final Snackbar snackbar = Snackbar.make(mDrawerLayout, "Pause the timer before changing time", Snackbar.LENGTH_SHORT);
+            snackbar.setAction("Pause Timer", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mTimerRunning) {
+                        Intent stopTimer = new Intent(getApplicationContext(), TimerService.class);
+                        stopTimer.putExtra(Utility.CHANGE_TIMER, TimerService.TOGGLE_TIMER);
+                        startService(stopTimer);
+                    }
+                    snackbar.dismiss();
+                }
+            }).show();
             return;
         }
         DialogFragment newFragment = TimePickerFragment.newInstance(R.string.set_timer);
@@ -560,9 +572,9 @@ public class MainActivity extends AppCompatActivity {
 
                 if (Utility.getPauseStatus(mContext)) {
                     if (mTimerRunning) {
-                        Intent startTimer = new Intent(getApplicationContext(), TimerService.class);
-                        startTimer.putExtra(Utility.CHANGE_TIMER, TimerService.TOGGLE_TIMER);
-                        startService(startTimer);
+                        Intent stopTimer = new Intent(getApplicationContext(), TimerService.class);
+                        stopTimer.putExtra(Utility.CHANGE_TIMER, TimerService.TOGGLE_TIMER);
+                        startService(stopTimer);
                     }
                 }
                 checkForVictories(fencer);
@@ -573,6 +585,11 @@ public class MainActivity extends AppCompatActivity {
 
     public void checkForVictories(Fencer fencer) {
         if (fencer.getPoints() >= Utility.getPointsPreference(mContext) || tieBreaker) {
+            if (mTimerRunning) {
+                Intent stopTimer = new Intent(getApplicationContext(), TimerService.class);
+                stopTimer.putExtra(Utility.CHANGE_TIMER, TimerService.TOGGLE_TIMER);
+                startService(stopTimer);
+            }
             disableChangingScore();
             AlertDialog.Builder winnerDialogBuilder = new AlertDialog.Builder(mContext);
             winnerDialogBuilder.setTitle(fencer.getName() + " wins!")
