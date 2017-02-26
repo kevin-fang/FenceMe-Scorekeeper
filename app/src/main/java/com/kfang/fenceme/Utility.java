@@ -30,6 +30,8 @@ class Utility {
     static final int DEFAULT_MINUTES = 3;
     static final String LAST_VERSION_NUMBER = "last_version_number";
     static final String RESTORE_ON_EXIT = "restore_status";
+    private static final String RED_NAME = "red_name";
+    private static final String GREEN_NAME = "green_name";
     private static final String RED_CARDRED = "red_cardred";
     private static final String RED_CARDYELLOW = "red_cardyellow";
     private static final String GREEN_CARDRED = "green_cardred";
@@ -80,6 +82,8 @@ class Utility {
                 .putInt(GREEN_CARDRED, mGreenFencer.getRedCards())
                 .putInt(RED_CARDYELLOW, mRedFencer.getYellowCards())
                 .putInt(GREEN_CARDYELLOW, mGreenFencer.getYellowCards())
+                .putString(GREEN_NAME, mGreenFencer.getName())
+                .putString(RED_NAME, mRedFencer.getName())
                 .apply();
     }
 
@@ -95,5 +99,7 @@ class Utility {
         mRedFencer.setYellowCards(gamePrefs.getInt(RED_CARDYELLOW, 0));
         mGreenFencer.setRedCards(gamePrefs.getInt(GREEN_CARDRED, 0));
         mGreenFencer.setYellowCards(gamePrefs.getInt(GREEN_CARDYELLOW, 0));
+        mRedFencer.setName(gamePrefs.getString(RED_NAME, "Red"));
+        mGreenFencer.setName(gamePrefs.getString(GREEN_NAME, "Green"));
     }
 }

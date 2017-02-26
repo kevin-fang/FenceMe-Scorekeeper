@@ -1,4 +1,12 @@
 <resources>
+    <string name="changelog">
+        * Automatic tie and win detection\n
+        * Significant internal optimization\n
+        * Automatic tiebreaker win detection\n
+        * New about screen!\n
+        * Names now restore on app exit\n
+        * Minor bug fixes\n
+    </string>
     <string name="app_name">FenceMe!</string>
     <string name="red_side">Red</string>
     <string name="green_side">Green</string>
@@ -55,7 +63,7 @@
     <string name="email">Features requests? Questions? Email kfangapps@gmail.com\n</string>
     <string name="logo_desc">FenceMe! Scorekeeper logo</string>
     <string name="rate">Click to rate this app on the Google Play Store</string>
-    <string name="whatsnew">What\'s new</string>
+    <string name="whats_new">What\'s new</string>
     <string name="rate_this_app">Rate this app</string>
 
 </resources>

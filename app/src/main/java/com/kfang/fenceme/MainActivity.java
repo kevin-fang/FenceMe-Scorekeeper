@@ -85,6 +85,8 @@ public class MainActivity extends AppCompatActivity {
     Button resetTimer;
     TextView greenScore;
     TextView redScore;
+    TextView redNameView;
+    TextView greenNameView;
     FragmentManager mFragmentManager = getSupportFragmentManager();
     AdView mAdView;
     int maxNameLength = 20;
@@ -148,8 +150,8 @@ public class MainActivity extends AppCompatActivity {
 
         // set up ads, views, and BroadcastManagers
         boolean isDebuggable = BuildConfig.DEBUG;
-        setupAds(isDebuggable);
         setViews();
+        setupAds(isDebuggable);
         setUpBroadcastManagers();
         // set "hamburger" animations
         if (getSupportActionBar() != null) {
@@ -164,12 +166,24 @@ public class MainActivity extends AppCompatActivity {
         // restore game status if enabled
         if (Utility.getRestoreStatus(mContext)) {
             Utility.updateCurrentMatchPreferences(mContext);
+            updateNames();
         } else {
             mCurrentTime = Utility.updateCurrentTime(mContext) * 60000;
         }
         setTime();
 
         checkIfFirstRun();
+    }
+
+    private void updateNames() {
+        redNameView = (TextView) findViewById(R.id.redSide);
+        greenNameView = (TextView) findViewById(R.id.greenSide);
+        if (mRedFencer.getName() != null) {
+            redNameView.setText(mRedFencer.getName());
+        }
+        if (mGreenFencer.getName() != null) {
+            greenNameView.setText(mGreenFencer.getName());
+        }
     }
 
     public void checkIfFirstRun() {
@@ -195,7 +209,7 @@ public class MainActivity extends AppCompatActivity {
     public void displayNewDialog(String versionName) {
         AlertDialog.Builder whatsNew = new AlertDialog.Builder(mContext);
         whatsNew.setTitle("What's new in FenceMe! " + versionName + ":")
-                .setMessage("* Automatic tie and win detection\n* Minor bugfixes\n* Significant internal optimization")
+                .setMessage(getString(R.string.changelog))
                 .setPositiveButton("Dismiss", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -500,8 +514,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         };
-        lbm.registerReceiver(timerUp, new IntentFilter(TIMER_UP_INTENT)
-        );
+        lbm.registerReceiver(timerUp, new IntentFilter(TIMER_UP_INTENT));
 
         // holy grail reset entire bout
         // cards, timer, player scores
@@ -544,7 +557,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void setViews() {
         // find name views and set correspondingly
-        TextView redNameView = (TextView) findViewById(R.id.redSide);
+        redNameView = (TextView) findViewById(R.id.redSide);
         TextView greenNameView = (TextView) findViewById(R.id.greenSide);
 
         if (mRedFencer.getName() != null) {

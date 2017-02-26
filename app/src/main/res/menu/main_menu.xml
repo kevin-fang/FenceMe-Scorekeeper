@@ -4,7 +4,7 @@
     <item
         android:id="@+id/whats_new"
         android:gravity="center_horizontal"
-        android:title="@string/whatsnew"
+        android:title="@string/whats_new"
         app:showAsAction="never" />
 
     <item
