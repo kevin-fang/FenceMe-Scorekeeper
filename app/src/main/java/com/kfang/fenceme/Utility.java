@@ -21,6 +21,8 @@ class Utility {
     static final String BOUT_LENGTH_MINUTES = "bout_length_time";
     static final String MAX_BRIGHTNESS = "maximum_brightness";
     static final String RESET_BOUT_PREFERENCES = "reset_bout_prefs";
+    static final String POPUP_ON_SCORE = "popup_on_score_increment";
+    static final String VIBRATE_TIMER = "vibrate_on_timer_change";
 
     static final int TO_ADD = 1;
     static final int TO_SUBTRACT = 0;
@@ -52,6 +54,11 @@ class Utility {
         return prefs.getInt(BOUT_LENGTH_POINTS, DEFAULT_POINTS);
     }
 
+    static boolean getPopupPreference(Context context) {
+        prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        return prefs.getBoolean(POPUP_ON_SCORE, false);
+    }
+
     static boolean getRestoreStatus(Context context) {
         prefs = PreferenceManager.getDefaultSharedPreferences(context);
         return prefs.getBoolean(RESTORE_ON_EXIT, true);
@@ -60,6 +67,11 @@ class Utility {
     static boolean getVibrateStatus(Context context) {
         prefs = PreferenceManager.getDefaultSharedPreferences(context);
         return prefs.getBoolean(VIBRATE_AT_END, true);
+    }
+
+    static boolean getVibrateTimerStatus(Context context) {
+        prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        return prefs.getBoolean(VIBRATE_TIMER, true);
     }
 
     static boolean getPauseStatus(Context context) {

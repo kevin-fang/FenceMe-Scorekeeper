@@ -60,6 +60,7 @@ import static com.kfang.fenceme.TimerService.mAlarmTone;
 import static com.kfang.fenceme.TimerService.mTimerRunning;
 import static com.kfang.fenceme.Utility.TO_ADD;
 import static com.kfang.fenceme.Utility.TO_SUBTRACT;
+import static com.kfang.fenceme.Utility.getPopupPreference;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -93,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
     Context mContext;
     LinearLayout updateRedScores;
     LinearLayout updateGreenScores;
+    Vibrator vibrator;
     private NavigationView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
 
@@ -134,6 +136,7 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         RateThisApp.onStart(this);
         RateThisApp.showRateDialogIfNeeded(this);
+        setUpBroadcastManagers();
     }
 
     @Override
@@ -149,10 +152,10 @@ public class MainActivity extends AppCompatActivity {
         fencers.add(mGreenFencer);
 
         // set up ads, views, and BroadcastManagers
+        vibrator = (Vibrator) getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
         boolean isDebuggable = BuildConfig.DEBUG;
         setViews();
         setupAds(isDebuggable);
-        setUpBroadcastManagers();
         // set "hamburger" animations
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -360,6 +363,8 @@ public class MainActivity extends AppCompatActivity {
             public void onReceive(Context context, Intent intent) {
                 // set text in button to corresponding value.
                 String text = intent.getStringExtra(TimerService.UPDATE_BUTTON_TEXT);
+                if (Utility.getVibrateTimerStatus(mContext))
+                    vibrator.vibrate(50);
                 mStartTimer.setText(text);
             }
         };
@@ -387,7 +392,6 @@ public class MainActivity extends AppCompatActivity {
 
                 Log.d("timerservice", "timerUP");
                 // vibrate phone in 500 ms increments
-                final Vibrator vibrator = (Vibrator) getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
                 Uri alarm = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
                 mAlarmTone = RingtoneManager.getRingtone(getApplicationContext(), alarm);
 
@@ -527,6 +531,7 @@ public class MainActivity extends AppCompatActivity {
                 mStartTimer.setText(getString(R.string.start_timer));
                 setTime();
                 resetScores(null);
+                vibrator.cancel();
 
                 Intent stopTimer = new Intent(getApplicationContext(), TimerService.class);
                 stopTimer.putExtra(Utility.CHANGE_TIMER, TimerService.RESET_TIMER);
@@ -729,13 +734,22 @@ public class MainActivity extends AppCompatActivity {
                         startService(stopTimer);
                     }
                 }
-                checkForVictories(fencer);
+                if (!checkForVictories(fencer) && toAdd == TO_ADD && getPopupPreference(mContext)) {
+                    Snackbar.make(mDrawerLayout, "Gave touch to " + fencer.getName(), Snackbar.LENGTH_SHORT)
+                            .setAction("Dismiss", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+
+                                }
+                            })
+                            .show();
+                }
             }
 
         };
     }
 
-    public void checkForVictories(Fencer fencer) {
+    public boolean checkForVictories(Fencer fencer) {
         if (fencer.getPoints() >= Utility.getPointsPreference(mContext) || tieBreaker) {
             if (mTimerRunning) {
                 Intent stopTimer = new Intent(getApplicationContext(), TimerService.class);
@@ -763,7 +777,9 @@ public class MainActivity extends AppCompatActivity {
                     })
                     .create()
                     .show();
+            return true;
         }
+        return false;
     }
 
     public void changeRedName(View v) {

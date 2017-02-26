@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.WindowManager;
 
+import static com.kfang.fenceme.TimerService.UPDATE_BUTTON_TEXT;
 import static com.kfang.fenceme.TimerService.mTimerRunning;
 
 /**
@@ -53,7 +54,9 @@ public class SettingsActivity extends AppCompatActivity {
             final NumberPickerPreference boutPointsPreference = (NumberPickerPreference) findPreference(Utility.BOUT_LENGTH_POINTS);
             final CheckBoxPreference pausePreference = (CheckBoxPreference) findPreference(Utility.PAUSE_ON_SCORE_CHANGE);
             final CheckBoxPreference awakePreference = (CheckBoxPreference) findPreference(Utility.KEEP_DEVICE_AWAKE);
+            final CheckBoxPreference vibrateTimerPreference = (CheckBoxPreference) findPreference(Utility.VIBRATE_TIMER);
             final CheckBoxPreference restorePreference = (CheckBoxPreference) findPreference(Utility.RESTORE_ON_EXIT);
+            final CheckBoxPreference popupPreference = (CheckBoxPreference) findPreference(Utility.POPUP_ON_SCORE);
             final CheckBoxPreference vibratePreference = (CheckBoxPreference) findPreference(Utility.VIBRATE_AT_END);
             final Preference resetPreferences = findPreference(Utility.RESET_BOUT_PREFERENCES);
 
@@ -100,6 +103,13 @@ public class SettingsActivity extends AppCompatActivity {
                                         getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
                                     }
                                     settingsEditor.putBoolean(Utility.KEEP_DEVICE_AWAKE, awakePreference.isChecked());
+                                    break;
+                                case Utility.POPUP_ON_SCORE:
+                                    settingsEditor.putBoolean(Utility.POPUP_ON_SCORE, popupPreference.isChecked());
+                                    break;
+                                case Utility.VIBRATE_TIMER:
+                                    settingsEditor.putBoolean(Utility.VIBRATE_TIMER, vibrateTimerPreference.isChecked());
+                                    break;
                             }
 
                         }

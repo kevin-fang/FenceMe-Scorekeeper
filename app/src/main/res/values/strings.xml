@@ -3,8 +3,8 @@
         * Automatic tie and win detection\n
         * Significant internal optimization\n
         * Automatic tiebreaker win detection\n
-        * New about screen!\n
-        * Names now restore on app exit\n
+        * Added option for popup on score increments\n
+        * Vibrate on timer change\n
         * Minor bug fixes\n
     </string>
     <string name="app_name">FenceMe!</string>
@@ -47,6 +47,10 @@
     <string name="pause_on_score_change">Pause timer on score change</string>
     <string name="keep_awake">Keep device awake</string>
     <string name="keep_awake_summary">When the timer is running, keep this device awake</string>
+    <string name="popup_on_score_increment">Popup on score increment</string>
+    <string name="popup_increment_summary">Create a popup upon score increment</string>
+    <string name="vibrate_timer_summary">Vibrate when the timer is started, paused, or reset</string>
+    <string name="vibrate_timer">Vibrate on timer change</string>
 
     <string name="set_timer">Set Timer</string>
     <string name="cancel">Cancel</string>
@@ -58,7 +62,7 @@
     <string name="restore_status_on_exit">Save game status on exit</string>
     <string name="restore_status_summary">When the app is closed, save the current point and time totals</string>
     <string name="vibrate_on_finish">Vibrate on timer finish</string>
-    <string name="vibrate_summary">Vibrate for when the timer runs out</string>
+    <string name="vibrate_summary">Vibrate when the timer runs out</string>
     <string name="currently_carding">Currently carding:</string>
     <string name="email">Features requests? Questions? Email kfangapps@gmail.com\n</string>
     <string name="logo_desc">FenceMe! Scorekeeper logo</string>

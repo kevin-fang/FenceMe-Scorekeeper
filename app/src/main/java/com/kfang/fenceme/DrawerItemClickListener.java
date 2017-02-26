@@ -82,6 +82,8 @@ class DrawerItemClickListener implements NavigationView.OnNavigationItemSelected
             case "Scorekeeper":
                 break;
             case "Tiebreaker":
+                mRedFencer.setPoints(0);
+                mGreenFencer.setPoints(0);
                 MainActivity.makeTieBreaker(mActivity);
                 break;
             case "Reset Bout":
