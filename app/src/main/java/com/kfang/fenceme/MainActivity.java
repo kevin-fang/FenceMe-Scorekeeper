@@ -42,12 +42,10 @@ import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Locale;
 import java.util.Random;
 
 import static com.kfang.fenceme.TimerService.RESET_BOUT_INTENT;
-import static com.kfang.fenceme.TimerService.SET_TIMER_INTENT;
 import static com.kfang.fenceme.TimerService.TIMER_UP_INTENT;
 import static com.kfang.fenceme.TimerService.mAlarmTone;
 import static com.kfang.fenceme.TimerService.mTimerRunning;
@@ -153,6 +151,7 @@ public class MainActivity extends AppCompatActivity {
         setTime();
 
     }
+
     public int getRedScore() {
         return Integer.parseInt(redScore.getText().toString());
     }
@@ -312,6 +311,7 @@ public class MainActivity extends AppCompatActivity {
                             private boolean shouldAnimate() {
                                 return true;
                             }
+
                             @Override
                             public void onClick(View v) {
                                 mTimerRunning = false;

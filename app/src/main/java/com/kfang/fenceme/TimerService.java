@@ -1,19 +1,11 @@
 package com.kfang.fenceme;
 
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.media.Ringtone;
-import android.media.RingtoneManager;
-import android.net.Uri;
 import android.os.Handler;
 import android.os.IBinder;
-import android.os.Vibrator;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.Snackbar;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
-import android.view.View;
 
 import static com.kfang.fenceme.MainActivity.mCurrentTime;
 

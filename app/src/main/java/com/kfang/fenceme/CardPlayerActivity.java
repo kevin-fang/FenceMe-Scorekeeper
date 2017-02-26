@@ -49,8 +49,8 @@ public class CardPlayerActivity extends AppCompatActivity {
             numRed = mGreenFencer.getRedCards();
             currentlyCarding.setText(getString(R.string.currently_carding) + " " + mGreenFencer.getName());
         }
-        yellowButton.setText(String.format(Locale.getDefault(), "Yellow Card\n%d", numYellow));
-        redButton.setText(String.format(Locale.getDefault(), "Red Card\n%d", numRed));
+        yellowButton.setText(String.format(Locale.getDefault(), "Yellow\nCard\n%d", numYellow));
+        redButton.setText(String.format(Locale.getDefault(), "Red\nCard\n%d", numRed));
         //blackButton.setText(String.format(Locale.getDefault(), "Black Card\n%d", 0));
     }
 

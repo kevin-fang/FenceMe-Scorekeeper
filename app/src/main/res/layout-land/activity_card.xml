@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/currently_carding"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingEnd="12dp"
+        android:paddingStart="12dp"
+        android:paddingTop="12dp"
+        android:text="@string/currently_carding"
+        android:textSize="20sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <Button
+            android:id="@+id/yellow_card"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_margin="12dp"
+            android:layout_weight="1"
+            android:background="@drawable/yellowcard"
+            android:fontFamily="sans-serif-light"
+            android:onClick="displayYellow"
+            android:text="@string/yellow_card"
+            android:textSize="@dimen/button_text_size" />
+
+        <Button
+            android:id="@+id/red_card"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_margin="12dp"
+            android:layout_weight="1"
+            android:background="@drawable/redcard"
+            android:fontFamily="sans-serif-light"
+            android:onClick="displayRed"
+            android:text="@string/red_card"
+            android:textSize="@dimen/button_text_size" />
+
+        <Button
+            android:id="@+id/black_card"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_margin="12dp"
+            android:layout_weight="1"
+            android:background="@drawable/blackcard"
+            android:fontFamily="sans-serif-light"
+            android:onClick="displayBlack"
+            android:text="@string/black_card"
+            android:textColor="@color/colorNames"
+            android:textSize="@dimen/button_text_size" />
+    </LinearLayout>
+
+</LinearLayout>

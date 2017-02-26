@@ -3,7 +3,6 @@ package com.kfang.fenceme;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.widget.Toast;
 
 import static com.kfang.fenceme.MainActivity.mGreenFencer;
 import static com.kfang.fenceme.MainActivity.mRedFencer;
@@ -44,6 +43,7 @@ class Utility {
         prefs = PreferenceManager.getDefaultSharedPreferences(context);
         return prefs.getBoolean(KEEP_DEVICE_AWAKE, true);
     }
+
     static int getPointsPreference(Context context) {
         prefs = PreferenceManager.getDefaultSharedPreferences(context);
         return prefs.getInt(BOUT_LENGTH_POINTS, DEFAULT_POINTS);

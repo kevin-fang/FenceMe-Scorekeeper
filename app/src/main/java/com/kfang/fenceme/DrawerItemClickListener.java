@@ -11,20 +11,13 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.DrawerLayout;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.WindowManager;
-import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import static com.kfang.fenceme.MainActivity.mGreenFencer;
 import static com.kfang.fenceme.MainActivity.mRedFencer;
 import static com.kfang.fenceme.TimerService.RESET_BOUT_INTENT;
 import static com.kfang.fenceme.TimerService.mTimerRunning;
-import static com.kfang.fenceme.Utility.RESET_BOUT_PREFERENCES;
 import static com.kfang.fenceme.Utility.TO_CARD_PLAYER;
 
 /**
