@@ -20,12 +20,12 @@ class Utility {
     static final String KEEP_DEVICE_AWAKE = "keep_awake";
     static final String BOUT_LENGTH_POINTS = "bout_length_points";
     static final String BOUT_LENGTH_MINUTES = "bout_length_time";
-    static final String RESET_BOUT_PREFERENCES = "reset_bout_length";
+    static final String MAX_BRIGHTNESS = "maximum_brightness";
+    static final String RESET_BOUT_PREFERENCES = "reset_bout_prefs";
 
     static final int TO_ADD = 1;
     static final int TO_SUBTRACT = 0;
     static final String TO_CARD_PLAYER = "card_player";
-    static final String MAX_BRIGHTNESS = "maximum_brightness";
     static final String CHANGE_TIMER = "TOGGLE";
     static final int DEFAULT_POINTS = 5;
     static final int DEFAULT_MINUTES = 3;

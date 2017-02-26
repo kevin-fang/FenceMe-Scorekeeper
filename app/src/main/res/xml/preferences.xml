@@ -27,7 +27,7 @@
             android:title="@string/pause_on_score_change" />
 
         <Preference
-            android:key="reset_bout_length"
+            android:key="reset_bout_prefs"
             android:summary="@string/reset_preferences"
             android:title="@string/reset_bout_preferences" />
 
