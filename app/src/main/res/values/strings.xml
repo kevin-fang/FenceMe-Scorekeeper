@@ -2,7 +2,7 @@
     <string name="app_name">FenceMe!</string>
 
     <string name="changelog">
-        * Red cards now increment points for other player\n
+        * Red cards now increment points for the opposite player\n
         * Automatic tiebreaker win detection\n
         * Added option for popup on score increments\n
         * Vibrate on timer change\n

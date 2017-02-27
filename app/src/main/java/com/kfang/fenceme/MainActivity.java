@@ -151,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
         vibrator = (Vibrator) getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
         boolean isDebuggable = BuildConfig.DEBUG;
         setViews();
-        setupAds(isDebuggable);
+        //setupAds(isDebuggable);
         // set "hamburger" animations
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -345,6 +345,9 @@ public class MainActivity extends AppCompatActivity {
     public void updateScores() {
         redScore.setText(String.valueOf(mRedFencer.getPoints()));
         greenScore.setText(String.valueOf(mGreenFencer.getPoints()));
+        if (!checkForVictories(mRedFencer)) {
+            checkForVictories(mGreenFencer);
+        }
     }
 
     private void setUpBroadcastManagers() {
