@@ -1,73 +1,45 @@
 <resources>
+    <string name="app_name">FenceMe!</string>
+
     <string name="changelog">
-        * Automatic tie and win detection\n
-        * Significant internal optimization\n
+        * Red cards now increment points for other player\n
         * Automatic tiebreaker win detection\n
         * Added option for popup on score increments\n
         * Vibrate on timer change\n
         * Minor bug fixes\n
     </string>
-    <string name="app_name">FenceMe!</string>
+
     <string name="red_side">Red</string>
     <string name="green_side">Green</string>
     <string name="add_point">+</string>
+    <string name="subtract_point">-</string>
+
     <string name="full_time">3:00</string>
+    <string name="no_time">0:00</string>
     <string name="no_score">0</string>
+
     <string name="start_timer">Start Timer</string>
     <string name="stop_timer">Pause Timer</string>
     <string name="reset_timer">Reset Timer</string>
-    <string name="subtract_point">-</string>
-    <string name="about">About FenceMe!</string>
-    <string name="about_text">The FenceMe! Scorekeeper Application was created by Kevin Fang as a
-        simple, elegant way to keep track of fencing scores. It contains many great features,
-        including:\n- Score keeping\n- Naming Players\n- Carding Players\n- Custom bout lengths\n- Penalty cards\n\nThis app is a work in progress, so expect many updates and new features!</string>
-    <string name="icon_attributes">Crossed weapons graphic made by <a href="http://www.freepik.com" title="Freepik">Freepik</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></string>
-    <string name="no_time">0:00</string>
+    <string name="set_timer">Set Timer</string>
+
+    <string name="reset_scores">Reset Scores</string>
+
+    <string name="card_player">Card a Player</string>
+    <string name="currently_carding">Currently carding:</string>
     <string name="black_card">Black\nCard</string>
     <string name="red_card">Red\nCard</string>
     <string name="yellow_card">Yellow\nCard</string>
+
     <string name="dismiss_button">Dismiss</string>
-    <string name="card_player">Card a Player</string>
-    <string name="reset_scores">Reset Scores</string>
     <string name="settings">Settings</string>
-
-    <string name="alarm_at_end">Timer alarm</string>
-    <string name="alarm_end_desc">Check this box to enable an alarm at the end of each bout timer</string>
-    <string name="max_points_per_bout">Maximum Points in Bout</string>
-    <string name="default_bout_length">Default Bout Length (minutes)</string>
-    <string name="maximum_brightness">Maximum Brightness when Displaying Cards</string>
-    <string name="maximum_brightness_desc">Check this box to set brightness to max when giving out red/yellow/black cards</string>
+    <string name="whats_new">What\'s new</string>
+    <string name="rate_this_app">Rate this app</string>
+    <string name="about">About FenceMe!</string>
     <string name="share_app">Share</string>
-    <string name="banner_ad_unit_id">ca-app-pub-6647745358935231/9322339102</string>
-    <string name="remove_ads">Remove Ads</string>
 
-    <string name="change_timer_summary">Press &quot;reset timer&quot; to activate</string>
-    <string name="change_point_summary">Press &quot;reset scores&quot; to activate</string>
-    <string name="current_version">Current app version: </string>
-    <string name="pause_on_score_change">Pause timer on score change</string>
-    <string name="keep_awake">Keep device awake</string>
-    <string name="keep_awake_summary">When the timer is running, keep this device awake</string>
-    <string name="popup_on_score_increment">Popup on score increment</string>
-    <string name="popup_increment_summary">Create a popup upon score increment</string>
-    <string name="vibrate_timer_summary">Vibrate when the timer is started, paused, or reset</string>
-    <string name="vibrate_timer">Vibrate on timer change</string>
-
-    <string name="set_timer">Set Timer</string>
     <string name="cancel">Cancel</string>
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
-    <string name="reset_bout_preferences">Reset default bout preferences</string>
-    <string name="reset_preferences">Reset names and bout preferences to 5 point, 3 minute bouts</string>
     <string name="award_point">Award Point</string>
-    <string name="restore_status_on_exit">Save game status on exit</string>
-    <string name="restore_status_summary">When the app is closed, save the current point and time totals</string>
-    <string name="vibrate_on_finish">Vibrate on timer finish</string>
-    <string name="vibrate_summary">Vibrate when the timer runs out</string>
-    <string name="currently_carding">Currently carding:</string>
-    <string name="email">Features requests? Questions? Email kfangapps@gmail.com\n</string>
-    <string name="logo_desc">FenceMe! Scorekeeper logo</string>
-    <string name="rate">Click to rate this app on the Google Play Store</string>
-    <string name="whats_new">What\'s new</string>
-    <string name="rate_this_app">Rate this app</string>
-
 </resources>

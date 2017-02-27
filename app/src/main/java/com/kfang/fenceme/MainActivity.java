@@ -527,7 +527,6 @@ public class MainActivity extends AppCompatActivity {
         );
 
 
-
         // holy grail reset entire bout
         // cards, timer, player scores
         lbm.registerReceiver(new BroadcastReceiver() {

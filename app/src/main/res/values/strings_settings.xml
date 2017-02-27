@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="alarm_at_end">Timer alarm</string>
+    <string name="alarm_end_desc">Check this box to enable an alarm at the end of each bout timer</string>
+
+    <string name="max_points_per_bout">Maximum Points in Bout</string>
+    <string name="default_bout_length">Default Bout Length (minutes)</string>
+
+    <string name="maximum_brightness">Maximum Brightness when Displaying Cards</string>
+    <string name="maximum_brightness_desc">Check this box to set brightness to max when giving out red/yellow/black cards</string>
+
+    <string name="banner_ad_unit_id">ca-app-pub-6647745358935231/9322339102</string>
+    <string name="remove_ads">Remove Ads</string>
+
+    <string name="pause_on_score_change">Pause timer on score change</string>
+
+    <string name="keep_awake">Keep device awake</string>
+    <string name="keep_awake_summary">When the timer is running, keep this device awake</string>
+
+    <string name="popup_on_score_increment">Popup on score increment</string>
+    <string name="popup_increment_summary">Create a popup upon score increment</string>
+
+    <string name="vibrate_timer_summary">Vibrate when the timer is started, paused, or reset</string>
+    <string name="vibrate_timer">Vibrate on timer change</string>
+
+    <string name="reset_bout_preferences">Reset default bout preferences</string>
+    <string name="reset_preferences">Reset names and bout preferences to 5 point, 3 minute bouts</string>
+
+    <string name="restore_status_on_exit">Save game status on exit</string>
+    <string name="restore_status_summary">When the app is closed, save the current point and time totals</string>
+
+    <string name="vibrate_on_finish">Vibrate on timer finish</string>
+    <string name="vibrate_summary">Vibrate when the timer runs out</string>
+
+    <string name="change_timer_summary">Press &quot;reset timer&quot; to activate</string>
+    <string name="change_point_summary">Press &quot;reset scores&quot; to activate</string>
+
+</resources>
