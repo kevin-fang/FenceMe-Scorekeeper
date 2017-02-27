@@ -1,7 +1,5 @@
 package com.kfang.fenceme;
 
-import android.content.Context;
-
 /**
  * Class to contain fencers
  */

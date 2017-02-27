@@ -3,7 +3,7 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="button_text_size">34sp</dimen>
-    <dimen name="timer_size">112sp</dimen>
+    <dimen name="timer_size">120sp</dimen>
     <dimen name="timer_size_landscape">108sp</dimen>
     <dimen name="player_name_size">45sp</dimen>
     <dimen name="score_text_size">34sp</dimen>

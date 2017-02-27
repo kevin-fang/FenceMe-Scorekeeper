@@ -16,7 +16,6 @@ import android.os.Handler;
 import android.os.Vibrator;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
-import android.provider.Telephony;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
@@ -41,16 +40,13 @@ import android.widget.HeaderViewListAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.android.vending.billing.IInAppBillingService;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 import com.kobakei.ratethisapp.RateThisApp;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Locale;
 import java.util.Random;
 
@@ -198,10 +194,13 @@ public class MainActivity extends AppCompatActivity {
             String lastVersion = prefs.getString(Utility.LAST_VERSION_NUMBER, null);
             Log.d("lastversion", "lastversion equals: " + lastVersion);
             if (lastVersion == null || !lastVersion.equals(versionName)) {
+                // first run
                 displayNewDialog(versionName);
                 SharedPreferences.Editor editor = prefs.edit();
                 editor.putString(Utility.LAST_VERSION_NUMBER, versionName);
                 editor.apply();
+
+
             }
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
@@ -343,6 +342,11 @@ public class MainActivity extends AppCompatActivity {
         lbm.unregisterReceiver(timerUp);
     }
 
+    public void updateScores() {
+        redScore.setText(String.valueOf(mRedFencer.getPoints()));
+        greenScore.setText(String.valueOf(mGreenFencer.getPoints()));
+    }
+
     private void setUpBroadcastManagers() {
         LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
         // LocalBroadcastManagers to deal with updating time
@@ -355,8 +359,6 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
-        lbm.registerReceiver(updateTime, new IntentFilter(TimerService.UPDATE_TIME_INTENT)
-        );
 
         updateToggle = new BroadcastReceiver() {
             @Override
@@ -368,10 +370,7 @@ public class MainActivity extends AppCompatActivity {
                 mStartTimer.setText(text);
             }
         };
-        // update text on toggle button
-        lbm.registerReceiver(
-                updateToggle, new IntentFilter(TimerService.UPDATE_TOGGLE_BUTTON_INTENT)
-        );
+
 
         resetBoutTimer = new BroadcastReceiver() {
             @Override
@@ -382,9 +381,6 @@ public class MainActivity extends AppCompatActivity {
                 setTime();
             }
         };
-        // reset timer
-        lbm.registerReceiver(resetBoutTimer, new IntentFilter(TimerService.RESET_TIMER_INTENT)
-        );
 
         timerUp = new BroadcastReceiver() {
             @Override
@@ -518,7 +514,19 @@ public class MainActivity extends AppCompatActivity {
 
             }
         };
+
         lbm.registerReceiver(timerUp, new IntentFilter(TIMER_UP_INTENT));
+        lbm.registerReceiver(updateTime, new IntentFilter(TimerService.UPDATE_TIME_INTENT)
+        );
+        // update text on toggle button
+        lbm.registerReceiver(
+                updateToggle, new IntentFilter(TimerService.UPDATE_TOGGLE_BUTTON_INTENT)
+        );
+        // reset timer
+        lbm.registerReceiver(resetBoutTimer, new IntentFilter(TimerService.RESET_TIMER_INTENT)
+        );
+
+
 
         // holy grail reset entire bout
         // cards, timer, player scores
@@ -552,6 +560,12 @@ public class MainActivity extends AppCompatActivity {
         subtractRed.setEnabled(true);
         addGreen.setEnabled(true);
         subtractGreen.setEnabled(true);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateScores();
     }
 
     private void setTime() {

@@ -12,7 +12,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.WindowManager;
 
-import static com.kfang.fenceme.TimerService.UPDATE_BUTTON_TEXT;
 import static com.kfang.fenceme.TimerService.mTimerRunning;
 
 /**

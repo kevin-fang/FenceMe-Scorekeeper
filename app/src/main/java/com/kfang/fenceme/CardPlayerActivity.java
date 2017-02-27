@@ -1,13 +1,19 @@
 package com.kfang.fenceme;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.Locale;
 
@@ -24,6 +30,7 @@ public class CardPlayerActivity extends AppCompatActivity {
     int numYellow = 0;
     int numRed = 0;
     TextView currentlyCarding;
+    LinearLayout cardLayout;
 
 
     @Override
@@ -51,6 +58,7 @@ public class CardPlayerActivity extends AppCompatActivity {
         }
         yellowButton.setText(String.format(Locale.getDefault(), "Yellow\nCard\n%d", numYellow));
         redButton.setText(String.format(Locale.getDefault(), "Red\nCard\n%d", numRed));
+        cardLayout = (LinearLayout) findViewById(R.id.card_layout);
         //blackButton.setText(String.format(Locale.getDefault(), "Black Card\n%d", 0));
     }
 
@@ -69,11 +77,19 @@ public class CardPlayerActivity extends AppCompatActivity {
     // display different cards based on what was clicked
     public void displayRed(View v) {
         // Toast.makeText(this, "Clicked Red", Toast.LENGTH_SHORT).show();
+        Fencer oppositeFencer;
         if (playerToCard.equals(mRedFencer.getName())) {
+            oppositeFencer = mGreenFencer;
             mRedFencer.incrementRedCards();
-        } else if (playerToCard.equals(mGreenFencer.getName())) {
+            Log.d("playerToCard", "mredfencer");
+        } else {
+            oppositeFencer = mRedFencer;
             mGreenFencer.incrementRedCards();
+            Log.d("playerToCard", "mgreenfencer");
         }
+        oppositeFencer.incrementNumPoints();
+
+        Toast.makeText(getApplicationContext(), "Gave point to " + oppositeFencer.getName(), Toast.LENGTH_SHORT).show();
         setContentView(R.layout.card_display);
         View cardView = findViewById(R.id.card);
         cardView.setBackground(ContextCompat.getDrawable(this, R.drawable.redcard));

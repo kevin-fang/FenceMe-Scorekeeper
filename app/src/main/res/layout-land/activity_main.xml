@@ -44,7 +44,7 @@
                 android:layout_centerVertical="true"
                 android:layout_gravity="center"
                 android:clickable="true"
-                android:fontFamily="sans-serif-light"
+                android:fontFamily="sans-serif-thin"
                 android:onClick="setTimer"
                 android:paddingBottom="12dp"
                 android:text="@string/full_time"
