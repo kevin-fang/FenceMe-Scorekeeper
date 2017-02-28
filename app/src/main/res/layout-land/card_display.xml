@@ -14,12 +14,12 @@
         android:layout_marginTop="8dp"
         android:layout_weight="1"
         android:background="@drawable/redcard"
-        android:contentDescription="@string/card_player" />
+        android:contentDescription="@string/nav_card_player" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:onClick="dismissCard"
-        android:text="@string/dismiss_button" />
+        android:text="@string/button_dismiss" />
 </LinearLayout>

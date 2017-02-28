@@ -32,7 +32,7 @@
             android:lines="1"
             android:onClick="changeRedName"
             android:paddingTop="6dp"
-            android:text="@string/red_side"
+            android:text="@string/red_side_default_name"
             android:textColor="@color/colorNames"
             android:textSize="@dimen/player_name_size" />
 
@@ -68,7 +68,7 @@
         android:gravity="center"
         android:isScrollContainer="false"
         android:onClick="setTimer"
-        android:text="@string/full_time"
+        android:text="@string/timer_full_time"
         android:textSize="@dimen/timer_size" />
 
     <LinearLayout
@@ -84,7 +84,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_weight=".35"
-            android:text="@string/reset_timer"
+            android:text="@string/button_reset_timer"
             android:textColor="@color/primary_text" />
 
         <View
@@ -102,7 +102,7 @@
             android:layout_gravity="center"
             android:layout_weight=".35"
             android:onClick="resetScores"
-            android:text="@string/start_timer"
+            android:text="@string/button_start_timer"
             android:textColor="@color/primary_text" />
     </LinearLayout>
 
@@ -127,7 +127,7 @@
             android:lines="1"
             android:onClick="changeGreenName"
             android:paddingTop="6dp"
-            android:text="@string/green_side"
+            android:text="@string/green_side_default_name"
             android:textColor="@color/colorNames"
             android:textSize="@dimen/player_name_size" />
 

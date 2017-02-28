@@ -538,7 +538,7 @@ public class MainActivity extends AppCompatActivity {
                 resetPlayerCards();
                 int minutes = Utility.updateCurrentTime(getApplicationContext());
                 mCurrentTime = minutes * 60000;
-                mStartTimer.setText(getString(R.string.start_timer));
+                mStartTimer.setText(getString(R.string.button_start_timer));
                 setTime();
                 resetScores(null);
                 vibrator.cancel();
@@ -609,7 +609,7 @@ public class MainActivity extends AppCompatActivity {
         // set textViews and buttons for timekeeping
         mStartTimer = (Button) findViewById(R.id.start_timer);
         if (mTimerRunning) {
-            mStartTimer.setText(getResources().getString(R.string.stop_timer));
+            mStartTimer.setText(getResources().getString(R.string.button_stop_timer));
         }
         resetTimer = (Button) findViewById(R.id.reset_timer);
         mCurrentTimer = (TextView) findViewById(R.id.timer);
@@ -727,7 +727,7 @@ public class MainActivity extends AppCompatActivity {
             }).show();
             return;
         }
-        DialogFragment newFragment = TimePickerFragment.newInstance(R.string.set_timer);
+        DialogFragment newFragment = TimePickerFragment.newInstance(R.string.button_set_timer);
         newFragment.show(mFragmentManager, "dialog");
     }
 

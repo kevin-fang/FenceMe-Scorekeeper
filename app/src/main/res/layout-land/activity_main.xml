@@ -47,7 +47,7 @@
                 android:fontFamily="sans-serif-thin"
                 android:onClick="setTimer"
                 android:paddingBottom="12dp"
-                android:text="@string/full_time"
+                android:text="@string/timer_full_time"
                 android:textSize="@dimen/timer_size_landscape" />
 
 
@@ -58,7 +58,7 @@
                 android:layout_above="@+id/reset_bar"
                 android:layout_centerHorizontal="true"
                 android:layout_gravity="center"
-                android:text="@string/start_timer" />
+                android:text="@string/button_start_timer" />
 
             <LinearLayout
                 android:id="@id/reset_bar"
@@ -76,7 +76,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_weight=".35"
-                    android:text="@string/reset_timer"
+                    android:text="@string/button_reset_timer"
                     android:textColor="@color/primary_text" />
 
                 <View
@@ -94,7 +94,7 @@
                     android:layout_gravity="center"
                     android:layout_weight=".35"
                     android:onClick="resetScores"
-                    android:text="@string/reset_scores"
+                    android:text="@string/button_reset_scores"
                     android:textColor="@color/primary_text" />
             </LinearLayout>
         </RelativeLayout>
@@ -124,7 +124,7 @@
                 android:lines="1"
                 android:onClick="changeRedName"
                 android:paddingTop="8dp"
-                android:text="@string/red_side"
+                android:text="@string/red_side_default_name"
                 android:textColor="@color/colorNames"
                 android:textSize="@dimen/player_name_size" />
 
@@ -185,7 +185,7 @@
                 android:lines="1"
                 android:onClick="changeGreenName"
                 android:paddingTop="8dp"
-                android:text="@string/green_side"
+                android:text="@string/green_side_default_name"
                 android:textColor="@color/colorNames"
                 android:textSize="@dimen/player_name_size" />
 

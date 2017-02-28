@@ -82,11 +82,11 @@ public class TimerService extends Service {
                 mStartTime = System.currentTimeMillis();
                 mHandler.removeCallbacks(mUpdateTimeTask);
                 mHandler.postDelayed(mUpdateTimeTask, 1000);
-                createUpdateToggleButtonIntent(R.string.stop_timer);
+                createUpdateToggleButtonIntent(R.string.button_stop_timer);
                 mTimerRunning = true;
             } else {
                 mHandler.removeCallbacks(mUpdateTimeTask);
-                createUpdateToggleButtonIntent(R.string.start_timer);
+                createUpdateToggleButtonIntent(R.string.button_start_timer);
                 mTimerRunning = false;
             }
         } else if (toggleOrReset == RESET_TIMER) { // reset the timer.
@@ -94,7 +94,7 @@ public class TimerService extends Service {
 
             Intent intent = new Intent(RESET_TIMER_INTENT);
             LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
-            createUpdateToggleButtonIntent(R.string.start_timer);
+            createUpdateToggleButtonIntent(R.string.button_start_timer);
 
             mTimerRunning = false;
             if (mAlarmTone != null && mAlarmTone.isPlaying()) { // stop the alarm if it is currently playing.

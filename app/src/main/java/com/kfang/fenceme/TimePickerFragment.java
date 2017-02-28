@@ -30,7 +30,6 @@ public class TimePickerFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        int title = getArguments().getInt("title");
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View pickerView = inflater.inflate(R.layout.time_picker, null);
@@ -53,7 +52,7 @@ public class TimePickerFragment extends DialogFragment {
 
 
         builder.setView(pickerView)
-                .setPositiveButton(R.string.set_timer, new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.button_set_timer, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         setTimer(minutesPicker.getValue(), secondsPicker.getValue());
