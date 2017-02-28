@@ -37,7 +37,6 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.HeaderViewListAdapter;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -68,10 +67,12 @@ public class MainActivity extends AppCompatActivity {
     static String[] mPreferenceTitles;
     static boolean tieBreaker = false;
     public DrawerLayout mDrawerLayout;
+
     BroadcastReceiver updateTime;
     BroadcastReceiver updateToggle;
     BroadcastReceiver resetBoutTimer;
     BroadcastReceiver timerUp;
+
     Button mStartTimer;
     TextView mCurrentTimer;
     // buttons in main drawable resource file
@@ -80,17 +81,19 @@ public class MainActivity extends AppCompatActivity {
     Button addGreen;
     Button subtractGreen;
     Button resetTimer;
+    Button doubleTouch;
+
     TextView greenScore;
     TextView redScore;
     TextView redNameView;
     TextView greenNameView;
+
     FragmentManager mFragmentManager = getSupportFragmentManager();
     AdView mAdView;
     int maxNameLength = 20;
     Context mContext;
-    LinearLayout updateRedScores;
-    LinearLayout updateGreenScores;
     Vibrator vibrator;
+
     private NavigationView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
 
@@ -151,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
         vibrator = (Vibrator) getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
         boolean isDebuggable = BuildConfig.DEBUG;
         setViews();
-        //setupAds(isDebuggable);
+        setupAds(isDebuggable);
         // set "hamburger" animations
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -210,8 +213,17 @@ public class MainActivity extends AppCompatActivity {
 
     public void displayNewDialog(String versionName) {
         AlertDialog.Builder whatsNew = new AlertDialog.Builder(mContext);
+        String[] changes = getResources().getStringArray(R.array.change_log);
+        StringBuilder changelogBuilder = new StringBuilder();
+        for (String change : changes) {
+            changelogBuilder.append("\u2022 "); // bullet point
+            changelogBuilder.append(change);
+            changelogBuilder.append("\n");
+        }
+        String changeLog = changelogBuilder.toString();
+
         whatsNew.setTitle("What's new in FenceMe! " + versionName + ":")
-                .setMessage(getString(R.string.changelog))
+                .setMessage(changeLog)
                 .setPositiveButton("Dismiss", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -345,9 +357,6 @@ public class MainActivity extends AppCompatActivity {
     public void updateScores() {
         redScore.setText(String.valueOf(mRedFencer.getPoints()));
         greenScore.setText(String.valueOf(mGreenFencer.getPoints()));
-        if (!checkForVictories(mRedFencer)) {
-            checkForVictories(mGreenFencer);
-        }
     }
 
     private void setUpBroadcastManagers() {
@@ -568,6 +577,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         updateScores();
+        if (!checkForVictories(mRedFencer)) {
+            checkForVictories(mGreenFencer);
+        }
     }
 
     private void setTime() {
@@ -595,16 +607,38 @@ public class MainActivity extends AppCompatActivity {
         subtractRed = (Button) findViewById(R.id.minus_red);
         addGreen = (Button) findViewById(R.id.plus_green);
         subtractGreen = (Button) findViewById(R.id.minus_green);
+        doubleTouch = (Button) findViewById(R.id.double_touch);
 
         // set values to redScore and greenScore
         redScore.setText(String.valueOf(mRedFencer.getPoints()));
         greenScore.setText(String.valueOf(mGreenFencer.getPoints()));
 
         // set onclickListeners for buttons
-        addRed.setOnClickListener(createButtonChangeListener(redScore, TO_ADD, mRedFencer));
-        subtractRed.setOnClickListener(createButtonChangeListener(redScore, TO_SUBTRACT, mRedFencer));
-        addGreen.setOnClickListener(createButtonChangeListener(greenScore, TO_ADD, mGreenFencer));
-        subtractGreen.setOnClickListener(createButtonChangeListener(greenScore, TO_SUBTRACT, mGreenFencer));
+        addRed.setOnClickListener(createScoreChanger(redScore, TO_ADD, mRedFencer));
+        subtractRed.setOnClickListener(createScoreChanger(redScore, TO_SUBTRACT, mRedFencer));
+        addGreen.setOnClickListener(createScoreChanger(greenScore, TO_ADD, mGreenFencer));
+        subtractGreen.setOnClickListener(createScoreChanger(greenScore, TO_SUBTRACT, mGreenFencer));
+        doubleTouch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (Utility.getPauseStatus(mContext)) {
+                    if (mTimerRunning) {
+                        Intent stopTimer = new Intent(getApplicationContext(), TimerService.class);
+                        stopTimer.putExtra(Utility.CHANGE_TIMER, TimerService.TOGGLE_TIMER);
+                        startService(stopTimer);
+                    }
+                }
+                for (Fencer fencer : fencers) {
+                    fencer.incrementNumPoints();
+                }
+                updateScores();
+                if (!(mRedFencer.getPoints() == mGreenFencer.getPoints() && mRedFencer.getPoints() >= 5)) {
+                    if (!checkForVictories(mRedFencer)) {
+                        checkForVictories(mGreenFencer);
+                    }
+                }
+            }
+        });
 
         // set textViews and buttons for timekeeping
         mStartTimer = (Button) findViewById(R.id.start_timer);
@@ -639,10 +673,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // set more layouts
-        updateGreenScores = (LinearLayout) findViewById(R.id.update_score_green);
-        updateRedScores = (LinearLayout) findViewById(R.id.update_score_red);
-
     }
 
     // set up ads with automatic debug detection
@@ -676,10 +706,9 @@ public class MainActivity extends AppCompatActivity {
     public void resetScores(View v) {
         enableChangingScore();
         tieBreaker = false;
-        redScore.setText(String.format("%s", 0));
-        greenScore.setText(String.format("%s", 0));
         mRedFencer.setPoints(0);
         mGreenFencer.setPoints(0);
+        updateScores();
     }
 
     // create options menu
@@ -714,7 +743,7 @@ public class MainActivity extends AppCompatActivity {
     public void setTimer(View v) {
         if (TimerService.mTimerRunning) {
             /* Toast.makeText(getApplicationContext(), "Pause timer before changing time", Toast.LENGTH_SHORT).show();*/
-            final Snackbar snackbar = Snackbar.make(mDrawerLayout, "Pause before changing time", Snackbar.LENGTH_SHORT);
+            final Snackbar snackbar = Snackbar.make(findViewById(R.id.coordinator), "Pause before changing time", Snackbar.LENGTH_SHORT);
             snackbar.setAction("Pause Timer", new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -732,7 +761,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // create an on click listener for each of the plus/minus buttons.
-    private View.OnClickListener createButtonChangeListener(final TextView score, final int toAdd, final Fencer fencer) {
+    private View.OnClickListener createScoreChanger(final TextView score, final int toAdd, final Fencer fencer) {
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
