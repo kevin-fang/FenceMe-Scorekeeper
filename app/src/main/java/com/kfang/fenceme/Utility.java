@@ -79,6 +79,11 @@ class Utility {
         return prefs.getBoolean(PAUSE_ON_SCORE_CHANGE, true);
     }
 
+
+    static boolean equalPoints() {
+        return mRedFencer.getPoints() == mGreenFencer.getPoints();
+    }
+
     static int updateCurrentTime(Context context) {
         prefs = PreferenceManager.getDefaultSharedPreferences(context);
         return prefs.getInt(BOUT_LENGTH_MINUTES, DEFAULT_MINUTES);
@@ -87,8 +92,8 @@ class Utility {
     static void saveCurrentMatchPreferences(Context context) {
         SharedPreferences gamePrefs = context.getSharedPreferences(CURRENT_GAME_PREFERENCES, Context.MODE_PRIVATE);
         SharedPreferences.Editor gamePrefsEditor = gamePrefs.edit();
-        gamePrefsEditor.putInt(CURRENT_RED_POINTS, ((MainActivity) context).getRedScore())
-                .putInt(CURRENT_GREEN_POINTS, ((MainActivity) context).getGreenScore())
+        gamePrefsEditor.putInt(CURRENT_RED_POINTS, mRedFencer.getPoints())
+                .putInt(CURRENT_GREEN_POINTS, mGreenFencer.getPoints())
                 .putLong(CURRENT_TIME, MainActivity.mCurrentTime)
                 .putInt(RED_CARDRED, mRedFencer.getRedCards())
                 .putInt(GREEN_CARDRED, mGreenFencer.getRedCards())
@@ -103,9 +108,8 @@ class Utility {
         SharedPreferences gamePrefs = context.getSharedPreferences(CURRENT_GAME_PREFERENCES, Context.MODE_PRIVATE);
         MainActivity activity = ((MainActivity) context);
         mRedFencer.setPoints(gamePrefs.getInt(CURRENT_RED_POINTS, 0));
-        activity.setRedScore(gamePrefs.getInt(CURRENT_RED_POINTS, 0));
         mGreenFencer.setPoints(gamePrefs.getInt(CURRENT_GREEN_POINTS, 0));
-        activity.setGreenScore(gamePrefs.getInt(CURRENT_GREEN_POINTS, 0));
+        activity.updateScores();
         MainActivity.mCurrentTime = gamePrefs.getLong(CURRENT_TIME, DEFAULT_MINUTES * 60000);
         mRedFencer.setRedCards(gamePrefs.getInt(RED_CARDRED, 0));
         mRedFencer.setYellowCards(gamePrefs.getInt(RED_CARDYELLOW, 0));

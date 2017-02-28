@@ -55,6 +55,7 @@ import static com.kfang.fenceme.TimerService.mAlarmTone;
 import static com.kfang.fenceme.TimerService.mTimerRunning;
 import static com.kfang.fenceme.Utility.TO_ADD;
 import static com.kfang.fenceme.Utility.TO_SUBTRACT;
+import static com.kfang.fenceme.Utility.equalPoints;
 import static com.kfang.fenceme.Utility.getPopupPreference;
 
 
@@ -68,13 +69,17 @@ public class MainActivity extends AppCompatActivity {
     static boolean tieBreaker = false;
     public DrawerLayout mDrawerLayout;
 
+    // Broadcast Receivers
     BroadcastReceiver updateTime;
     BroadcastReceiver updateToggle;
     BroadcastReceiver resetBoutTimer;
     BroadcastReceiver timerUp;
+    BroadcastReceiver resetEntireBout;
 
+    // timer views
     Button mStartTimer;
     TextView mCurrentTimer;
+
     // buttons in main drawable resource file
     Button addRed;
     Button subtractRed;
@@ -90,7 +95,8 @@ public class MainActivity extends AppCompatActivity {
 
     FragmentManager mFragmentManager = getSupportFragmentManager();
     AdView mAdView;
-    int maxNameLength = 20;
+
+    static final int MAX_NAME_LENGTH = 20;
     Context mContext;
     Vibrator vibrator;
 
@@ -99,10 +105,12 @@ public class MainActivity extends AppCompatActivity {
 
     // create a tiebreaker
     public static void makeTieBreaker(final Context context) {
+        // generate random fencer from arraylist of fencers
         Random r = new Random();
-        tieBreaker = true;
         Fencer chosenFencer = fencers.get(r.nextInt(fencers.size()));
         chosenFencer.assignPriority();
+        tieBreaker = true;
+        // create tiebreaker dialog that sets time to 1 minute
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle("Tiebreaker");
         builder.setMessage(chosenFencer.getName() + " has priority!");
@@ -120,8 +128,9 @@ public class MainActivity extends AppCompatActivity {
                 startTimer.putExtra(Utility.CHANGE_TIMER, TimerService.TOGGLE_TIMER);
                 context.startService(startTimer);
             }
-        });
-        builder.create().show();
+        })
+                .create()
+                .show();
 
     }
 
@@ -135,7 +144,13 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         RateThisApp.onStart(this);
         RateThisApp.showRateDialogIfNeeded(this);
-        setUpBroadcastManagers();
+        setUpBroadcastReceivers();
+    }
+
+    @Override
+    protected void onStop() {
+        unregisterReceivers();
+        super.onStop();
     }
 
     @Override
@@ -144,32 +159,33 @@ public class MainActivity extends AppCompatActivity {
         mContext = MainActivity.this;
         setContentView(R.layout.activity_main);
 
+        // initialize fencers and add to fencers array
         mRedFencer = new Fencer("Red");
         mGreenFencer = new Fencer("Green");
         fencers = new ArrayList<>();
         fencers.add(mRedFencer);
         fencers.add(mGreenFencer);
 
-        // set up ads, views, and BroadcastManagers
+        // set up ads, views, vibrations and action bars.
         vibrator = (Vibrator) getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
         boolean isDebuggable = BuildConfig.DEBUG;
         setViews();
         setupAds(isDebuggable);
-        // set "hamburger" animations
+        // set action bar
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
         getSupportActionBar().setHomeButtonEnabled(true);
 
-        // set up navigation drawer
+        // set up navigation drawer and reset cards
         setupNavigation();
-
         resetPlayerCards();
+
         // restore game status if enabled
         if (Utility.getRestoreStatus(mContext)) {
             Utility.updateCurrentMatchPreferences(mContext);
             updateNames();
-        } else {
+        } else { // restore default time
             mCurrentTime = Utility.updateCurrentTime(mContext) * 60000;
         }
         setTime();
@@ -177,6 +193,7 @@ public class MainActivity extends AppCompatActivity {
         checkIfFirstRun();
     }
 
+    // update the views containing names of the players
     private void updateNames() {
         redNameView = (TextView) findViewById(R.id.redSide);
         greenNameView = (TextView) findViewById(R.id.greenSide);
@@ -188,32 +205,33 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // check if the app is being first run (since last update)
     public void checkIfFirstRun() {
         String versionName;
         try {
-            PackageInfo pinfo = getPackageManager().getPackageInfo(getPackageName(), 0);
-            versionName = pinfo.versionName;
+            PackageInfo packageInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+            versionName = packageInfo.versionName;
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
             String lastVersion = prefs.getString(Utility.LAST_VERSION_NUMBER, null);
-            Log.d("lastversion", "lastversion equals: " + lastVersion);
+            //Log.d("lastversion", "lastversion equals: " + lastVersion);
             if (lastVersion == null || !lastVersion.equals(versionName)) {
-                // first run
+                // first run of the app
                 displayNewDialog(versionName);
                 SharedPreferences.Editor editor = prefs.edit();
                 editor.putString(Utility.LAST_VERSION_NUMBER, versionName);
                 editor.apply();
 
-
             }
-        } catch (PackageManager.NameNotFoundException e) {
+        } catch (PackageManager.NameNotFoundException e) { // should never happen.
             e.printStackTrace();
         }
 
     }
 
+    // display a dialog containing what's new
     public void displayNewDialog(String versionName) {
-        AlertDialog.Builder whatsNew = new AlertDialog.Builder(mContext);
         String[] changes = getResources().getStringArray(R.array.change_log);
+        // build change log from string awways
         StringBuilder changelogBuilder = new StringBuilder();
         for (String change : changes) {
             changelogBuilder.append("\u2022 "); // bullet point
@@ -222,6 +240,8 @@ public class MainActivity extends AppCompatActivity {
         }
         String changeLog = changelogBuilder.toString();
 
+        // build alert dialog with changelog
+        AlertDialog.Builder whatsNew = new AlertDialog.Builder(mContext);
         whatsNew.setTitle("What's new in FenceMe! " + versionName + ":")
                 .setMessage(changeLog)
                 .setPositiveButton("Dismiss", new DialogInterface.OnClickListener() {
@@ -241,6 +261,7 @@ public class MainActivity extends AppCompatActivity {
                 .show();
     }
 
+    // launch intent to rate app
     public void launchRateApp() {
         Uri uri = Uri.parse("market://details?id=" + getApplicationContext().getPackageName());
         Intent goToMarket = new Intent(Intent.ACTION_VIEW, uri);
@@ -257,28 +278,13 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public int getRedScore() {
-        return Integer.parseInt(redScore.getText().toString());
-    }
-
-    public void setRedScore(int score) {
-        redScore.setText(String.valueOf(score));
-    }
-
-    public int getGreenScore() {
-        return Integer.parseInt(greenScore.getText().toString());
-    }
-
-    public void setGreenScore(int score) {
-        greenScore.setText(String.valueOf(score));
-    }
-
     @Override
     protected void onPause() {
         super.onPause();
         unregisterReceivers();
     }
 
+    // set up navigation drawers
     public void setupNavigation() {
         mPreferenceTitles = getResources().getStringArray(R.array.main_menu_array);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -347,11 +353,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void unregisterReceivers() {
+        // unregister the receivers registered in the local broadcast manager
         LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
         lbm.unregisterReceiver(updateTime);
         lbm.unregisterReceiver(updateToggle);
         lbm.unregisterReceiver(resetBoutTimer);
         lbm.unregisterReceiver(timerUp);
+        lbm.unregisterReceiver(resetEntireBout);
     }
 
     public void updateScores() {
@@ -359,7 +367,8 @@ public class MainActivity extends AppCompatActivity {
         greenScore.setText(String.valueOf(mGreenFencer.getPoints()));
     }
 
-    private void setUpBroadcastManagers() {
+    // create broadcast receivers to update time, update button, reset bout, and timer up
+    private void setUpBroadcastReceivers() {
         LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
         // LocalBroadcastManagers to deal with updating time
         updateTime = new BroadcastReceiver() {
@@ -527,21 +536,7 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
-        lbm.registerReceiver(timerUp, new IntentFilter(TIMER_UP_INTENT));
-        lbm.registerReceiver(updateTime, new IntentFilter(TimerService.UPDATE_TIME_INTENT)
-        );
-        // update text on toggle button
-        lbm.registerReceiver(
-                updateToggle, new IntentFilter(TimerService.UPDATE_TOGGLE_BUTTON_INTENT)
-        );
-        // reset timer
-        lbm.registerReceiver(resetBoutTimer, new IntentFilter(TimerService.RESET_TIMER_INTENT)
-        );
-
-
-        // holy grail reset entire bout
-        // cards, timer, player scores
-        lbm.registerReceiver(new BroadcastReceiver() {
+        resetEntireBout = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 resetPlayerCards();
@@ -556,7 +551,24 @@ public class MainActivity extends AppCompatActivity {
                 stopTimer.putExtra(Utility.CHANGE_TIMER, TimerService.RESET_TIMER);
                 startService(stopTimer);
             }
-        }, new IntentFilter(RESET_BOUT_INTENT));
+        };
+
+        // timer up
+        lbm.registerReceiver(timerUp, new IntentFilter(TIMER_UP_INTENT));
+        // update time
+        lbm.registerReceiver(updateTime, new IntentFilter(TimerService.UPDATE_TIME_INTENT)
+        );
+        // update text on toggle button
+        lbm.registerReceiver(
+                updateToggle, new IntentFilter(TimerService.UPDATE_TOGGLE_BUTTON_INTENT)
+        );
+        // reset timer
+        lbm.registerReceiver(resetBoutTimer, new IntentFilter(TimerService.RESET_TIMER_INTENT)
+        );
+
+        // holy grail reset entire bout - change
+        // cards, timer, player scores
+        lbm.registerReceiver(resetEntireBout, new IntentFilter(RESET_BOUT_INTENT));
     }
 
     private void disableChangingScore() {
@@ -632,7 +644,7 @@ public class MainActivity extends AppCompatActivity {
                     fencer.incrementNumPoints();
                 }
                 updateScores();
-                if (!(mRedFencer.getPoints() == mGreenFencer.getPoints() && mRedFencer.getPoints() >= 5)) {
+                if (!equalPoints() && mRedFencer.getPoints() >= 5) {
                     if (!checkForVictories(mRedFencer)) {
                         checkForVictories(mGreenFencer);
                     }
@@ -699,6 +711,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         Utility.saveCurrentMatchPreferences(mContext);
+        unregisterReceivers();
         super.onDestroy();
     }
 
@@ -795,7 +808,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public boolean checkForVictories(Fencer fencer) {
-        if (fencer.getPoints() >= Utility.getPointsPreference(mContext) || tieBreaker) {
+        if (fencer.getPoints() >= Utility.getPointsPreference(mContext) || tieBreaker && !equalPoints()) {
             if (mTimerRunning) {
                 Intent stopTimer = new Intent(getApplicationContext(), TimerService.class);
                 stopTimer.putExtra(Utility.CHANGE_TIMER, TimerService.TOGGLE_TIMER);
@@ -844,7 +857,7 @@ public class MainActivity extends AppCompatActivity {
         inputName.setText(view.getText());
         inputName.setSelectAllOnFocus(true);
         inputName.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS);
-        inputName.setFilters(new InputFilter[]{new InputFilter.LengthFilter(maxNameLength)});
+        inputName.setFilters(new InputFilter[]{new InputFilter.LengthFilter(MAX_NAME_LENGTH)});
         builder.setView(inputName);
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
