@@ -45,6 +45,8 @@ import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 import com.kobakei.ratethisapp.RateThisApp;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Random;
@@ -149,8 +151,13 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onStop() {
+        EventBus.getDefault().unregister(this);
         unregisterReceivers();
         super.onStop();
+    }
+
+    public void onEvent(TimerServiceEvent event) {
+
     }
 
     @Override
@@ -158,6 +165,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         mContext = MainActivity.this;
         setContentView(R.layout.activity_main);
+
+        EventBus.getDefault().register(this);
 
         // initialize fencers and add to fencers array
         mRedFencer = new Fencer("Red");
@@ -281,6 +290,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        EventBus.getDefault().unregister(this);
         unregisterReceivers();
     }
 
@@ -712,6 +722,8 @@ public class MainActivity extends AppCompatActivity {
 
         Utility.saveCurrentMatchPreferences(mContext);
         unregisterReceivers();
+        EventBus.getDefault().unregister(this);
+
         super.onDestroy();
     }
 
