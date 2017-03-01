@@ -33,9 +33,6 @@ class DrawerItemClickListener implements NavigationView.OnNavigationItemSelected
         mDrawerLayout = drawerLayout;
     }
 
-    /**
-     * Swaps fragments in the main content view
-     */
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         String selectedItem = menuItem.getTitle().toString();

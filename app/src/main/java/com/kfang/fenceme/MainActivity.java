@@ -98,6 +98,12 @@ public class MainActivity extends AppCompatActivity {
     private NavigationView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
 
+    /* TODO: Move code out of MainActivity
+     * TODO: Use eventBusses instead of BroadcastReceivers
+     * TODO: Make navigation drawer look nicer
+     */
+
+
     // create a tiebreaker
     public static void makeTieBreaker(final Context context) {
         // generate random fencer from arraylist of fencers

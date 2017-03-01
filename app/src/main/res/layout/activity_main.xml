@@ -6,7 +6,8 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.kfang.fenceme.MainActivity">
+    tools:context="com.kfang.fenceme.MainActivity"
+    tools:ignore="PxUsage">
 
     <android.support.design.widget.CoordinatorLayout
         android:id="@+id/coordinator"

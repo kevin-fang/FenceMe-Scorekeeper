@@ -30,6 +30,7 @@ public class CardPlayerActivity extends AppCompatActivity {
     LinearLayout cardLayout;
 
 
+    // TODO: Change card player to fragment
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
