@@ -281,7 +281,7 @@
                 android:layout_gravity="center_vertical"
                 android:clickable="true"
                 android:drawablePadding="8dp"
-                android:drawableStart="@drawable/settings_nav"
+                android:drawableStart="@drawable/ic_settings_grey_500_24dp"
                 android:gravity="center_vertical"
                 android:onClick="launchSettings"
                 android:paddingBottom="12dp"

@@ -79,7 +79,6 @@ class Utility {
         return prefs.getBoolean(PAUSE_ON_SCORE_CHANGE, true);
     }
 
-
     static boolean equalPoints() {
         return mRedFencer.getPoints() == mGreenFencer.getPoints();
     }

@@ -16,6 +16,7 @@ import android.os.Handler;
 import android.os.Vibrator;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
@@ -45,8 +46,6 @@ import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 import com.kobakei.ratethisapp.RateThisApp;
 
-import org.greenrobot.eventbus.EventBus;
-
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Random;
@@ -63,6 +62,7 @@ import static com.kfang.fenceme.Utility.getPopupPreference;
 
 public class MainActivity extends AppCompatActivity {
 
+    static final int MAX_NAME_LENGTH = 20;
     public static long mCurrentTime;
     public static Fencer mRedFencer;
     public static Fencer mGreenFencer;
@@ -70,18 +70,15 @@ public class MainActivity extends AppCompatActivity {
     static String[] mPreferenceTitles;
     static boolean tieBreaker = false;
     public DrawerLayout mDrawerLayout;
-
     // Broadcast Receivers
     BroadcastReceiver updateTime;
     BroadcastReceiver updateToggle;
     BroadcastReceiver resetBoutTimer;
     BroadcastReceiver timerUp;
     BroadcastReceiver resetEntireBout;
-
     // timer views
     Button mStartTimer;
     TextView mCurrentTimer;
-
     // buttons in main drawable resource file
     Button addRed;
     Button subtractRed;
@@ -89,19 +86,15 @@ public class MainActivity extends AppCompatActivity {
     Button subtractGreen;
     Button resetTimer;
     Button doubleTouch;
-
     TextView greenScore;
     TextView redScore;
     TextView redNameView;
     TextView greenNameView;
-
     FragmentManager mFragmentManager = getSupportFragmentManager();
     AdView mAdView;
-
-    static final int MAX_NAME_LENGTH = 20;
     Context mContext;
     Vibrator vibrator;
-
+    CoordinatorLayout mCoordinatorLayout;
     private NavigationView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
 
@@ -144,6 +137,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+
         RateThisApp.onStart(this);
         RateThisApp.showRateDialogIfNeeded(this);
         setUpBroadcastReceivers();
@@ -151,7 +145,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onStop() {
-        EventBus.getDefault().unregister(this);
+
         unregisterReceivers();
         super.onStop();
     }
@@ -166,7 +160,6 @@ public class MainActivity extends AppCompatActivity {
         mContext = MainActivity.this;
         setContentView(R.layout.activity_main);
 
-        EventBus.getDefault().register(this);
 
         // initialize fencers and add to fencers array
         mRedFencer = new Fencer("Red");
@@ -290,7 +283,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        EventBus.getDefault().unregister(this);
         unregisterReceivers();
     }
 
@@ -622,6 +614,8 @@ public class MainActivity extends AppCompatActivity {
             greenNameView.setText(mGreenFencer.getName());
         }
 
+        mCoordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator);
+
         // set textviews and buttons for scorekeeping
         redScore = (TextView) findViewById(R.id.red_score);
         greenScore = (TextView) findViewById(R.id.green_score);
@@ -654,10 +648,21 @@ public class MainActivity extends AppCompatActivity {
                     fencer.incrementNumPoints();
                 }
                 updateScores();
-                if (!equalPoints() && mRedFencer.getPoints() >= 5) {
+                if (mRedFencer.getPoints() >= 5) {
                     if (!checkForVictories(mRedFencer)) {
                         checkForVictories(mGreenFencer);
                     }
+                }
+
+                if (Utility.getPopupPreference(mContext)) {
+                    Snackbar.make(mCoordinatorLayout, "Gave double touch", Snackbar.LENGTH_SHORT)
+                            .setAction("Dismiss", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+
+                                }
+                            })
+                            .show();
                 }
             }
         });
@@ -722,7 +727,6 @@ public class MainActivity extends AppCompatActivity {
 
         Utility.saveCurrentMatchPreferences(mContext);
         unregisterReceivers();
-        EventBus.getDefault().unregister(this);
 
         super.onDestroy();
     }
@@ -768,7 +772,7 @@ public class MainActivity extends AppCompatActivity {
     public void setTimer(View v) {
         if (TimerService.mTimerRunning) {
             /* Toast.makeText(getApplicationContext(), "Pause timer before changing time", Toast.LENGTH_SHORT).show();*/
-            final Snackbar snackbar = Snackbar.make(findViewById(R.id.coordinator), "Pause before changing time", Snackbar.LENGTH_SHORT);
+            final Snackbar snackbar = Snackbar.make(mCoordinatorLayout, "Pause before changing time", Snackbar.LENGTH_SHORT);
             snackbar.setAction("Pause Timer", new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -790,7 +794,7 @@ public class MainActivity extends AppCompatActivity {
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (toAdd == TO_ADD && fencer.getPoints() < Utility.getPointsPreference(mContext)) {
+                if (toAdd == TO_ADD && (fencer.getPoints() < Utility.getPointsPreference(mContext) || equalPoints())) {
                     fencer.incrementNumPoints();
                 } else if (toAdd == TO_SUBTRACT && fencer.getPoints() > 0) {
                     fencer.decrementNumPoints();
@@ -805,7 +809,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
                 if (!checkForVictories(fencer) && toAdd == TO_ADD && getPopupPreference(mContext)) {
-                    Snackbar.make(mDrawerLayout, "Gave touch to " + fencer.getName(), Snackbar.LENGTH_SHORT)
+                    Snackbar.make(mCoordinatorLayout, "Gave touch to " + fencer.getName(), Snackbar.LENGTH_SHORT)
                             .setAction("Dismiss", new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
@@ -820,12 +824,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public boolean checkForVictories(Fencer fencer) {
-        if (fencer.getPoints() >= Utility.getPointsPreference(mContext) || tieBreaker && !equalPoints()) {
+        if (!equalPoints() && fencer.getPoints() >= Utility.getPointsPreference(mContext) || tieBreaker) {
+            String LOG_TAG = this.getPackageName();
+            Log.d(LOG_TAG, "red points: " + mRedFencer.getPoints());
+            Log.d(LOG_TAG, "green points: " + mGreenFencer.getPoints());
+            Log.d(LOG_TAG, "equal points: " + equalPoints());
+
             if (mTimerRunning) {
                 Intent stopTimer = new Intent(getApplicationContext(), TimerService.class);
                 stopTimer.putExtra(Utility.CHANGE_TIMER, TimerService.TOGGLE_TIMER);
                 startService(stopTimer);
             }
+
             disableChangingScore();
             AlertDialog.Builder winnerDialogBuilder = new AlertDialog.Builder(mContext);
             winnerDialogBuilder.setTitle(fencer.getName() + " wins!")

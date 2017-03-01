@@ -25,7 +25,7 @@
     <string name="vibrate_timer">Vibrate on timer change</string>
 
     <string name="reset_bout_preferences">Reset default bout preferences</string>
-    <string name="reset_preferences">Reset names and bout preferences to 5 point, 3 minute bouts</string>
+    <string name="reset_preferences">Reset bout preferences to 5 point, 3 minute bouts</string>
 
     <string name="restore_status_on_exit">Save game status on exit</string>
     <string name="restore_status_summary">When the app is closed, save the current point and time totals</string>

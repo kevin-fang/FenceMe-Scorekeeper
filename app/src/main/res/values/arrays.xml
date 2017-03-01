@@ -8,12 +8,7 @@
     </string-array>
 
     <string-array name="change_log">
-        <item>Red cards now increment points for the opposite player!</item>
-        <item>Added double touches for Épée!</item>
-        <item>Automatic tiebreaker win detection!</item>
-        <item>Added option for popup on score increments</item>
-        <item>Added ability to swipe away bottom notifications (snackbars)</item>
-        <item>Vibrate on timer change</item>
-        <item>Minor bug fixes</item>
+        <item>Allowed double touches to increment score past bout length</item>
+        <item>Fixed bug where double touches past bout length would cause a win</item>
     </string-array>
 </resources>
