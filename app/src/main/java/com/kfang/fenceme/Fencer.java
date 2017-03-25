@@ -11,12 +11,7 @@ class Fencer {
     private int yellowCards;
     private boolean hasPriority;
 
-    Fencer(int points, String name, int redCards, int yellowCards) {
-        this.points = points;
-        this.name = name;
-        this.redCards = redCards;
-        this.yellowCards = yellowCards;
-    }
+    // is decrement card functionality really needed?
 
     Fencer(String name) {
         this.points = 0;
@@ -69,9 +64,9 @@ class Fencer {
         this.redCards++;
     }
 
-    void decrementRedCards() {
+    /* void decrementRedCards() {
         this.redCards--;
-    }
+    } */
 
     int getYellowCards() {
         return yellowCards;
@@ -85,9 +80,11 @@ class Fencer {
         this.yellowCards++;
     }
 
+    /*
     void decrementYellowCards() {
         this.yellowCards--;
     }
+    */
 
     void resetCards() {
         this.redCards = 0;

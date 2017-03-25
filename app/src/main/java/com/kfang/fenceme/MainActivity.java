@@ -86,6 +86,7 @@ public class MainActivity extends AppCompatActivity {
     Button subtractGreen;
     Button resetTimer;
     Button doubleTouch;
+
     TextView greenScore;
     TextView redScore;
     TextView redNameView;
@@ -99,7 +100,6 @@ public class MainActivity extends AppCompatActivity {
     private ActionBarDrawerToggle mDrawerToggle;
 
     /* TODO: Move code out of MainActivity
-     * TODO: Use eventBusses instead of BroadcastReceivers
      * TODO: Make navigation drawer look nicer
      */
 
@@ -156,9 +156,6 @@ public class MainActivity extends AppCompatActivity {
         super.onStop();
     }
 
-    public void onEvent(TimerServiceEvent event) {
-
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -830,11 +827,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public boolean checkForVictories(Fencer fencer) {
-        if (!equalPoints() && fencer.getPoints() >= Utility.getPointsPreference(mContext) || tieBreaker) {
+        if (!equalPoints() && fencer.getPoints() >= Utility.getPointsPreference(mContext) || (tieBreaker && !equalPoints())) {
             String LOG_TAG = this.getPackageName();
-            Log.d(LOG_TAG, "red points: " + mRedFencer.getPoints());
+            /* Log.d(LOG_TAG, "red points: " + mRedFencer.getPoints());
             Log.d(LOG_TAG, "green points: " + mGreenFencer.getPoints());
-            Log.d(LOG_TAG, "equal points: " + equalPoints());
+            Log.d(LOG_TAG, "equal points: " + equalPoints()); */
 
             if (mTimerRunning) {
                 Intent stopTimer = new Intent(getApplicationContext(), TimerService.class);

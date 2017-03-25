@@ -31,6 +31,7 @@ public class CardPlayerActivity extends AppCompatActivity {
 
 
     // TODO: Change card player to fragment
+    // TODO: Full brightness + setting
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
