@@ -7,7 +7,6 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
 
-import org.greenrobot.eventbus.EventBus;
 
 import static com.kfang.fenceme.MainActivity.mCurrentTime;
 
@@ -59,7 +58,6 @@ public class TimerService extends Service {
 
     // create an update_time_intent and fire it to the broadcastReceiver
     private void createUpdateTimeIntent() {
-        EventBus.getDefault().post(new TimerServiceEvent("Hello EventBus!"));
         Intent intent = new Intent(UPDATE_TIME_INTENT);
         LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
     }
@@ -105,7 +103,6 @@ public class TimerService extends Service {
             }
         } else if (toggleOrReset == SET_TIMER) { // set timer to value
             mHandler.removeCallbacks(mUpdateTimeTask);
-            //Log.d("MCURERENTTIME", "In TimerService: " + mCurrentTime);
             Intent intent = new Intent(UPDATE_TIME_INTENT);
             LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
         }
