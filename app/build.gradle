@@ -8,8 +8,8 @@ android {
         targetSdkVersion 25
         applicationId "com.kfang.fenceme"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        versionCode 22
-        versionName "2.5.1"
+        versionCode 23
+        versionName "2.5.2"
     }
     buildTypes {
         release {
