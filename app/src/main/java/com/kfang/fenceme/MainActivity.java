@@ -1,5 +1,6 @@
 package com.kfang.fenceme;
 
+import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -281,6 +282,16 @@ public class MainActivity extends AppCompatActivity {
             startActivity(new Intent(Intent.ACTION_VIEW,
                     Uri.parse("http://play.google.com/store/apps/details?id=" + getApplicationContext().getPackageName())));
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == DrawerItemClickListener.OPEN_CARD_ACTIVITY && resultCode == Activity.RESULT_OK) {
+            if (!checkForVictories(mRedFencer)) {
+                checkForVictories(mGreenFencer);
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
@@ -594,8 +605,19 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         updateScores();
-        if (!checkForVictories(mRedFencer)) {
+        checkAndSetDoubleTouch(this);
+        /* if (!checkForVictories(mRedFencer)) {
             checkForVictories(mGreenFencer);
+        } */
+    }
+
+    public static void checkAndSetDoubleTouch(Activity activity) {
+        if (Utility.getDoubleTouchStatus(activity)) {
+            activity.findViewById(R.id.double_touch).setVisibility(View.VISIBLE);
+            activity.findViewById(R.id.double_touch_divider).setVisibility(View.VISIBLE);
+        } else {
+            activity.findViewById(R.id.double_touch).setVisibility(View.GONE);
+            activity.findViewById(R.id.double_touch_divider).setVisibility(View.GONE);
         }
     }
 
@@ -619,7 +641,7 @@ public class MainActivity extends AppCompatActivity {
 
         mCoordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator);
 
-        // set textviews and buttons for scorekeeping
+        // set text views and buttons for scorekeeping
         redScore = (TextView) findViewById(R.id.red_score);
         greenScore = (TextView) findViewById(R.id.green_score);
         addRed = (Button) findViewById(R.id.plus_red);
@@ -703,6 +725,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        checkAndSetDoubleTouch(this);
+
     }
 
     // set up ads with automatic debug detection
@@ -768,6 +792,9 @@ public class MainActivity extends AppCompatActivity {
             case R.id.rate_this_app:
                 RateThisApp.showRateDialog(this);
                 return true;
+            case R.id.settings:
+                startActivity(new Intent(this, SettingsActivity.class));
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -827,12 +854,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public boolean checkForVictories(Fencer fencer) {
+        // check if the points are not equal and there is a fencer with enough points to win or there is a tiebreaker and the points aren't equal
         if (!equalPoints() && fencer.getPoints() >= Utility.getPointsPreference(mContext) || (tieBreaker && !equalPoints())) {
-            String LOG_TAG = this.getPackageName();
-            /* Log.d(LOG_TAG, "red points: " + mRedFencer.getPoints());
-            Log.d(LOG_TAG, "green points: " + mGreenFencer.getPoints());
-            Log.d(LOG_TAG, "equal points: " + equalPoints()); */
-
             if (mTimerRunning) {
                 Intent stopTimer = new Intent(getApplicationContext(), TimerService.class);
                 stopTimer.putExtra(Utility.CHANGE_TIMER, TimerService.TOGGLE_TIMER);

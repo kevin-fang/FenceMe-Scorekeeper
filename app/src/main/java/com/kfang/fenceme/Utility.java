@@ -23,6 +23,7 @@ class Utility {
     static final String RESET_BOUT_PREFERENCES = "reset_bout_prefs";
     static final String POPUP_ON_SCORE = "popup_on_score_increment";
     static final String VIBRATE_TIMER = "vibrate_on_timer_change";
+    static final String TOGGLE_DOUBLE_TOUCH = "toggle_double_touch";
 
     static final int TO_ADD = 1;
     static final int TO_SUBTRACT = 0;
@@ -67,6 +68,11 @@ class Utility {
     static boolean getVibrateStatus(Context context) {
         prefs = PreferenceManager.getDefaultSharedPreferences(context);
         return prefs.getBoolean(VIBRATE_AT_END, true);
+    }
+
+    static boolean getDoubleTouchStatus(Context context) {
+        prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        return prefs.getBoolean(TOGGLE_DOUBLE_TOUCH, true);
     }
 
     static boolean getVibrateTimerStatus(Context context) {

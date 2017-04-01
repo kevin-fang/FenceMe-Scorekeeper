@@ -261,24 +261,5 @@
         android:paddingTop="24dp"
         android:theme="@style/NavigationViewStyle">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:paddingEnd="12dp"
-            android:paddingStart="12dp">
-
-            <TextView
-                android:id="@+id/settings"
-                android:layout_width="wrap_content"
-                android:layout_height="24dp"
-                android:layout_gravity="center_vertical"
-                android:clickable="true"
-                android:drawablePadding="8dp"
-                android:drawableStart="@drawable/ic_settings_grey_500_24dp"
-                android:gravity="center_vertical"
-                android:onClick="launchSettings"
-                android:text="@string/settings" />
-        </LinearLayout>
     </android.support.design.widget.NavigationView>
 </android.support.v4.widget.DrawerLayout>

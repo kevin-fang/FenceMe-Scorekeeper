@@ -28,6 +28,8 @@ class DrawerItemClickListener implements NavigationView.OnNavigationItemSelected
     private Activity mActivity;
     private DrawerLayout mDrawerLayout;
 
+    static final int OPEN_CARD_ACTIVITY = 1234;
+
     DrawerItemClickListener(Activity activity, DrawerLayout drawerLayout) {
         mActivity = activity;
         mDrawerLayout = drawerLayout;
@@ -69,7 +71,7 @@ class DrawerItemClickListener implements NavigationView.OnNavigationItemSelected
                                     }
                                     Intent cardPlayer = new Intent(mActivity, CardPlayerActivity.class);
                                     cardPlayer.putExtra(TO_CARD_PLAYER, player);
-                                    mActivity.startActivity(cardPlayer);
+                                    mActivity.startActivityForResult(cardPlayer, OPEN_CARD_ACTIVITY);
                                 }
                             }
                         })

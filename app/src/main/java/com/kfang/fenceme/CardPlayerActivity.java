@@ -1,5 +1,6 @@
 package com.kfang.fenceme;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -92,6 +93,13 @@ public class CardPlayerActivity extends AppCompatActivity {
         setContentView(R.layout.card_display);
         View cardView = findViewById(R.id.card);
         cardView.setBackground(ContextCompat.getDrawable(this, R.drawable.redcard));
+        Intent returnIntent = new Intent();
+        setResult(Activity.RESULT_OK, returnIntent);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 
     public void displayYellow(View v) {
@@ -100,14 +108,12 @@ public class CardPlayerActivity extends AppCompatActivity {
         } else if (playerToCard.equals(mGreenFencer.getName())) {
             mGreenFencer.incrementYellowCards();
         }
-        //Toast.makeText(this, "Clicked Yellow", Toast.LENGTH_SHORT).show();
         setContentView(R.layout.card_display);
         View cardView = findViewById(R.id.card);
         cardView.setBackground(ContextCompat.getDrawable(this, R.drawable.yellowcard));
     }
 
     public void displayBlack(View v) {
-        //Toast.makeText(this, "Clicked Black", Toast.LENGTH_SHORT).show();
         setContentView(R.layout.card_display);
         View cardView = findViewById(R.id.card);
         cardView.setBackground(ContextCompat.getDrawable(this, R.drawable.blackcard));

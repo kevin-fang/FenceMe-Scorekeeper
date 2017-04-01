@@ -17,6 +17,13 @@
         android:gravity="center_horizontal"
         android:title="@string/about"
         app:showAsAction="never" />
+
+    <item
+        android:id="@+id/settings"
+        android:title="@string/settings"
+        android:icon="@drawable/settings"
+        app:showAsAction="ifRoom"
+        />
     <!-- <item
         android:id="@+id/remove_ads"
         android:gravity="center_horizontal"

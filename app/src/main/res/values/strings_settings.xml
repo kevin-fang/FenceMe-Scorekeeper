@@ -36,4 +36,7 @@
     <string name="change_timer_summary">Press &quot;reset timer&quot; to activate</string>
     <string name="change_point_summary">Press &quot;reset scores&quot; to activate</string>
 
+    <string name="toggle_double_touch">Enable double touch</string>
+    <string name="double_touch_summary">Used for Épee bouts</string>
+
 </resources>

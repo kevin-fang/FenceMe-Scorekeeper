@@ -3,11 +3,17 @@
 
     <PreferenceCategory android:title="Bout Preferences">
 
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="pause_on_score_change"
+            android:title="@string/pause_on_score_change" />
+
         <com.kfang.fenceme.NumberPickerPreference
             android:defaultValue="5"
             android:key="bout_length_points"
             android:summary="@string/change_point_summary"
             android:title="@string/max_points_per_bout" />
+
 
         <com.kfang.fenceme.NumberPickerPreference
             android:defaultValue="3"
@@ -21,15 +27,17 @@
             android:summary="@string/restore_status_summary"
             android:title="@string/restore_status_on_exit" />
 
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="pause_on_score_change"
-            android:title="@string/pause_on_score_change" />
 
         <Preference
             android:key="reset_bout_prefs"
             android:summary="@string/reset_preferences"
             android:title="@string/reset_bout_preferences" />
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="toggle_double_touch"
+            android:summary="@string/double_touch_summary"
+            android:title="@string/toggle_double_touch" />
 
     </PreferenceCategory>
 

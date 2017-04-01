@@ -57,6 +57,7 @@ public class SettingsActivity extends AppCompatActivity {
             final CheckBoxPreference restorePreference = (CheckBoxPreference) findPreference(Utility.RESTORE_ON_EXIT);
             final CheckBoxPreference popupPreference = (CheckBoxPreference) findPreference(Utility.POPUP_ON_SCORE);
             final CheckBoxPreference vibratePreference = (CheckBoxPreference) findPreference(Utility.VIBRATE_AT_END);
+            final CheckBoxPreference doubleTouchPreference = (CheckBoxPreference) findPreference(Utility.TOGGLE_DOUBLE_TOUCH);
             final Preference resetPreferences = findPreference(Utility.RESET_BOUT_PREFERENCES);
 
             resetPreferences.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
@@ -109,6 +110,9 @@ public class SettingsActivity extends AppCompatActivity {
                                 case Utility.VIBRATE_TIMER:
                                     settingsEditor.putBoolean(Utility.VIBRATE_TIMER, vibrateTimerPreference.isChecked());
                                     break;
+                                case Utility.TOGGLE_DOUBLE_TOUCH:
+                                    settingsEditor.putBoolean(Utility.TOGGLE_DOUBLE_TOUCH, doubleTouchPreference.isChecked());
+                                    break;
                             }
 
                         }
@@ -116,6 +120,7 @@ public class SettingsActivity extends AppCompatActivity {
             prefs.registerOnSharedPreferenceChangeListener(spChanged);
             settingsEditor.apply();
         }
+
 
         @Override
         public void onActivityCreated(Bundle savedInstanceState) {
