@@ -8,7 +8,13 @@
     </string-array>
 
     <string-array name="change_log">
-        <item>Allowed double touches to increment score past bout length</item>
-        <item>Fixed bug where double touches past bout length would cause a win</item>
+        <item>Changed navigation menu to something more aesthetically pleasing</item>
+        <item>Moved settings button to top toolbar for easier access</item>
+        <item>Changed timer start and stop vibration</item>
+        <item>Improved about scren</item>
+        <item>Significantly reduced rating popups occurring</item>
+        <item>Fixed bug where rotating device would stop the timer</item>
+        <item>Fixed bug where multiple dialogs would pop up in the case of victories</item>
+        <item>Updated Android support libraries</item>
     </string-array>
 </resources>

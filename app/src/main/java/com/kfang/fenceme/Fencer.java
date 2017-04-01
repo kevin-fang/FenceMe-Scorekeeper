@@ -32,7 +32,7 @@ class Fencer {
         return points;
     }
 
-    void setPoints(int points) {
+    public void setPoints(int points) {
         this.points = points;
     }
 
@@ -44,7 +44,7 @@ class Fencer {
         this.points--;
     }
 
-    String getName() {
+    public String getName() {
         return name;
     }
 

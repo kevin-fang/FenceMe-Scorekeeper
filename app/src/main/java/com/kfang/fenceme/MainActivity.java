@@ -18,36 +18,40 @@ import android.os.Vibrator;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.text.InputFilter;
 import android.text.InputType;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.HeaderViewListAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
+import com.kfang.fenceme.NavMenu.DrawerAdapter;
+import com.kfang.fenceme.NavMenu.DrawerItem;
+import com.kfang.fenceme.NavMenu.SimpleItem;
 import com.kobakei.ratethisapp.RateThisApp;
+import com.yarolegovich.slidingrootnav.SlideGravity;
+import com.yarolegovich.slidingrootnav.SlidingRootNav;
+import com.yarolegovich.slidingrootnav.SlidingRootNavBuilder;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Locale;
 import java.util.Random;
 
@@ -64,9 +68,11 @@ import static com.kfang.fenceme.Utility.getPopupPreference;
 public class MainActivity extends AppCompatActivity {
 
     static final int MAX_NAME_LENGTH = 20;
+    public static String LOG_TAG;
     public static long mCurrentTime;
     public static Fencer mRedFencer;
     public static Fencer mGreenFencer;
+    public static String[] screenTitles = {"Card a Player", "Tiebreaker", "Reset Bout"};
     static ArrayList<Fencer> fencers;
     static String[] mPreferenceTitles;
     static boolean tieBreaker = false;
@@ -87,7 +93,6 @@ public class MainActivity extends AppCompatActivity {
     Button subtractGreen;
     Button resetTimer;
     Button doubleTouch;
-
     TextView greenScore;
     TextView redScore;
     TextView redNameView;
@@ -97,17 +102,9 @@ public class MainActivity extends AppCompatActivity {
     Context mContext;
     Vibrator vibrator;
     CoordinatorLayout mCoordinatorLayout;
-    private NavigationView mDrawerList;
-    private ActionBarDrawerToggle mDrawerToggle;
-
-    /* TODO: Move code out of MainActivity
-     * TODO: Make navigation drawer look nicer
-     */
-
 
     // create a tiebreaker
     public static void makeTieBreaker(final Context context) {
-        // generate random fencer from arraylist of fencers
         Random r = new Random();
         Fencer chosenFencer = fencers.get(r.nextInt(fencers.size()));
         chosenFencer.assignPriority();
@@ -141,29 +138,37 @@ public class MainActivity extends AppCompatActivity {
         mGreenFencer.resetCards();
     }
 
+    public static void checkAndSetDoubleTouch(Activity activity) {
+        if (Utility.getDoubleTouchStatus(activity)) {
+            activity.findViewById(R.id.double_touch).setVisibility(View.VISIBLE);
+            activity.findViewById(R.id.double_touch_divider).setVisibility(View.VISIBLE);
+        } else {
+            activity.findViewById(R.id.double_touch).setVisibility(View.GONE);
+            activity.findViewById(R.id.double_touch_divider).setVisibility(View.GONE);
+        }
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
 
         RateThisApp.onStart(this);
-        RateThisApp.showRateDialogIfNeeded(this);
-        setUpBroadcastReceivers();
+        setupBroadcastReceivers();
     }
 
     @Override
     protected void onStop() {
-
         unregisterReceivers();
         super.onStop();
     }
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        LOG_TAG = this.getPackageName();
+
         mContext = MainActivity.this;
         setContentView(R.layout.activity_main);
-
 
         // initialize fencers and add to fencers array
         mRedFencer = new Fencer("Red");
@@ -177,15 +182,32 @@ public class MainActivity extends AppCompatActivity {
         boolean isDebuggable = BuildConfig.DEBUG;
         setViews();
         setupAds(isDebuggable);
-        // set action bar
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
-        getSupportActionBar().setHomeButtonEnabled(true);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
+        // set action bar
         // set up navigation drawer and reset cards
-        setupNavigation();
+
+        SlidingRootNavBuilder builder = new SlidingRootNavBuilder(this)
+                .withMenuLayout(R.layout.menu_left_drawer)
+                .withToolbarMenuToggle(toolbar)
+                .withSavedState(savedInstanceState)
+                .withGravity(SlideGravity.LEFT);
+
+        SlidingRootNav navigationMenu = builder.inject();
+
+        DrawerAdapter adapter = new DrawerAdapter(Arrays.asList(
+                createItemFor(0),
+                createItemFor(1),
+                createItemFor(2)
+        ));
+        adapter.setListener(new DrawerItemClickListener(this, navigationMenu));
         resetPlayerCards();
+
+        RecyclerView list = (RecyclerView) findViewById(R.id.list);
+        list.setNestedScrollingEnabled(false);
+        list.setLayoutManager(new LinearLayoutManager(this));
+        list.setAdapter(adapter);
 
         // restore game status if enabled
         if (Utility.getRestoreStatus(mContext)) {
@@ -194,9 +216,13 @@ public class MainActivity extends AppCompatActivity {
         } else { // restore default time
             mCurrentTime = Utility.updateCurrentTime(mContext) * 60000;
         }
+
         setTime();
 
         checkIfFirstRun();
+        if (savedInstanceState == null) {
+            RateThisApp.showRateDialogIfNeeded(this);
+        }
     }
 
     // update the views containing names of the players
@@ -211,6 +237,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private DrawerItem createItemFor(int position) {
+        return new SimpleItem(screenTitles[position])
+                .withSelectedTextTint(R.color.colorAccent)
+                .withTextTint(R.color.colorAccent);
+    }
+
     // check if the app is being first run (since last update)
     public void checkIfFirstRun() {
         String versionName;
@@ -219,7 +251,6 @@ public class MainActivity extends AppCompatActivity {
             versionName = packageInfo.versionName;
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
             String lastVersion = prefs.getString(Utility.LAST_VERSION_NUMBER, null);
-            //Log.d("lastversion", "lastversion equals: " + lastVersion);
             if (lastVersion == null || !lastVersion.equals(versionName)) {
                 // first run of the app
                 displayNewDialog(versionName);
@@ -294,64 +325,12 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+    // set up navigation drawers
+
     @Override
     protected void onPause() {
         super.onPause();
         unregisterReceivers();
-    }
-
-    // set up navigation drawers
-    public void setupNavigation() {
-        mPreferenceTitles = getResources().getStringArray(R.array.main_menu_array);
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerList = (NavigationView) findViewById(R.id.left_drawer);
-
-        mDrawerList.setNavigationItemSelectedListener(new DrawerItemClickListener(this, mDrawerLayout));
-
-        Menu menu = mDrawerList.getMenu();
-        for (String preferenceTitle : mPreferenceTitles) {
-            menu.add(preferenceTitle);
-        }
-
-        for (int i = 0, count = mDrawerList.getChildCount(); i < count; i++) {
-            final View child = mDrawerList.getChildAt(i);
-            if (child != null && child instanceof ListView) {
-                final ListView menuView = (ListView) child;
-                final HeaderViewListAdapter adapter = (HeaderViewListAdapter) menuView.getAdapter();
-                final BaseAdapter wrapped = (BaseAdapter) adapter.getWrappedAdapter();
-                wrapped.notifyDataSetChanged();
-            }
-        }
-
-        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
-                R.string.drawer_open, R.string.drawer_close) {
-
-            /**
-             * Called when a drawer has settled in a completely closed state.
-             */
-            public void onDrawerClosed(View view) {
-                super.onDrawerClosed(view);
-                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-            }
-
-            /**
-             * Called when a drawer has settled in a completely open state.
-             */
-            public void onDrawerOpened(View drawerView) {
-                mDrawerList.bringToFront();
-                mDrawerLayout.requestLayout();
-                super.onDrawerOpened(drawerView);
-                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-            }
-        };
-
-        mDrawerToggle.setDrawerIndicatorEnabled(true);
-        mDrawerToggle.syncState();
-        // Set the drawer toggle as the DrawerListener
-        mDrawerLayout.addDrawerListener(mDrawerToggle);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setHomeAsUpIndicator(mDrawerToggle.getDrawerArrowDrawable());
-        }
     }
 
     // launch settings fragment
@@ -384,7 +363,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // create broadcast receivers to update time, update button, reset bout, and timer up
-    private void setUpBroadcastReceivers() {
+    private void setupBroadcastReceivers() {
         LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
         // LocalBroadcastManagers to deal with updating time
         updateTime = new BroadcastReceiver() {
@@ -403,7 +382,11 @@ public class MainActivity extends AppCompatActivity {
                 // set text in button to corresponding value.
                 String text = intent.getStringExtra(TimerService.UPDATE_BUTTON_TEXT);
                 if (Utility.getVibrateTimerStatus(mContext))
-                    vibrator.vibrate(50);
+                    if (mTimerRunning) {
+                        vibrator.vibrate(50);
+                    } else {
+                        vibrator.vibrate(new long[]{0, 50, 70, 50}, -1);
+                    }
                 mStartTimer.setText(text);
             }
         };
@@ -423,7 +406,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onReceive(Context context, Intent intent) {
 
-                Log.d("timerservice", "timerUP");
                 // vibrate phone in 500 ms increments
                 Uri alarm = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
                 mAlarmTone = RingtoneManager.getRingtone(getApplicationContext(), alarm);
@@ -611,16 +593,6 @@ public class MainActivity extends AppCompatActivity {
         } */
     }
 
-    public static void checkAndSetDoubleTouch(Activity activity) {
-        if (Utility.getDoubleTouchStatus(activity)) {
-            activity.findViewById(R.id.double_touch).setVisibility(View.VISIBLE);
-            activity.findViewById(R.id.double_touch_divider).setVisibility(View.VISIBLE);
-        } else {
-            activity.findViewById(R.id.double_touch).setVisibility(View.GONE);
-            activity.findViewById(R.id.double_touch_divider).setVisibility(View.GONE);
-        }
-    }
-
     private void setTime() {
         int minutes = (int) mCurrentTime / 1000 / 60;
         int seconds = (int) mCurrentTime / 1000 % 60;
@@ -630,7 +602,7 @@ public class MainActivity extends AppCompatActivity {
     private void setViews() {
         // find name views and set correspondingly
         redNameView = (TextView) findViewById(R.id.redSide);
-        TextView greenNameView = (TextView) findViewById(R.id.greenSide);
+        greenNameView = (TextView) findViewById(R.id.greenSide);
 
         if (mRedFencer.getName() != null) {
             redNameView.setText(mRedFencer.getName());
@@ -641,7 +613,7 @@ public class MainActivity extends AppCompatActivity {
 
         mCoordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator);
 
-        // set text views and buttons for scorekeeping
+        // set text views and buttons for score keeping
         redScore = (TextView) findViewById(R.id.red_score);
         greenScore = (TextView) findViewById(R.id.green_score);
         addRed = (Button) findViewById(R.id.plus_red);
@@ -684,7 +656,6 @@ public class MainActivity extends AppCompatActivity {
                             .setAction("Dismiss", new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-
                                 }
                             })
                             .show();
@@ -746,11 +717,11 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onDestroy() {
-        if (mTimerRunning) {
+        /* if (mTimerRunning) {
             Intent startTimer = new Intent(getApplicationContext(), TimerService.class);
             startTimer.putExtra(Utility.CHANGE_TIMER, TimerService.TOGGLE_TIMER);
             startService(startTimer);
-        }
+        } */
 
         Utility.saveCurrentMatchPreferences(mContext);
         unregisterReceivers();
@@ -777,9 +748,6 @@ public class MainActivity extends AppCompatActivity {
     // create activities for options menu selections
     public boolean onOptionsItemSelected(MenuItem item) {
         // Activate the navigation drawer toggle
-        if (mDrawerToggle.onOptionsItemSelected(item)) {
-            return true;
-        }
         switch (item.getItemId()) {
             case R.id.about:
                 startActivity(new Intent(this, AboutActivity.class));

@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -38,10 +37,7 @@ public class CardPlayerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_card);
         Intent intent = getIntent();
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayShowHomeEnabled(true);
-        }
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         playerToCard = intent.getStringExtra(TO_CARD_PLAYER);
         yellowButton = (Button) findViewById(R.id.yellow_card);
         redButton = (Button) findViewById(R.id.red_card);
@@ -81,11 +77,9 @@ public class CardPlayerActivity extends AppCompatActivity {
         if (playerToCard.equals(mRedFencer.getName())) {
             oppositeFencer = mGreenFencer;
             mRedFencer.incrementRedCards();
-            Log.d("playerToCard", "mredfencer");
         } else {
             oppositeFencer = mRedFencer;
             mGreenFencer.incrementRedCards();
-            Log.d("playerToCard", "mgreenfencer");
         }
         oppositeFencer.incrementNumPoints();
 

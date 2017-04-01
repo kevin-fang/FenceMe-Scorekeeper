@@ -1,13 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:ads="http://schemas.android.com/apk/res-auto"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:orientation="vertical"
     tools:context="com.kfang.fenceme.MainActivity"
     tools:ignore="PxUsage">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+    </android.support.design.widget.AppBarLayout>
 
     <android.support.design.widget.CoordinatorLayout
         android:id="@+id/coordinator"
@@ -24,14 +39,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="4dp"
                 android:isScrollContainer="false"
                 ads:adSize="BANNER"
                 ads:adUnitId="@string/banner_ad_unit_id"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/red_body" />
-
 
             <Button
                 android:id="@+id/start_timer"
@@ -48,9 +61,6 @@
                 android:id="@+id/green_body"
                 android:layout_width="0dp"
                 android:layout_height="140dp"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"
                 android:layout_weight="1"
                 android:background="@drawable/layout_green"
                 android:isScrollContainer="false"
@@ -134,9 +144,9 @@
                     android:textColor="@color/primary_text" />
 
                 <View
+                    android:id="@+id/double_touch_divider"
                     android:layout_width="2px"
                     android:layout_height="fill_parent"
-                    android:id="@+id/double_touch_divider"
                     android:layout_marginBottom="4dp"
                     android:background="#90909090" />
 
@@ -194,9 +204,6 @@
                 android:id="@+id/red_body"
                 android:layout_width="0dp"
                 android:layout_height="140dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
                 android:layout_weight="1"
                 android:background="@drawable/layout_red"
                 android:orientation="vertical"
@@ -258,17 +265,4 @@
         </android.support.constraint.ConstraintLayout>
     </android.support.design.widget.CoordinatorLayout>
 
-    <android.support.design.widget.NavigationView
-        android:id="@+id/left_drawer"
-        android:layout_width="240dp"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:background="@android:color/white"
-        android:choiceMode="singleChoice"
-        android:divider="@android:color/transparent"
-        android:dividerHeight="0dp"
-        android:theme="@style/NavigationViewStyle">
-
-    </android.support.design.widget.NavigationView>
-
-</android.support.v4.widget.DrawerLayout>
+</LinearLayout>

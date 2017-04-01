@@ -2,6 +2,7 @@ package com.kfang.fenceme;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Vibrator;
 import android.preference.PreferenceManager;
 
 import static com.kfang.fenceme.MainActivity.mGreenFencer;
@@ -11,8 +12,10 @@ import static com.kfang.fenceme.MainActivity.mRedFencer;
  * Class to get preferences.
  */
 
-class Utility {
+public class Utility {
 
+    public static final String TO_CARD_PLAYER = "card_player";
+    public static final String CHANGE_TIMER = "TOGGLE";
     // settings string keys
     static final String VIBRATE_AT_END = "vibrate_on_finish";
     static final String PAUSE_ON_SCORE_CHANGE = "pause_on_score_change";
@@ -24,11 +27,8 @@ class Utility {
     static final String POPUP_ON_SCORE = "popup_on_score_increment";
     static final String VIBRATE_TIMER = "vibrate_on_timer_change";
     static final String TOGGLE_DOUBLE_TOUCH = "toggle_double_touch";
-
     static final int TO_ADD = 1;
     static final int TO_SUBTRACT = 0;
-    static final String TO_CARD_PLAYER = "card_player";
-    static final String CHANGE_TIMER = "TOGGLE";
     static final int DEFAULT_POINTS = 5;
     static final int DEFAULT_MINUTES = 3;
     static final String LAST_VERSION_NUMBER = "last_version_number";
@@ -75,9 +75,11 @@ class Utility {
         return prefs.getBoolean(TOGGLE_DOUBLE_TOUCH, true);
     }
 
+    // returns whether to vibrate phone
     static boolean getVibrateTimerStatus(Context context) {
+        Vibrator v = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
         prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        return prefs.getBoolean(VIBRATE_TIMER, true);
+        return prefs.getBoolean(VIBRATE_TIMER, true) && v.hasVibrator();
     }
 
     static boolean getPauseStatus(Context context) {

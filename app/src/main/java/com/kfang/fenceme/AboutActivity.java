@@ -9,7 +9,9 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
+
+import mehdi.sakout.aboutpage.AboutPage;
+import mehdi.sakout.aboutpage.Element;
 
 /*
  * Simple about page.
@@ -19,10 +21,36 @@ public class AboutActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.about);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
+
+        Element versionElement = new Element();
+        String versionName;
+        try {
+            PackageInfo pinfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+            versionName = pinfo.versionName;
+            versionElement.setTitle("Version: " + versionName);
+
+        } catch (PackageManager.NameNotFoundException e) {
+            versionElement = null;
+        }
+
+        View aboutPage = new AboutPage(this)
+                .isRTL(false)
+                .setDescription(getResources().getString(R.string.about_text))
+                .setImage(R.drawable.about_app_feature)
+                .addItem(versionElement)
+                .addGroup("Connect with us:")
+                .addEmail("helionapps@gmail.com")
+                .addPlayStore("com.kfang.fenceme")
+                .create();
+
+        setContentView(aboutPage);
+
+
+        /*
+        setContentView(R.layout.about);
         TextView versionNumber = (TextView) findViewById(R.id.current_version);
         try {
             PackageInfo pinfo = getPackageManager().getPackageInfo(getPackageName(), 0);
@@ -30,7 +58,7 @@ public class AboutActivity extends AppCompatActivity {
             versionNumber.setText(getResources().getText(R.string.current_version) + " " + versionName);
         } catch (PackageManager.NameNotFoundException e) {
             versionNumber.setVisibility(View.INVISIBLE);
-        }
+        }*/
     }
 
     @Override
