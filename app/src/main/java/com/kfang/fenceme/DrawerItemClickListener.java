@@ -3,7 +3,6 @@ package com.kfang.fenceme;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.FragmentManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
@@ -14,7 +13,6 @@ import com.yarolegovich.slidingrootnav.SlidingRootNav;
 
 import static com.kfang.fenceme.MainActivity.mGreenFencer;
 import static com.kfang.fenceme.MainActivity.mRedFencer;
-import static com.kfang.fenceme.MainActivity.screenTitles;
 import static com.kfang.fenceme.TimerService.RESET_BOUT_INTENT;
 import static com.kfang.fenceme.TimerService.mTimerRunning;
 import static com.kfang.fenceme.Utility.TO_CARD_PLAYER;
@@ -36,12 +34,9 @@ public class DrawerItemClickListener implements DrawerAdapter.OnItemSelectedList
     @Override
     public void onItemSelected(int position) {
         //Toast.makeText(activity, "selected: " + menuItem.getTitle(), Toast.LENGTH_SHORT).show();
-        String selectedItem = screenTitles[position];
-        FragmentManager fragmentManager = activity.getFragmentManager();
-        fragmentManager.popBackStack();
 
-        switch (selectedItem) {
-            case "Card a Player":
+        switch (position) {
+            case MainActivity.CARD_A_PLAYER:
                 AlertDialog.Builder builder = new AlertDialog.Builder(activity);
                 final String[] playerArray = {mRedFencer.getName(), mGreenFencer.getName(), "Reset Cards"};
                 builder.setTitle("Card a player")
@@ -69,13 +64,13 @@ public class DrawerItemClickListener implements DrawerAdapter.OnItemSelectedList
                         .show();
                 navigationMenu.closeMenu(true);
                 break;
-            case "Tiebreaker":
+            case MainActivity.TIEBREAKER:
                 mRedFencer.setPoints(0);
                 mGreenFencer.setPoints(0);
                 MainActivity.makeTieBreaker(activity);
                 navigationMenu.closeMenu(true);
                 break;
-            case "Reset Bout":
+            case MainActivity.RESET_BOUT:
                 AlertDialog.Builder resetBuilder = new AlertDialog.Builder(activity);
                 resetBuilder.setTitle("Are you sure?")
                         .setPositiveButton("Reset", new DialogInterface.OnClickListener() {

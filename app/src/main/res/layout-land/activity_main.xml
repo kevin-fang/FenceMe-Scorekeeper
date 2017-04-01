@@ -125,14 +125,14 @@
                         android:background="#90909090" />
 
                     <Button
-                        android:id="@+id/reset_scores"
+                        android:id="@+id/reset_bout"
                         style="?android:attr/buttonBarButtonStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_weight=".35"
-                        android:onClick="resetScores"
-                        android:text="@string/button_reset_scores"
+                        android:onClick="resetBout"
+                        android:text="@string/button_reset_bout"
                         android:textColor="@color/primary_text" />
                 </LinearLayout>
             </RelativeLayout>

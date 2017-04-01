@@ -67,6 +67,9 @@ import static com.kfang.fenceme.Utility.getPopupPreference;
 
 public class MainActivity extends AppCompatActivity {
 
+    public static final int CARD_A_PLAYER = 0;
+    public static final int TIEBREAKER = 1;
+    public static final int RESET_BOUT = 2;
     static final int MAX_NAME_LENGTH = 20;
     public static String LOG_TAG;
     public static long mCurrentTime;
@@ -108,7 +111,6 @@ public class MainActivity extends AppCompatActivity {
         Random r = new Random();
         Fencer chosenFencer = fencers.get(r.nextInt(fencers.size()));
         chosenFencer.assignPriority();
-        tieBreaker = true;
         // create tiebreaker dialog that sets time to 1 minute
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle("Tiebreaker");
@@ -126,6 +128,7 @@ public class MainActivity extends AppCompatActivity {
                 Intent startTimer = new Intent(context, TimerService.class);
                 startTimer.putExtra(Utility.CHANGE_TIMER, TimerService.TOGGLE_TIMER);
                 context.startService(startTimer);
+                tieBreaker = true;
             }
         })
                 .create()
@@ -197,9 +200,9 @@ public class MainActivity extends AppCompatActivity {
         SlidingRootNav navigationMenu = builder.inject();
 
         DrawerAdapter adapter = new DrawerAdapter(Arrays.asList(
-                createItemFor(0),
-                createItemFor(1),
-                createItemFor(2)
+                createItemFor(CARD_A_PLAYER),
+                createItemFor(TIEBREAKER),
+                createItemFor(RESET_BOUT)
         ));
         adapter.setListener(new DrawerItemClickListener(this, navigationMenu));
         resetPlayerCards();
@@ -537,17 +540,7 @@ public class MainActivity extends AppCompatActivity {
         resetEntireBout = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                resetPlayerCards();
-                int minutes = Utility.updateCurrentTime(getApplicationContext());
-                mCurrentTime = minutes * 60000;
-                mStartTimer.setText(getString(R.string.button_start_timer));
-                setTime();
-                resetScores(null);
-                vibrator.cancel();
-
-                Intent stopTimer = new Intent(getApplicationContext(), TimerService.class);
-                stopTimer.putExtra(Utility.CHANGE_TIMER, TimerService.RESET_TIMER);
-                startService(stopTimer);
+                resetBout(null);
             }
         };
 
@@ -717,16 +710,34 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onDestroy() {
-        /* if (mTimerRunning) {
-            Intent startTimer = new Intent(getApplicationContext(), TimerService.class);
-            startTimer.putExtra(Utility.CHANGE_TIMER, TimerService.TOGGLE_TIMER);
-            startService(startTimer);
-        } */
 
         Utility.saveCurrentMatchPreferences(mContext);
         unregisterReceivers();
 
         super.onDestroy();
+    }
+
+    public void resetBout(View v) {
+        new AlertDialog.Builder(this)
+                .setTitle("Are you sure?")
+                .setPositiveButton("Reset", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        resetPlayerCards();
+                        int minutes = Utility.updateCurrentTime(getApplicationContext());
+                        mCurrentTime = minutes * 60000;
+                        mStartTimer.setText(getString(R.string.button_start_timer));
+                        setTime();
+                        resetScores(null);
+                        vibrator.cancel();
+
+                        Intent stopTimer = new Intent(getApplicationContext(), TimerService.class);
+                        stopTimer.putExtra(Utility.CHANGE_TIMER, TimerService.RESET_TIMER);
+                        startService(stopTimer);
+                    }
+                })
+                .setMessage("Resetting will reset all points, the timer, and all cards awarded.")
+                .create()
+                .show();
     }
 
     // reset scores

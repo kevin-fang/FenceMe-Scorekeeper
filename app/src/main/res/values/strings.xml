@@ -17,7 +17,7 @@
     <string name="button_reset_timer">Reset Timer</string>
     <string name="button_set_timer">Set Timer</string>
 
-    <string name="button_reset_scores">Reset Scores</string>
+    <string name="button_reset_bout">Reset Bout</string>
 
     <string name="nav_card_player">Card a Player</string>
     <string name="currently_carding">Currently carding:</string>
