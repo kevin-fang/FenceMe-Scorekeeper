@@ -21,7 +21,7 @@ import static com.kfang.fenceme.Utility.TO_CARD_PLAYER;
  * Drawer Item CLick Listener
  */
 
-public class DrawerItemClickListener implements DrawerAdapter.OnItemSelectedListener {
+class DrawerItemClickListener implements DrawerAdapter.OnItemSelectedListener {
     static final int OPEN_CARD_ACTIVITY = 1234;
     private Activity activity;
     private SlidingRootNav navigationMenu;
@@ -71,18 +71,8 @@ public class DrawerItemClickListener implements DrawerAdapter.OnItemSelectedList
                 navigationMenu.closeMenu(true);
                 break;
             case MainActivity.RESET_BOUT:
-                AlertDialog.Builder resetBuilder = new AlertDialog.Builder(activity);
-                resetBuilder.setTitle("Are you sure?")
-                        .setPositiveButton("Reset", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                LocalBroadcastManager.getInstance(activity).sendBroadcast(new Intent(RESET_BOUT_INTENT));
-                                Toast.makeText(activity, "Bout reset!", Toast.LENGTH_SHORT).show();
-                            }
-                        })
-                        .setMessage("Resetting will reset all points, the timer, and all cards awarded.")
-                        .create()
-                        .show();
                 navigationMenu.closeMenu(true);
+                LocalBroadcastManager.getInstance(activity).sendBroadcast(new Intent(RESET_BOUT_INTENT));
                 break;
         }
     }

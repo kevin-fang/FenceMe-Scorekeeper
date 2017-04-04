@@ -38,6 +38,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -729,10 +730,16 @@ public class MainActivity extends AppCompatActivity {
                         setTime();
                         resetScores(null);
                         vibrator.cancel();
-
+                        Toast.makeText(mContext, "Bout Reset!", Toast.LENGTH_SHORT).show();
                         Intent stopTimer = new Intent(getApplicationContext(), TimerService.class);
                         stopTimer.putExtra(Utility.CHANGE_TIMER, TimerService.RESET_TIMER);
                         startService(stopTimer);
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
                     }
                 })
                 .setMessage("Resetting will reset all points, the timer, and all cards awarded.")

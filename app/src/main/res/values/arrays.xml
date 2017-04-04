@@ -8,14 +8,6 @@
     </string-array>
 
     <string-array name="change_log">
-        <item>Changed navigation menu to something more aesthetically pleasing</item>
-        <item>Removed "reset scores" button in favor of "reset entire bout" to avoid confusion</item>
-        <item>Moved settings button to top toolbar for easier access</item>
-        <item>Changed timer start and stop vibration</item>
-        <item>Improved about screen</item>
-        <item>Significantly reduced rating popups occurring</item>
-        <item>Fixed bug where rotating device would stop the timer</item>
-        <item>Fixed bug where multiple dialogs would pop up in the case of victories</item>
-        <item>Updated Android support libraries</item>
+        <item>Fixed bug where resetting bout would create two confirmations</item>
     </string-array>
 </resources>
