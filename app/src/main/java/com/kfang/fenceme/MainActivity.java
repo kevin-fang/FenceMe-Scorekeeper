@@ -1,5 +1,7 @@
 package com.kfang.fenceme;
 
+import android.animation.ArgbEvaluator;
+import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
@@ -15,12 +17,12 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
-import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
@@ -60,6 +62,7 @@ import static com.kfang.fenceme.TimerService.RESET_BOUT_INTENT;
 import static com.kfang.fenceme.TimerService.TIMER_UP_INTENT;
 import static com.kfang.fenceme.TimerService.mAlarmTone;
 import static com.kfang.fenceme.TimerService.mTimerRunning;
+import static com.kfang.fenceme.Utility.TIMER_RUNNING;
 import static com.kfang.fenceme.Utility.TO_ADD;
 import static com.kfang.fenceme.Utility.TO_SUBTRACT;
 import static com.kfang.fenceme.Utility.equalPoints;
@@ -221,12 +224,24 @@ public class MainActivity extends AppCompatActivity {
             mCurrentTime = Utility.updateCurrentTime(mContext) * 60000;
         }
 
+        if (savedInstanceState != null) {
+            if (savedInstanceState.getBoolean(TIMER_RUNNING)) {
+                setTimerButtonColor(Utility.COLOR_RED, this);
+            }
+        }
+
         setTime();
 
         checkIfFirstRun();
         if (savedInstanceState == null) {
             RateThisApp.showRateDialogIfNeeded(this);
         }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putBoolean(TIMER_RUNNING, mTimerRunning);
+        super.onSaveInstanceState(outState);
     }
 
     // update the views containing names of the players
@@ -337,18 +352,30 @@ public class MainActivity extends AppCompatActivity {
         unregisterReceivers();
     }
 
-    // launch settings fragment
-    public void launchSettings(View v) {
-        mDrawerLayout.closeDrawers();
-        PreferenceFragment fragment = new SettingsActivity.MyPreferenceFragment();
+    public void setTimerButtonColor(String color, Context context) {
+        ValueAnimator anim = new ValueAnimator();
+        anim.setIntValues(ContextCompat.getColor(context, R.color.colorBrightRed), ContextCompat.getColor(context, R.color.colorBrightGreen));
+        anim.setEvaluator(new ArgbEvaluator());
+        anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                mStartTimer.setBackgroundColor((Integer) valueAnimator.getAnimatedValue());
+            }
+        });
+        anim.setDuration(150);
 
-        android.app.FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.popBackStack();
-        fragmentManager.beginTransaction()
-                .replace(R.id.drawer_layout, fragment)
-                .addToBackStack(null)
-                .commit();
-
+        switch (color) {
+            case Utility.COLOR_GREEN:
+                //mStartTimer.setBackgroundColor(ContextCompat.getColor(context, R.color.colorBrightGreen));
+                anim.setIntValues(ContextCompat.getColor(context, R.color.colorBrightRed), ContextCompat.getColor(context, R.color.colorBrightGreen));
+                anim.start();
+                break;
+            case Utility.COLOR_RED:
+                //mStartTimer.setBackgroundColor(ContextCompat.getColor(context, R.color.colorBrightRed));
+                anim.setIntValues(ContextCompat.getColor(context, R.color.colorBrightGreen), ContextCompat.getColor(context, R.color.colorBrightRed));
+                anim.start();
+                break;
+        }
     }
 
     private void unregisterReceivers() {
@@ -379,12 +406,14 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
-
+        // update button toggle text to eiher "start timer" or "stop timer"
         updateToggle = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
+                mStartTimer.setEnabled(true);
                 // set text in button to corresponding value.
                 String text = intent.getStringExtra(TimerService.UPDATE_BUTTON_TEXT);
+                String color = intent.getStringExtra(TimerService.UPDATE_BUTTON_COLOR);
                 if (Utility.getVibrateTimerStatus(mContext))
                     if (mTimerRunning) {
                         vibrator.vibrate(50);
@@ -392,6 +421,7 @@ public class MainActivity extends AppCompatActivity {
                         vibrator.vibrate(new long[]{0, 50, 70, 50}, -1);
                     }
                 mStartTimer.setText(text);
+                setTimerButtonColor(color, getApplicationContext());
             }
         };
 
@@ -399,7 +429,8 @@ public class MainActivity extends AppCompatActivity {
         resetBoutTimer = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                // set the text in the textview to corresponding minutes and seconds
+                mStartTimer.setEnabled(true);
+                // set the text in the text view to corresponding minutes and seconds
                 int minutes = Utility.updateCurrentTime(getApplicationContext());
                 mCurrentTime = minutes * 60000;
                 setTime();
@@ -414,6 +445,7 @@ public class MainActivity extends AppCompatActivity {
                 Uri alarm = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
                 mAlarmTone = RingtoneManager.getRingtone(getApplicationContext(), alarm);
 
+                mStartTimer.setEnabled(false);
                 // play alarm in background thread
                 final Thread alarms = new Thread(new Runnable() {
                     @Override
@@ -730,7 +762,7 @@ public class MainActivity extends AppCompatActivity {
                         setTime();
                         resetScores(null);
                         vibrator.cancel();
-                        Toast.makeText(mContext, "Bout Reset!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mContext, "Bout reset!", Toast.LENGTH_SHORT).show();
                         Intent stopTimer = new Intent(getApplicationContext(), TimerService.class);
                         stopTimer.putExtra(Utility.CHANGE_TIMER, TimerService.RESET_TIMER);
                         startService(stopTimer);
@@ -779,6 +811,12 @@ public class MainActivity extends AppCompatActivity {
                 RateThisApp.showRateDialog(this);
                 return true;
             case R.id.settings:
+                if (mTimerRunning) {
+                    Intent stopTimer = new Intent(getApplicationContext(), TimerService.class);
+                    stopTimer.putExtra(Utility.CHANGE_TIMER, TimerService.TOGGLE_TIMER);
+                    startService(stopTimer);
+                    Toast.makeText(this, "Paused bout", Toast.LENGTH_SHORT).show();
+                }
                 startActivity(new Intent(this, SettingsActivity.class));
                 return true;
         }

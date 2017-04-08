@@ -39,7 +39,6 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_marginBottom="4dp"
-                android:layout_marginTop="4dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toRightOf="@+id/linearLayout5"
                 app:layout_constraintRight_toLeftOf="@+id/linearLayout6"
@@ -61,8 +60,8 @@
                     android:id="@+id/timer"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_above="@+id/start_timer"
                     android:layout_centerHorizontal="true"
-                    android:layout_centerVertical="true"
                     android:layout_gravity="center"
                     android:clickable="true"
                     android:fontFamily="sans-serif-thin"
@@ -74,11 +73,14 @@
 
                 <Button
                     android:id="@+id/start_timer"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_above="@+id/reset_bar"
                     android:layout_centerHorizontal="true"
                     android:layout_gravity="center"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="8dp"
+                    android:background="@color/colorBrightGreen"
                     android:text="@string/button_start_timer" />
 
                 <LinearLayout

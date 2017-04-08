@@ -12,10 +12,13 @@ import static com.kfang.fenceme.MainActivity.mRedFencer;
  * Class to get preferences.
  */
 
-public class Utility {
+class Utility {
 
-    public static final String TO_CARD_PLAYER = "card_player";
-    public static final String CHANGE_TIMER = "TOGGLE";
+    static final String TO_CARD_PLAYER = "card_player";
+    static final String CHANGE_TIMER = "TOGGLE";
+    static final String TIMER_RUNNING = "timer_running";
+    static final String COLOR_GREEN = "green";
+    static final String COLOR_RED = "red";
     // settings string keys
     static final String VIBRATE_AT_END = "vibrate_on_finish";
     static final String PAUSE_ON_SCORE_CHANGE = "pause_on_score_change";

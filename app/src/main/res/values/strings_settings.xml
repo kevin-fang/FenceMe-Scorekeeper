@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="alarm_at_end">Timer alarm</string>
+    <string name="alarm_at_end" translatable="false">Timer alarm</string>
     <string name="alarm_end_desc">Check this box to enable an alarm at the end of each bout timer</string>
 
     <string name="max_points_per_bout">Maximum Points in Bout</string>
@@ -10,12 +10,12 @@
     <string name="maximum_brightness">Maximum Brightness when Displaying Cards</string>
     <string name="maximum_brightness_desc">Check this box to set brightness to max when giving out red/yellow/black cards</string>
 
-    <string name="banner_ad_unit_id">ca-app-pub-6647745358935231/9322339102</string>
+    <string name="banner_ad_unit_id" translatable="false">ca-app-pub-6647745358935231/9322339102</string>
     <string name="remove_ads">Remove Ads</string>
 
     <string name="pause_on_score_change">Pause timer on score change</string>
 
-    <string name="keep_awake">Keep device awake</string>
+    <string name="keep_awake" translatable="false">Keep device awake</string>
     <string name="keep_awake_summary">When the timer is running, keep this device awake</string>
 
     <string name="popup_on_score_increment">Popup on score increment</string>

@@ -9,5 +9,6 @@
 
     <string-array name="change_log">
         <item>Fixed bug where resetting bout would create two confirmations</item>
+        <item>Added color to start and stop timer button</item>
     </string-array>
 </resources>

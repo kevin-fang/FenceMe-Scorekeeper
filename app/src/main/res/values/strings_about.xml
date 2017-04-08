@@ -3,9 +3,9 @@
 
     <string name="about_text">The FenceMe! Scorekeeper Application was created by Kevin Fang as a
         simple, elegant way to keep track of fencing scores. \nThis app is a work in progress, so expect many updates and new features!</string>
-    <string name="icon_attributes">Crossed weapons graphic made by <a href="http://www.freepik.com" title="Freepik">Freepik</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" target="_blank" title="Creative Commons BY 3.0">CC 3.0 BY</a></string>
+    <string name="icon_attributes" translatable="false">Crossed weapons graphic made by <a href="http://www.freepik.com" title="Freepik">Freepik</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" target="_blank" title="Creative Commons BY 3.0">CC 3.0 BY</a></string>
     <string name="email">Features requests? Questions? Email kfangapps@gmail.com\n</string>
-    <string name="logo_desc">FenceMe! Scorekeeper logo</string>
+    <string name="logo_desc" translatable="false">FenceMe! Scorekeeper logo</string>
     <string name="rate">Click to rate this app on the Google Play Store</string>
     <string name="current_version">Current app version: </string>
 

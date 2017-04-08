@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">FenceMe!</string>
+    <string name="about">Sur FenceMe!</string>
+    <string name="about_text">Le FenceMe! Scorekeeper application a été crée par Kevin Fang comme un simple, élégant façon pour suivre les scores d\'escrime. Cette application est un travail en cours de réalisation, allors attendez-vous à de nombreuses mises à jour et nouvelles fonctionallités!</string>
+    <string name="alarm_end_desc">Appuyer pour activer une alarme à la fin de chaque temporasiteur</string>
+    <string name="black_card">Carton noir</string>
+    <string name="button_dismiss">Retournez</string>
+    <string name="button_reset_bout">Réinitialiser</string>
+    <string name="button_reset_timer">Réinitialiser la minuterie</string>
+    <string name="button_set_timer">Ajuster la minuterie</string>
+    <string name="button_start_timer">Commencer</string>
+    <string name="button_stop_timer">Pause</string>
+    <string name="cancel">Annuler</string>
+    <string name="current_version">"Version actuelle de l'application: "</string>
+    <string name="currently_carding">"En train de carder: "</string>
+    <string name="default_bout_length">Longueur par défaut</string>
+    <string name="double_touch">Deux touches</string>
+    <string name="double_touch_summary">Utilisé pour épée</string>
+    <string name="green_side_default_name">Vert</string>
+    <string name="red_side_default_name">Rouge</string>
+    <string name="red_card">Carton rouge</string>
+</resources>

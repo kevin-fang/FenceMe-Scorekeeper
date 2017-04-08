@@ -27,6 +27,7 @@ public class TimerService extends Service {
     public static String RESET_BOUT_INTENT = "com.kfang.fenceme.resetbout";
     public static String TIMER_UP_INTENT = "com.kfang.fenceme.timerup";
     public static String UPDATE_BUTTON_TEXT = "to_update";
+    public static String UPDATE_BUTTON_COLOR = "to_update_color";
     public static boolean mTimerRunning = false;
     static Ringtone mAlarmTone;
     // keep track of start times and end times
@@ -62,9 +63,10 @@ public class TimerService extends Service {
     }
 
     // create an update_toggle_button_intent and fire it to the broadcastReceiver
-    private void createUpdateToggleButtonIntent(int timerValue) {
+    private void createUpdateToggleButtonIntent(int timerValue, String color) {
         Intent intent = new Intent(UPDATE_TOGGLE_BUTTON_INTENT);
         intent.putExtra(UPDATE_BUTTON_TEXT, getResources().getString(timerValue));
+        intent.putExtra(UPDATE_BUTTON_COLOR, color);
         LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
     }
 
@@ -82,11 +84,11 @@ public class TimerService extends Service {
                 mStartTime = System.currentTimeMillis();
                 mHandler.removeCallbacks(mUpdateTimeTask);
                 mHandler.postDelayed(mUpdateTimeTask, 1000);
-                createUpdateToggleButtonIntent(R.string.button_stop_timer);
+                createUpdateToggleButtonIntent(R.string.button_stop_timer, Utility.COLOR_RED);
                 mTimerRunning = true;
             } else {
                 mHandler.removeCallbacks(mUpdateTimeTask);
-                createUpdateToggleButtonIntent(R.string.button_start_timer);
+                createUpdateToggleButtonIntent(R.string.button_start_timer, Utility.COLOR_GREEN);
                 mTimerRunning = false;
             }
         } else if (toggleOrReset == RESET_TIMER) { // reset the timer.
@@ -94,7 +96,7 @@ public class TimerService extends Service {
 
             Intent intent = new Intent(RESET_TIMER_INTENT);
             LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
-            createUpdateToggleButtonIntent(R.string.button_start_timer);
+            createUpdateToggleButtonIntent(R.string.button_start_timer, Utility.COLOR_GREEN);
 
             mTimerRunning = false;
             if (mAlarmTone != null && mAlarmTone.isPlaying()) { // stop the alarm if it is currently playing.
