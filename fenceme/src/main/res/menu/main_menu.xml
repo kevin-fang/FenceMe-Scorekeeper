@@ -22,7 +22,14 @@
         android:id="@+id/settings"
         android:icon="@drawable/settings"
         android:title="@string/settings"
-        app:showAsAction="ifRoom"
+        app:showAsAction="ifRoom" />
+
+    <!-- TODO: ADD PRO
+    <item
+        android:id="@+id/go_pro"
+        android:title="@string/go_pro"
+        app:showAsAction="never"
         />
+    -->
 
 </menu>

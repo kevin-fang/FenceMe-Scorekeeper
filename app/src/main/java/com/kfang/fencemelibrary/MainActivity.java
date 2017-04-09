@@ -815,6 +815,10 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    public void openProPage(View v) {
+
+    }
+
     public void setTimer(View v) {
         if (TimerService.mTimerRunning) {
             /* Toast.makeText(getApplicationContext(), "Pause timer before changing time", Toast.LENGTH_SHORT).show();*/

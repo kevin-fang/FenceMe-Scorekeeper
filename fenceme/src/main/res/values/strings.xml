@@ -1,4 +1,4 @@
 <resources>
-    <string name="app_name">FenceMe!</string>
+    <string name="app_name" translatable="false">FenceMe!</string>
     <bool name="lite_version">true</bool>
 </resources>
