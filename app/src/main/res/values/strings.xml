@@ -37,4 +37,5 @@
     <string name="award_point" translatable="false">Award Point</string>
 
     <bool name="lite_version">true</bool>
+    <string name="go_pro">Get FenceMe! Pro</string>
 </resources>

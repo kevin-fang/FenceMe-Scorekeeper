@@ -802,6 +802,13 @@ public class MainActivity extends AppCompatActivity {
         } else if (id == R.id.rate_this_app) {
             RateThisApp.showRateDialog(this);
             return true;
+        } else if (id == R.id.go_pro) {
+            final String appPackageName = "com.helionlabs.fencemepro"; // getPackageName() from Context or Activity object
+            try {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+            } catch (android.content.ActivityNotFoundException anfe) {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
+            }
         } else if (id == R.id.settings) {
             if (TimerService.mTimerRunning) {
                 Intent stopTimer = new Intent(getApplicationContext(), TimerService.class);
@@ -815,9 +822,6 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void openProPage(View v) {
-
-    }
 
     public void setTimer(View v) {
         if (TimerService.mTimerRunning) {
