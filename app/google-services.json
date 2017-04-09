@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:723573634273:android:6b22289471157af8",
         "android_client_info": {
-          "package_name": "com.kfang.fenceme"
+          "package_name": "com.kfang.fencemelibrary"
         }
       },
       "oauth_client": [
@@ -18,7 +18,7 @@
           "client_id": "723573634273-2n5leo1mvk30qrg43v3qjp5tcq9ruarp.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.kfang.fenceme",
+            "package_name": "com.kfang.fencemelibrary",
             "certificate_hash": "1D9BDC71A0883759597F5F9C03406724A20EF4A5"
           }
         },

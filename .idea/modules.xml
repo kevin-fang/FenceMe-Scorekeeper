@@ -2,9 +2,10 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/FenceMe.iml" filepath="$PROJECT_DIR$/FenceMe.iml" />
       <module fileurl="file://$PROJECT_DIR$/FenceMe-Scorekeeper.iml" filepath="$PROJECT_DIR$/FenceMe-Scorekeeper.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/fenceme/fenceme.iml" filepath="$PROJECT_DIR$/fenceme/fenceme.iml" />
+      <module fileurl="file://$PROJECT_DIR$/fencemepro/fencemepro.iml" filepath="$PROJECT_DIR$/fencemepro/fencemepro.iml" />
     </modules>
   </component>
 </project>

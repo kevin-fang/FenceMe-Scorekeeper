@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">FenceMe!</string>
+    <bool name="lite_version">true</bool>
+</resources>

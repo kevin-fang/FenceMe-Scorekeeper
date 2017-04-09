@@ -1,10 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.kfang.fencemelibrary">
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.VIBRATE" />
-
+    package="com.helionlabs.fencemepro">
 
     <application
         android:allowBackup="true"
@@ -19,17 +15,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name="com.kfang.fencemelibrary.AboutActivity">
-        </activity>
-        <activity android:name="com.kfang.fencemelibrary.CardPlayerActivity">
-
-        </activity>
-        <activity android:name="com.kfang.fencemelibrary.SettingsActivity">
-
-        </activity>
-
-        <service android:name="com.kfang.fencemelibrary.TimerService" />
     </application>
 
 </manifest>

@@ -35,4 +35,6 @@
     <string name="drawer_open" translatable="false">Open navigation drawer</string>
     <string name="drawer_close" translatable="false">Close navigation drawer</string>
     <string name="award_point" translatable="false">Award Point</string>
+
+    <bool name="lite_version">true</bool>
 </resources>

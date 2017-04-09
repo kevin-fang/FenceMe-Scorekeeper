@@ -10,7 +10,7 @@
     android:isScrollContainer="false"
     android:orientation="vertical"
     android:padding="8dp"
-    tools:context="com.kfang.fenceme.MainActivity">
+    tools:context="com.kfang.fencemelibrary.MainActivity">
 
     <RelativeLayout
         android:id="@+id/red_body"
