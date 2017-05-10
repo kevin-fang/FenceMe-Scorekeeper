@@ -143,6 +143,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public static boolean isPro(Context context) {
+        return !context.getResources().getBoolean(R.bool.lite_version);
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -176,7 +180,7 @@ public class MainActivity extends AppCompatActivity {
         vibrator = (Vibrator) getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
         boolean isDebuggable = BuildConfig.DEBUG;
         setViews();
-        if (getResources().getBoolean(R.bool.lite_version)) {
+        if (!isPro(this)) {
             setupAds(isDebuggable);
         }
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -207,11 +211,11 @@ public class MainActivity extends AppCompatActivity {
         list.setAdapter(adapter);
 
         // restore game status if enabled
-        if (Utility.getRestoreStatus(mContext)) {
-            Utility.updateCurrentMatchPreferences(mContext);
+        if (Utility.getRestoreStatus(this)) {
+            Utility.updateCurrentMatchPreferences(this);
             updateNames();
         } else { // restore default time
-            mCurrentTime = Utility.updateCurrentTime(mContext) * 60000;
+            mCurrentTime = Utility.updateCurrentTime(this) * 60000;
         }
 
         if (savedInstanceState != null) {
@@ -256,7 +260,7 @@ public class MainActivity extends AppCompatActivity {
         try {
             PackageInfo packageInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
             versionName = packageInfo.versionName;
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
             String lastVersion = prefs.getString(Utility.LAST_VERSION_NUMBER, null);
             if (lastVersion == null || !lastVersion.equals(versionName)) {
                 // first run of the app
@@ -289,7 +293,7 @@ public class MainActivity extends AppCompatActivity {
             proVersion = "Pro ";
         }
         // build alert dialog with changelog
-        AlertDialog.Builder whatsNew = new AlertDialog.Builder(mContext);
+        AlertDialog.Builder whatsNew = new AlertDialog.Builder(this);
         whatsNew.setTitle("What's new in FenceMe! " + proVersion + versionName + ":")
                 .setMessage(changeLog)
                 .setPositiveButton("Dismiss", new DialogInterface.OnClickListener() {
@@ -326,6 +330,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // set up navigation drawers
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == DrawerItemClickListener.OPEN_CARD_ACTIVITY && resultCode == Activity.RESULT_OK) {
@@ -335,8 +341,6 @@ public class MainActivity extends AppCompatActivity {
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
-
-    // set up navigation drawers
 
     @Override
     protected void onPause() {
@@ -736,7 +740,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onDestroy() {
 
-        Utility.saveCurrentMatchPreferences(mContext);
+        Utility.saveCurrentMatchPreferences(this);
         unregisterReceivers();
 
         super.onDestroy();
@@ -795,7 +799,7 @@ public class MainActivity extends AppCompatActivity {
             startActivity(new Intent(this, AboutActivity.class));
             return true;
         } else if (id == R.id.whats_new) {
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
             String lastVersion = prefs.getString(Utility.LAST_VERSION_NUMBER, null);
             displayNewDialog(lastVersion);
             return true;
@@ -879,7 +883,7 @@ public class MainActivity extends AppCompatActivity {
 
     public boolean checkForVictories(Fencer fencer) {
         // check if the points are not equal and there is a fencer with enough points to win or there is a tiebreaker and the points aren't equal
-        if (!Utility.equalPoints() && fencer.getPoints() >= Utility.getPointsPreference(mContext) || (tieBreaker && !Utility.equalPoints())) {
+        if (!Utility.equalPoints() && fencer.getPoints() >= Utility.getPointsPreference(this) || (tieBreaker && !Utility.equalPoints())) {
             if (TimerService.mTimerRunning) {
                 Intent stopTimer = new Intent(getApplicationContext(), TimerService.class);
                 stopTimer.putExtra(Utility.CHANGE_TIMER, TimerService.TOGGLE_TIMER);
@@ -887,7 +891,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             disableChangingScore();
-            AlertDialog.Builder winnerDialogBuilder = new AlertDialog.Builder(mContext);
+            AlertDialog.Builder winnerDialogBuilder = new AlertDialog.Builder(this);
             winnerDialogBuilder.setTitle(fencer.getName() + " wins!")
                     .setMessage(fencer.getName() + " has won the bout!")
                     .setPositiveButton("Reset Bout", new DialogInterface.OnClickListener() {

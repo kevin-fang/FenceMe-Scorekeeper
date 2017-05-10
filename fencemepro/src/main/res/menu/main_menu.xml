@@ -24,5 +24,10 @@
         android:title="@string/settings"
         app:showAsAction="ifRoom" />
 
+    <item
+        android:id="@+id/go_pro"
+        android:title="@string/go_pro"
+        android:visible="false"
+        app:showAsAction="never" />
 
 </menu>

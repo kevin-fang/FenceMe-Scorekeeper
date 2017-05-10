@@ -9,8 +9,8 @@ android {
         targetSdkVersion 25
         applicationId "com.kfang.fenceme"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        versionCode 24
-        versionName "2.6.0"
+        versionCode 25
+        versionName "2.6.0.1"
     }
     buildTypes {
         release {
