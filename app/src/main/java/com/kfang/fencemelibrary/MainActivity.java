@@ -57,6 +57,9 @@ import java.util.Arrays;
 import java.util.Locale;
 import java.util.Random;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -79,24 +82,42 @@ public class MainActivity extends AppCompatActivity {
     BroadcastReceiver timerUp;
     BroadcastReceiver resetEntireBout;
     // timer views
-    Button mStartTimer;
+    @BindView(R2.id.timer)
     TextView mCurrentTimer;
+    @BindView(R2.id.start_timer)
+    TextView mStartTimer;
     // buttons in main drawable resource file
-    Button addRed;
-    Button subtractRed;
-    Button addGreen;
-    Button subtractGreen;
-    Button resetTimer;
-    Button doubleTouch;
-    TextView greenScore;
+
+    @BindView(R2.id.coordinator)
+    CoordinatorLayout mCoordinatorLayout;
+    @BindView(R2.id.red_score)
     TextView redScore;
+    @BindView(R2.id.green_score)
+    TextView greenScore;
+    @BindView(R2.id.plus_red)
+    Button addRed;
+    @BindView(R2.id.minus_red)
+    Button subtractRed;
+    @BindView(R2.id.plus_green)
+    Button addGreen;
+    @BindView(R2.id.minus_green)
+    Button subtractGreen;
+    @BindView(R2.id.double_touch)
+    Button doubleTouch;
+
+    @BindView(R2.id.redSide)
     TextView redNameView;
+    @BindView(R2.id.greenSide)
     TextView greenNameView;
-    FragmentManager mFragmentManager = getSupportFragmentManager();
+    @BindView(R2.id.reset_timer)
+    Button resetTimer;
+
+    @BindView(R2.id.adView)
     AdView mAdView;
+
+    FragmentManager mFragmentManager = getSupportFragmentManager();
     Context mContext;
     Vibrator vibrator;
-    CoordinatorLayout mCoordinatorLayout;
 
     // create a tiebreaker
     public static void makeTieBreaker(final Context context) {
@@ -161,6 +182,12 @@ public class MainActivity extends AppCompatActivity {
         super.onStop();
     }
 
+    @BindView(R2.id.toolbar)
+    Toolbar toolbar;
+
+    @BindView(R2.id.list)
+    RecyclerView sideList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -168,6 +195,8 @@ public class MainActivity extends AppCompatActivity {
 
         mContext = MainActivity.this;
         setContentView(R.layout.activity_main);
+
+        ButterKnife.bind(this);
 
         // initialize fencers and add to fencers array
         mRedFencer = new Fencer("Red");
@@ -183,7 +212,7 @@ public class MainActivity extends AppCompatActivity {
         if (!isPro(this)) {
             setupAds(isDebuggable);
         }
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
         setSupportActionBar(toolbar);
 
         // set action bar
@@ -205,10 +234,9 @@ public class MainActivity extends AppCompatActivity {
         adapter.setListener(new DrawerItemClickListener(this, navigationMenu));
         resetPlayerCards();
 
-        RecyclerView list = (RecyclerView) findViewById(R.id.list);
-        list.setNestedScrollingEnabled(false);
-        list.setLayoutManager(new LinearLayoutManager(this));
-        list.setAdapter(adapter);
+        sideList.setNestedScrollingEnabled(false);
+        sideList.setLayoutManager(new LinearLayoutManager(this));
+        sideList.setAdapter(adapter);
 
         // restore game status if enabled
         if (Utility.getRestoreStatus(this)) {
@@ -238,8 +266,6 @@ public class MainActivity extends AppCompatActivity {
 
     // update the views containing names of the players
     private void updateNames() {
-        redNameView = (TextView) findViewById(R.id.redSide);
-        greenNameView = (TextView) findViewById(R.id.greenSide);
         if (mRedFencer.getName() != null) {
             redNameView.setText(mRedFencer.getName());
         }
@@ -623,8 +649,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void setViews() {
         // find name views and set correspondingly
-        redNameView = (TextView) findViewById(R.id.redSide);
-        greenNameView = (TextView) findViewById(R.id.greenSide);
 
         if (mRedFencer.getName() != null) {
             redNameView.setText(mRedFencer.getName());
@@ -632,17 +656,6 @@ public class MainActivity extends AppCompatActivity {
         if (mGreenFencer.getName() != null) {
             greenNameView.setText(mGreenFencer.getName());
         }
-
-        mCoordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator);
-
-        // set text views and buttons for score keeping
-        redScore = (TextView) findViewById(R.id.red_score);
-        greenScore = (TextView) findViewById(R.id.green_score);
-        addRed = (Button) findViewById(R.id.plus_red);
-        subtractRed = (Button) findViewById(R.id.minus_red);
-        addGreen = (Button) findViewById(R.id.plus_green);
-        subtractGreen = (Button) findViewById(R.id.minus_green);
-        doubleTouch = (Button) findViewById(R.id.double_touch);
 
         // set values to redScore and greenScore
         redScore.setText(String.valueOf(mRedFencer.getPoints()));
@@ -686,12 +699,9 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // set textViews and buttons for timekeeping
-        mStartTimer = (Button) findViewById(R.id.start_timer);
         if (TimerService.mTimerRunning) {
             mStartTimer.setText(getResources().getString(R.string.button_stop_timer));
         }
-        resetTimer = (Button) findViewById(R.id.reset_timer);
-        mCurrentTimer = (TextView) findViewById(R.id.timer);
 
         // set onClickListener for start and reset
         mStartTimer.setOnClickListener(new View.OnClickListener() {
@@ -727,7 +737,6 @@ public class MainActivity extends AppCompatActivity {
         // set up ads and in app purchases
         MobileAds.initialize(getApplicationContext(), "ca-app-pub-6647745358935231~7845605907");
 
-        mAdView = (AdView) findViewById(R.id.adView);
         AdRequest adRequest;
         if (test) {
             adRequest = new AdRequest.Builder().addTestDevice("1E4125EDAE1F61B3A38F14662D5C93C7").build();

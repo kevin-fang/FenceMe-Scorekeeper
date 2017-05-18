@@ -30,6 +30,8 @@ dependencies {
     compile 'com.google.firebase:firebase-core:10.0.1'
     compile 'com.github.medyo:android-about-page:1.2'
     compile 'com.yarolegovich:sliding-root-nav:1.0.2'
+    compile 'com.jakewharton:butterknife:8.6.0'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.6.0'
     compile 'com.android.support:design:25.3.1'
     testCompile 'junit:junit:4.12'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
@@ -37,3 +39,5 @@ dependencies {
 
 
 apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.android.library'
+apply plugin: 'com.jakewharton.butterknife'
