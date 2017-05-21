@@ -16,6 +16,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    dataBinding {
+        enabled = true
+    }
     return void
 }
 
@@ -24,6 +27,8 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
+    compile 'com.jakewharton:butterknife:8.6.0'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.6.0'
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'io.github.kobakei:ratethisapp:1.1.2'
     compile 'com.google.firebase:firebase-ads:10.0.1'
@@ -37,3 +42,5 @@ dependencies {
 
 
 apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.android.library'
+apply plugin: 'com.jakewharton.butterknife'
