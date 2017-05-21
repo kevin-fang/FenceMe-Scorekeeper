@@ -85,9 +85,10 @@ public class MainActivity extends AppCompatActivity {
     BroadcastReceiver resetEntireBout;
     // timer views
     @BindView(R2.id.start_timer)
-    Button mStartTimer;
+    Button startTimerButton;
     @BindView(R2.id.timer)
-    TextView mCurrentTimer;
+    TextView currentTimerView;
+
     // buttons in main drawable resource file
     @BindView(R2.id.plus_red)
     Button addRed;
@@ -209,6 +210,8 @@ public class MainActivity extends AppCompatActivity {
         setViews();
         if (!isPro(this)) {
             setupAds(isDebuggable);
+        } else {
+            currentTimerView.setTextSize(148);
         }
         setSupportActionBar(toolbar);
 
@@ -379,19 +382,19 @@ public class MainActivity extends AppCompatActivity {
         anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                mStartTimer.setBackgroundColor((Integer) valueAnimator.getAnimatedValue());
+                startTimerButton.setBackgroundColor((Integer) valueAnimator.getAnimatedValue());
             }
         });
         anim.setDuration(150);
 
         switch (color) {
             case Utility.COLOR_GREEN:
-                //mStartTimer.setBackgroundColor(ContextCompat.getColor(context, R.color.colorBrightGreen));
+                //startTimerButton.setBackgroundColor(ContextCompat.getColor(context, R.color.colorBrightGreen));
                 anim.setIntValues(ContextCompat.getColor(context, R.color.colorBrightRed), ContextCompat.getColor(context, R.color.colorBrightGreen));
                 anim.start();
                 break;
             case Utility.COLOR_RED:
-                //mStartTimer.setBackgroundColor(ContextCompat.getColor(context, R.color.colorBrightRed));
+                //startTimerButton.setBackgroundColor(ContextCompat.getColor(context, R.color.colorBrightRed));
                 anim.setIntValues(ContextCompat.getColor(context, R.color.colorBrightGreen), ContextCompat.getColor(context, R.color.colorBrightRed));
                 anim.start();
                 break;
@@ -430,7 +433,7 @@ public class MainActivity extends AppCompatActivity {
         updateToggle = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                mStartTimer.setEnabled(true);
+                startTimerButton.setEnabled(true);
                 // set text in button to corresponding value.
                 String text = intent.getStringExtra(TimerService.UPDATE_BUTTON_TEXT);
                 String color = intent.getStringExtra(TimerService.UPDATE_BUTTON_COLOR);
@@ -440,7 +443,7 @@ public class MainActivity extends AppCompatActivity {
                     } else {
                         vibrator.vibrate(new long[]{0, 50, 70, 50}, -1);
                     }
-                mStartTimer.setText(text);
+                startTimerButton.setText(text);
                 setTimerButtonColor(color, getApplicationContext());
             }
         };
@@ -449,7 +452,7 @@ public class MainActivity extends AppCompatActivity {
         resetBoutTimer = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                mStartTimer.setEnabled(true);
+                startTimerButton.setEnabled(true);
                 // set the text in the text view to corresponding minutes and seconds
                 int minutes = Utility.updateCurrentTime(getApplicationContext());
                 mCurrentTime = minutes * 60000;
@@ -465,7 +468,7 @@ public class MainActivity extends AppCompatActivity {
                 Uri alarm = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
                 TimerService.mAlarmTone = RingtoneManager.getRingtone(getApplicationContext(), alarm);
 
-                mStartTimer.setEnabled(false);
+                startTimerButton.setEnabled(false);
                 // play alarm in background thread
                 final Thread alarms = new Thread(new Runnable() {
                     @Override
@@ -642,7 +645,7 @@ public class MainActivity extends AppCompatActivity {
     private void setTime() {
         int minutes = (int) mCurrentTime / 1000 / 60;
         int seconds = (int) mCurrentTime / 1000 % 60;
-        mCurrentTimer.setText("" + minutes + String.format(Locale.getDefault(), ":%02d", seconds));
+        currentTimerView.setText("" + minutes + String.format(Locale.getDefault(), ":%02d", seconds));
     }
 
     private void setViews() {
@@ -699,11 +702,11 @@ public class MainActivity extends AppCompatActivity {
 
         // set textViews and buttons for timekeeping
         if (TimerService.mTimerRunning) {
-            mStartTimer.setText(getResources().getString(R.string.button_stop_timer));
+            startTimerButton.setText(getResources().getString(R.string.button_stop_timer));
         }
 
         // set onClickListener for start and reset
-        mStartTimer.setOnClickListener(new View.OnClickListener() {
+        startTimerButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (Utility.getAwakeStatus(mContext)) {
                     if (!TimerService.mTimerRunning) { // if timer isn't running, keep screen on because we want to start the timer
@@ -762,7 +765,7 @@ public class MainActivity extends AppCompatActivity {
                         resetPlayerCards();
                         int minutes = Utility.updateCurrentTime(getApplicationContext());
                         mCurrentTime = minutes * 60000;
-                        mStartTimer.setText(getString(R.string.button_start_timer));
+                        startTimerButton.setText(getString(R.string.button_start_timer));
                         setTime();
                         resetScores(null);
                         vibrator.cancel();

@@ -14,14 +14,20 @@ import android.widget.Toast;
 
 import java.util.Locale;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 import static com.kfang.fencemelibrary.MainActivity.mGreenFencer;
 import static com.kfang.fencemelibrary.MainActivity.mRedFencer;
 
 
 public class CardPlayerActivity extends AppCompatActivity {
     String playerToCard;
+    @BindView(R2.id.yellow_card)
     Button yellowButton;
+    @BindView(R2.id.red_card)
     Button redButton;
+    @BindView(R2.id.black_card)
     Button blackButton;
     int numYellow = 0;
     int numRed = 0;
@@ -37,10 +43,8 @@ public class CardPlayerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_card);
         Intent intent = getIntent();
 
+        ButterKnife.bind(this);
         playerToCard = intent.getStringExtra(Utility.TO_CARD_PLAYER);
-        yellowButton = (Button) findViewById(R.id.yellow_card);
-        redButton = (Button) findViewById(R.id.red_card);
-        blackButton = (Button) findViewById(R.id.black_card);
         currentlyCarding = (TextView) findViewById(R.id.currently_carding);
         if (playerToCard.equals(mRedFencer.getName())) {
             numYellow = mRedFencer.getYellowCards();
@@ -54,7 +58,6 @@ public class CardPlayerActivity extends AppCompatActivity {
         yellowButton.setText(String.format(Locale.getDefault(), "Yellow\nCard\n%d", numYellow));
         redButton.setText(String.format(Locale.getDefault(), "Red\nCard\n%d", numRed));
         cardLayout = (LinearLayout) findViewById(R.id.card_layout);
-        //blackButton.setText(String.format(Locale.getDefault(), "Black Card\n%d", 0));
     }
 
     @Override

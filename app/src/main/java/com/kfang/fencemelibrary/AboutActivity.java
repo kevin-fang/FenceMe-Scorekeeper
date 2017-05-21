@@ -33,7 +33,7 @@ public class AboutActivity extends AppCompatActivity {
             versionElement.setTitle("Version: " + versionName);
 
         } catch (PackageManager.NameNotFoundException e) {
-            versionElement = null;
+            versionElement.setTitle("Version: unknown");
         }
 
         View aboutPage = new AboutPage(this)
@@ -48,17 +48,6 @@ public class AboutActivity extends AppCompatActivity {
 
         setContentView(aboutPage);
 
-
-        /*
-        setContentView(R.layout.about);
-        TextView versionNumber = (TextView) findViewById(R.id.current_version);
-        try {
-            PackageInfo pinfo = getPackageManager().getPackageInfo(getPackageName(), 0);
-            String versionName = pinfo.versionName;
-            versionNumber.setText(getResources().getText(R.string.current_version) + " " + versionName);
-        } catch (PackageManager.NameNotFoundException e) {
-            versionNumber.setVisibility(View.INVISIBLE);
-        }*/
     }
 
     @Override
