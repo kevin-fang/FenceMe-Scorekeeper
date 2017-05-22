@@ -71,7 +71,6 @@ public class SettingsActivity extends AppCompatActivity {
                     stopTimer.putExtra(Utility.CHANGE_TIMER, TimerService.RESET_TIMER);
                     getActivity().startService(stopTimer);
 
-                    ((MainActivity) getActivity()).resetScores(null);
                     return true;
                 }
             });

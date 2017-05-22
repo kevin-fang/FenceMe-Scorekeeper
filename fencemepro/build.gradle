@@ -9,9 +9,8 @@ android {
         targetSdkVersion 25
         applicationId "com.helionlabs.fencemepro"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        versionCode 25
-        versionName "2.6.0.1"
-
+        versionCode 26
+        versionName "2.6.1"
     }
     buildTypes {
         release {

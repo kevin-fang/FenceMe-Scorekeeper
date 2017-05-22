@@ -10,8 +10,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -283,30 +281,23 @@ public class MainActivity extends AppCompatActivity {
 
     // check if the app is being first run (since last update)
     public void checkIfFirstRun() {
-        String versionName;
-        try {
-            PackageInfo packageInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
-            versionName = packageInfo.versionName;
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-            String lastVersion = prefs.getString(Utility.LAST_VERSION_NUMBER, null);
-            if (lastVersion == null || !lastVersion.equals(versionName)) {
-                // first run of the app
-                displayNewDialog(versionName);
-                SharedPreferences.Editor editor = prefs.edit();
-                editor.putString(Utility.LAST_VERSION_NUMBER, versionName);
-                editor.apply();
+        String versionName = BuildConfig.VERSION_NAME;
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        String lastVersion = prefs.getString(Utility.LAST_VERSION_NUMBER, null);
+        if (lastVersion == null || !lastVersion.equals(versionName)) {
+            // first run of the app
+            displayNewDialog(versionName);
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putString(Utility.LAST_VERSION_NUMBER, versionName);
+            editor.apply();
 
-            }
-        } catch (PackageManager.NameNotFoundException e) { // should never happen.
-            e.printStackTrace();
         }
-
     }
 
     // display a dialog containing what's new
     public void displayNewDialog(String versionName) {
         String[] changes = getResources().getStringArray(R.array.change_log);
-        // build change log from string awways
+        // build change log from string arrays
         StringBuilder changelogBuilder = new StringBuilder();
         for (String change : changes) {
             changelogBuilder.append("\u2022 "); // bullet point

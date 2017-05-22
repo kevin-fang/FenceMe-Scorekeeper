@@ -2,8 +2,6 @@ package com.kfang.fencemelibrary;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -26,27 +24,23 @@ public class AboutActivity extends AppCompatActivity {
         }
 
         Element versionElement = new Element();
-        String versionName;
-        try {
-            PackageInfo pinfo = getPackageManager().getPackageInfo("com.kfang.fenceme", 0);
-            versionName = pinfo.versionName;
-            versionElement.setTitle("Version: " + versionName);
+        String versionName = BuildConfig.VERSION_NAME;
+        versionElement.setTitle("Version: " + versionName);
 
-        } catch (PackageManager.NameNotFoundException e) {
-            versionElement.setTitle("Version: unknown");
-        }
-
-        View aboutPage = new AboutPage(this)
+        AboutPage page = new AboutPage(this)
                 .isRTL(false)
                 .setDescription(getResources().getString(R.string.about_text))
                 .setImage(R.drawable.about_app_feature)
                 .addItem(versionElement)
                 .addGroup("Connect with us:")
-                .addEmail("helionapps@gmail.com")
-                .addPlayStore("com.kfang.fenceme")
-                .create();
+                .addEmail("helionapps@gmail.com");
+        if (!MainActivity.isPro(this)) {
+            page.addPlayStore("com.kfang.fenceme");
+        } else {
+            page.addPlayStore("com.helionlabs.fencemepro");
+        }
 
-        setContentView(aboutPage);
+        setContentView(page.create());
 
     }
 
