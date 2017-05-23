@@ -1,9 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:ads="http://schemas.android.com/apk/res-auto"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="redFencer"
+            type="com.kfang.fencemelibrary.Fencer" />
+
+        <variable
+            name="greenFencer"
+            type="com.kfang.fencemelibrary.Fencer" />
+    </data>
+
+    <LinearLayout
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -261,3 +273,4 @@
     </android.support.design.widget.CoordinatorLayout>
 
 </LinearLayout>
+</layout>

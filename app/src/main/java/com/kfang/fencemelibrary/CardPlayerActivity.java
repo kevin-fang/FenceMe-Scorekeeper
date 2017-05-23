@@ -31,10 +31,8 @@ public class CardPlayerActivity extends AppCompatActivity {
     Button blackButton;
     int numYellow = 0;
     int numRed = 0;
-    @BindView(R2.id.currently_carding)
     TextView currentlyCarding;
     LinearLayout cardLayout;
-
 
 
     // TODO: Change card player to fragment
@@ -46,8 +44,8 @@ public class CardPlayerActivity extends AppCompatActivity {
         Intent intent = getIntent();
 
         ButterKnife.bind(this);
-
         playerToCard = intent.getStringExtra(Utility.TO_CARD_PLAYER);
+        currentlyCarding = (TextView) findViewById(R.id.currently_carding);
         if (playerToCard.equals(mRedFencer.getName())) {
             numYellow = mRedFencer.getYellowCards();
             numRed = mRedFencer.getRedCards();
@@ -60,7 +58,6 @@ public class CardPlayerActivity extends AppCompatActivity {
         yellowButton.setText(String.format(Locale.getDefault(), "Yellow\nCard\n%d", numYellow));
         redButton.setText(String.format(Locale.getDefault(), "Red\nCard\n%d", numRed));
         cardLayout = (LinearLayout) findViewById(R.id.card_layout);
-        //blackButton.setText(String.format(Locale.getDefault(), "Black Card\n%d", 0));
     }
 
     @Override

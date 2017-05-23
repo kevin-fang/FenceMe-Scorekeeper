@@ -10,8 +10,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
+import android.databinding.DataBindingUtil;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -47,6 +46,7 @@ import com.google.android.gms.ads.MobileAds;
 import com.kfang.fencemelibrary.NavMenu.DrawerAdapter;
 import com.kfang.fencemelibrary.NavMenu.DrawerItem;
 import com.kfang.fencemelibrary.NavMenu.SimpleItem;
+import com.kfang.fencemelibrary.databinding.ActivityMainBinding;
 import com.kobakei.ratethisapp.RateThisApp;
 import com.yarolegovich.slidingrootnav.SlideGravity;
 import com.yarolegovich.slidingrootnav.SlidingRootNav;
@@ -82,18 +82,12 @@ public class MainActivity extends AppCompatActivity {
     BroadcastReceiver timerUp;
     BroadcastReceiver resetEntireBout;
     // timer views
-    @BindView(R2.id.timer)
-    TextView mCurrentTimer;
     @BindView(R2.id.start_timer)
-    TextView mStartTimer;
-    // buttons in main drawable resource file
+    Button startTimerButton;
+    @BindView(R2.id.timer)
+    TextView currentTimerView;
 
-    @BindView(R2.id.coordinator)
-    CoordinatorLayout mCoordinatorLayout;
-    @BindView(R2.id.red_score)
-    TextView redScore;
-    @BindView(R2.id.green_score)
-    TextView greenScore;
+    // buttons in main drawable resource file
     @BindView(R2.id.plus_red)
     Button addRed;
     @BindView(R2.id.minus_red)
@@ -102,22 +96,28 @@ public class MainActivity extends AppCompatActivity {
     Button addGreen;
     @BindView(R2.id.minus_green)
     Button subtractGreen;
+    @BindView(R2.id.reset_timer)
+    Button resetTimer;
     @BindView(R2.id.double_touch)
     Button doubleTouch;
-
+    @BindView(R2.id.green_score)
+    TextView greenScore;
+    @BindView(R2.id.red_score)
+    TextView redScore;
     @BindView(R2.id.redSide)
     TextView redNameView;
     @BindView(R2.id.greenSide)
     TextView greenNameView;
-    @BindView(R2.id.reset_timer)
-    Button resetTimer;
-
     @BindView(R2.id.adView)
     AdView mAdView;
+    @BindView(R2.id.coordinator)
+    CoordinatorLayout mCoordinatorLayout;
 
     FragmentManager mFragmentManager = getSupportFragmentManager();
     Context mContext;
     Vibrator vibrator;
+    @BindView(R2.id.toolbar)
+    Toolbar toolbar;
 
     // create a tiebreaker
     public static void makeTieBreaker(final Context context) {
@@ -182,12 +182,6 @@ public class MainActivity extends AppCompatActivity {
         super.onStop();
     }
 
-    @BindView(R2.id.toolbar)
-    Toolbar toolbar;
-
-    @BindView(R2.id.list)
-    RecyclerView sideList;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -196,8 +190,6 @@ public class MainActivity extends AppCompatActivity {
         mContext = MainActivity.this;
         setContentView(R.layout.activity_main);
 
-        ButterKnife.bind(this);
-
         // initialize fencers and add to fencers array
         mRedFencer = new Fencer("Red");
         mGreenFencer = new Fencer("Green");
@@ -205,14 +197,20 @@ public class MainActivity extends AppCompatActivity {
         fencers.add(mRedFencer);
         fencers.add(mGreenFencer);
 
+        ActivityMainBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        binding.setGreenFencer(mGreenFencer);
+        binding.setRedFencer(mRedFencer);
+
+        ButterKnife.bind(this);
         // set up ads, views, vibrations and action bars.
         vibrator = (Vibrator) getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
         boolean isDebuggable = BuildConfig.DEBUG;
         setViews();
         if (!isPro(this)) {
             setupAds(isDebuggable);
+        } else {
+            currentTimerView.setTextSize(148);
         }
-
         setSupportActionBar(toolbar);
 
         // set action bar
@@ -234,9 +232,10 @@ public class MainActivity extends AppCompatActivity {
         adapter.setListener(new DrawerItemClickListener(this, navigationMenu));
         resetPlayerCards();
 
-        sideList.setNestedScrollingEnabled(false);
-        sideList.setLayoutManager(new LinearLayoutManager(this));
-        sideList.setAdapter(adapter);
+        RecyclerView list = (RecyclerView) findViewById(R.id.list);
+        list.setNestedScrollingEnabled(false);
+        list.setLayoutManager(new LinearLayoutManager(this));
+        list.setAdapter(adapter);
 
         // restore game status if enabled
         if (Utility.getRestoreStatus(this)) {
@@ -282,30 +281,23 @@ public class MainActivity extends AppCompatActivity {
 
     // check if the app is being first run (since last update)
     public void checkIfFirstRun() {
-        String versionName;
-        try {
-            PackageInfo packageInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
-            versionName = packageInfo.versionName;
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-            String lastVersion = prefs.getString(Utility.LAST_VERSION_NUMBER, null);
-            if (lastVersion == null || !lastVersion.equals(versionName)) {
-                // first run of the app
-                displayNewDialog(versionName);
-                SharedPreferences.Editor editor = prefs.edit();
-                editor.putString(Utility.LAST_VERSION_NUMBER, versionName);
-                editor.apply();
+        String versionName = BuildConfig.VERSION_NAME;
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        String lastVersion = prefs.getString(Utility.LAST_VERSION_NUMBER, null);
+        if (lastVersion == null || !lastVersion.equals(versionName)) {
+            // first run of the app
+            displayNewDialog(versionName);
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putString(Utility.LAST_VERSION_NUMBER, versionName);
+            editor.apply();
 
-            }
-        } catch (PackageManager.NameNotFoundException e) { // should never happen.
-            e.printStackTrace();
         }
-
     }
 
     // display a dialog containing what's new
     public void displayNewDialog(String versionName) {
         String[] changes = getResources().getStringArray(R.array.change_log);
-        // build change log from string awways
+        // build change log from string arrays
         StringBuilder changelogBuilder = new StringBuilder();
         for (String change : changes) {
             changelogBuilder.append("\u2022 "); // bullet point
@@ -381,19 +373,19 @@ public class MainActivity extends AppCompatActivity {
         anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                mStartTimer.setBackgroundColor((Integer) valueAnimator.getAnimatedValue());
+                startTimerButton.setBackgroundColor((Integer) valueAnimator.getAnimatedValue());
             }
         });
         anim.setDuration(150);
 
         switch (color) {
             case Utility.COLOR_GREEN:
-                //mStartTimer.setBackgroundColor(ContextCompat.getColor(context, R.color.colorBrightGreen));
+                //startTimerButton.setBackgroundColor(ContextCompat.getColor(context, R.color.colorBrightGreen));
                 anim.setIntValues(ContextCompat.getColor(context, R.color.colorBrightRed), ContextCompat.getColor(context, R.color.colorBrightGreen));
                 anim.start();
                 break;
             case Utility.COLOR_RED:
-                //mStartTimer.setBackgroundColor(ContextCompat.getColor(context, R.color.colorBrightRed));
+                //startTimerButton.setBackgroundColor(ContextCompat.getColor(context, R.color.colorBrightRed));
                 anim.setIntValues(ContextCompat.getColor(context, R.color.colorBrightGreen), ContextCompat.getColor(context, R.color.colorBrightRed));
                 anim.start();
                 break;
@@ -432,7 +424,7 @@ public class MainActivity extends AppCompatActivity {
         updateToggle = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                mStartTimer.setEnabled(true);
+                startTimerButton.setEnabled(true);
                 // set text in button to corresponding value.
                 String text = intent.getStringExtra(TimerService.UPDATE_BUTTON_TEXT);
                 String color = intent.getStringExtra(TimerService.UPDATE_BUTTON_COLOR);
@@ -442,7 +434,7 @@ public class MainActivity extends AppCompatActivity {
                     } else {
                         vibrator.vibrate(new long[]{0, 50, 70, 50}, -1);
                     }
-                mStartTimer.setText(text);
+                startTimerButton.setText(text);
                 setTimerButtonColor(color, getApplicationContext());
             }
         };
@@ -451,7 +443,7 @@ public class MainActivity extends AppCompatActivity {
         resetBoutTimer = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                mStartTimer.setEnabled(true);
+                startTimerButton.setEnabled(true);
                 // set the text in the text view to corresponding minutes and seconds
                 int minutes = Utility.updateCurrentTime(getApplicationContext());
                 mCurrentTime = minutes * 60000;
@@ -467,7 +459,7 @@ public class MainActivity extends AppCompatActivity {
                 Uri alarm = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
                 TimerService.mAlarmTone = RingtoneManager.getRingtone(getApplicationContext(), alarm);
 
-                mStartTimer.setEnabled(false);
+                startTimerButton.setEnabled(false);
                 // play alarm in background thread
                 final Thread alarms = new Thread(new Runnable() {
                     @Override
@@ -644,7 +636,7 @@ public class MainActivity extends AppCompatActivity {
     private void setTime() {
         int minutes = (int) mCurrentTime / 1000 / 60;
         int seconds = (int) mCurrentTime / 1000 % 60;
-        mCurrentTimer.setText("" + minutes + String.format(Locale.getDefault(), ":%02d", seconds));
+        currentTimerView.setText("" + minutes + String.format(Locale.getDefault(), ":%02d", seconds));
     }
 
     private void setViews() {
@@ -656,6 +648,7 @@ public class MainActivity extends AppCompatActivity {
         if (mGreenFencer.getName() != null) {
             greenNameView.setText(mGreenFencer.getName());
         }
+
 
         // set values to redScore and greenScore
         redScore.setText(String.valueOf(mRedFencer.getPoints()));
@@ -700,11 +693,11 @@ public class MainActivity extends AppCompatActivity {
 
         // set textViews and buttons for timekeeping
         if (TimerService.mTimerRunning) {
-            mStartTimer.setText(getResources().getString(R.string.button_stop_timer));
+            startTimerButton.setText(getResources().getString(R.string.button_stop_timer));
         }
 
         // set onClickListener for start and reset
-        mStartTimer.setOnClickListener(new View.OnClickListener() {
+        startTimerButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (Utility.getAwakeStatus(mContext)) {
                     if (!TimerService.mTimerRunning) { // if timer isn't running, keep screen on because we want to start the timer
@@ -763,7 +756,7 @@ public class MainActivity extends AppCompatActivity {
                         resetPlayerCards();
                         int minutes = Utility.updateCurrentTime(getApplicationContext());
                         mCurrentTime = minutes * 60000;
-                        mStartTimer.setText(getString(R.string.button_start_timer));
+                        startTimerButton.setText(getString(R.string.button_start_timer));
                         setTime();
                         resetScores(null);
                         vibrator.cancel();
@@ -966,6 +959,7 @@ public class MainActivity extends AppCompatActivity {
                 dialog.cancel();
             }
         });
+
         AlertDialog alertToShow = builder.create();
         if (alertToShow.getWindow() != null) {
             alertToShow.getWindow().setSoftInputMode(
