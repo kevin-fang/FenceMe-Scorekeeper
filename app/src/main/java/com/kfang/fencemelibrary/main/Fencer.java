@@ -1,4 +1,4 @@
-package com.kfang.fencemelibrary;
+package com.kfang.fencemelibrary.main;
 
 /**
  * Class to contain fencers
@@ -28,19 +28,19 @@ public class Fencer {
         return this.hasPriority;
     }
 
-    int getPoints() {
+    public int getPoints() {
         return points;
     }
 
-    void setPoints(int points) {
+    public void setPoints(int points) {
         this.points = points;
     }
 
-    void incrementNumPoints() {
+    public void incrementNumPoints() {
         this.points++;
     }
 
-    void decrementNumPoints() {
+    public void decrementNumPoints() {
         this.points--;
     }
 
@@ -52,27 +52,27 @@ public class Fencer {
         this.name = name;
     }
 
-    int getRedCards() {
+    public int getRedCards() {
         return redCards;
     }
 
-    void setRedCards(int cards) {
+    public void setRedCards(int cards) {
         this.redCards = cards;
     }
 
-    void incrementRedCards() {
+    public void incrementRedCards() {
         this.redCards++;
     }
 
-    int getYellowCards() {
+    public int getYellowCards() {
         return yellowCards;
     }
 
-    void setYellowCards(int cards) {
+    public void setYellowCards(int cards) {
         this.yellowCards = cards;
     }
 
-    void incrementYellowCards() {
+    public void incrementYellowCards() {
         this.yellowCards++;
     }
 

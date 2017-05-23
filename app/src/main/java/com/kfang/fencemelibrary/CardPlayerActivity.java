@@ -12,13 +12,17 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.kfang.fencemelibrary.main.Fencer;
+import com.kfang.fencemelibrary.main.MainActivity;
+
 import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.kfang.fencemelibrary.MainActivity.mGreenFencer;
-import static com.kfang.fencemelibrary.MainActivity.mRedFencer;
+import static com.kfang.fencemelibrary.Constants.TO_CARD_PLAYER;
+import static com.kfang.fencemelibrary.main.MainActivity.mGreenFencer;
+import static com.kfang.fencemelibrary.main.MainActivity.mRedFencer;
 
 
 public class CardPlayerActivity extends AppCompatActivity {
@@ -44,7 +48,7 @@ public class CardPlayerActivity extends AppCompatActivity {
         Intent intent = getIntent();
 
         ButterKnife.bind(this);
-        playerToCard = intent.getStringExtra(Utility.TO_CARD_PLAYER);
+        playerToCard = intent.getStringExtra(TO_CARD_PLAYER);
         currentlyCarding = (TextView) findViewById(R.id.currently_carding);
         if (playerToCard.equals(mRedFencer.getName())) {
             numYellow = mRedFencer.getYellowCards();

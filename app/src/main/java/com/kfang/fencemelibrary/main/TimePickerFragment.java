@@ -1,4 +1,4 @@
-package com.kfang.fencemelibrary;
+package com.kfang.fencemelibrary.main;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -11,7 +11,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.NumberPicker;
 
+import com.kfang.fencemelibrary.R;
+
 import java.util.Locale;
+
+import static com.kfang.fencemelibrary.Constants.CHANGE_TIMER;
 
 /**
  * Time Picker Fragment for setting timer
@@ -69,13 +73,13 @@ public class TimePickerFragment extends DialogFragment {
     }
 
     public void setTimer(int minutes, int seconds) {
-        if (minutes == seconds && minutes == 0) {
-            MainActivity.mCurrentTime = Utility.updateCurrentTime(getContext()) * 60000;
+        if (seconds == 0 && minutes == 0) {
+            MainActivity.mCurrentTime = ((MainActivity) getActivity()).presenter.getBoutLength() * 60000;
         } else {
             MainActivity.mCurrentTime = seconds * 1000 + minutes * 60000;
         }
         Intent setTimer = new Intent(getContext(), TimerService.class);
-        setTimer.putExtra(Utility.CHANGE_TIMER, TimerService.SET_TIMER);
+        setTimer.putExtra(CHANGE_TIMER, TimerService.SET_TIMER);
         //Toast.makeText(getContext(), "" + MainActivity.mCurrentTime, Toast.LENGTH_SHORT).show();
         getActivity().startService(setTimer);
     }

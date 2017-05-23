@@ -1,4 +1,4 @@
-package com.kfang.fencemelibrary;
+package com.kfang.fencemelibrary.main;
 
 import android.app.Service;
 import android.content.Intent;
@@ -7,7 +7,11 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
 
-import static com.kfang.fencemelibrary.MainActivity.mCurrentTime;
+import com.kfang.fencemelibrary.R;
+
+import static com.kfang.fencemelibrary.Constants.CHANGE_TIMER;
+import static com.kfang.fencemelibrary.Constants.COLOR_GREEN;
+import static com.kfang.fencemelibrary.Constants.COLOR_RED;
 
 
 /**
@@ -38,11 +42,11 @@ public class TimerService extends Service {
     private Runnable mUpdateTimeTask = new Runnable() {
         public void run() {
             // subtract 1000 ms every second.
-            mCurrentTime = (int) (mCurrentTime - 1000);
+            MainActivity.mCurrentTime = (int) (MainActivity.mCurrentTime - 1000);
 
-            if (mCurrentTime > 0) {
+            if (MainActivity.mCurrentTime > 0) {
                 mHandler.postDelayed(this, 1000);
-            } else if (mCurrentTime == 0) { // play an alarm if the time is up.
+            } else if (MainActivity.mCurrentTime == 0) { // play an alarm if the time is up.
                 mHandler.removeCallbacks(mUpdateTimeTask);
                 Intent intent = new Intent(TIMER_UP_INTENT);
                 LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
@@ -75,7 +79,7 @@ public class TimerService extends Service {
     public int onStartCommand(Intent i, int flags, int startId) {
         int toggleOrReset; // value to indicate whether the button being pressed is resetting the timer or starting/pausing it.
         try {
-            toggleOrReset = i.getIntExtra(Utility.CHANGE_TIMER, TOGGLE_TIMER);
+            toggleOrReset = i.getIntExtra(CHANGE_TIMER, TOGGLE_TIMER);
         } catch (NullPointerException e) {
             toggleOrReset = SET_TIMER; // bugfix - when starting the app, onStartCommand will run. Reset the timer when the app will start.
         }
@@ -84,11 +88,11 @@ public class TimerService extends Service {
                 mStartTime = System.currentTimeMillis();
                 mHandler.removeCallbacks(mUpdateTimeTask);
                 mHandler.postDelayed(mUpdateTimeTask, 1000);
-                createUpdateToggleButtonIntent(R.string.button_stop_timer, Utility.COLOR_RED);
+                createUpdateToggleButtonIntent(R.string.button_stop_timer, COLOR_RED);
                 mTimerRunning = true;
             } else {
                 mHandler.removeCallbacks(mUpdateTimeTask);
-                createUpdateToggleButtonIntent(R.string.button_start_timer, Utility.COLOR_GREEN);
+                createUpdateToggleButtonIntent(R.string.button_start_timer, COLOR_GREEN);
                 mTimerRunning = false;
             }
         } else if (toggleOrReset == RESET_TIMER) { // reset the timer.
@@ -96,7 +100,7 @@ public class TimerService extends Service {
 
             Intent intent = new Intent(RESET_TIMER_INTENT);
             LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
-            createUpdateToggleButtonIntent(R.string.button_start_timer, Utility.COLOR_GREEN);
+            createUpdateToggleButtonIntent(R.string.button_start_timer, COLOR_GREEN);
 
             mTimerRunning = false;
             if (mAlarmTone != null && mAlarmTone.isPlaying()) { // stop the alarm if it is currently playing.

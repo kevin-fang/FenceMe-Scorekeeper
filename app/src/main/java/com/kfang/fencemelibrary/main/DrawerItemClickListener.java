@@ -1,4 +1,4 @@
-package com.kfang.fencemelibrary;
+package com.kfang.fencemelibrary.main;
 
 
 import android.app.Activity;
@@ -8,14 +8,13 @@ import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 import android.widget.Toast;
 
+import com.kfang.fencemelibrary.CardPlayerActivity;
 import com.kfang.fencemelibrary.NavMenu.DrawerAdapter;
 import com.yarolegovich.slidingrootnav.SlidingRootNav;
 
-import static com.kfang.fencemelibrary.MainActivity.mGreenFencer;
-import static com.kfang.fencemelibrary.MainActivity.mRedFencer;
-import static com.kfang.fencemelibrary.TimerService.RESET_BOUT_INTENT;
-import static com.kfang.fencemelibrary.TimerService.mTimerRunning;
-import static com.kfang.fencemelibrary.Utility.TO_CARD_PLAYER;
+import static com.kfang.fencemelibrary.Constants.CHANGE_TIMER;
+import static com.kfang.fencemelibrary.Constants.TO_CARD_PLAYER;
+
 
 /**
  * Drawer Item CLick Listener
@@ -38,7 +37,7 @@ class DrawerItemClickListener implements DrawerAdapter.OnItemSelectedListener {
         switch (position) {
             case MainActivity.CARD_A_PLAYER:
                 AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-                final String[] playerArray = {mRedFencer.getName(), mGreenFencer.getName(), "Reset Cards"};
+                final String[] playerArray = {MainActivity.mRedFencer.getName(), MainActivity.mGreenFencer.getName(), "Reset Cards"};
                 builder.setTitle("Card a player")
                         .setItems(playerArray, new DialogInterface.OnClickListener() {
                             @Override
@@ -49,9 +48,9 @@ class DrawerItemClickListener implements DrawerAdapter.OnItemSelectedListener {
                                     Toast.makeText(activity, "Cards have been reset!", Toast.LENGTH_SHORT).show();
                                 } else {
                                     // create intent to card player and pause timer
-                                    if (mTimerRunning) {
+                                    if (TimerService.mTimerRunning) {
                                         Intent startTimer = new Intent(activity, TimerService.class);
-                                        startTimer.putExtra(Utility.CHANGE_TIMER, TimerService.TOGGLE_TIMER);
+                                        startTimer.putExtra(CHANGE_TIMER, TimerService.TOGGLE_TIMER);
                                         activity.startService(startTimer);
                                     }
                                     Intent cardPlayer = new Intent(activity, CardPlayerActivity.class);
@@ -65,14 +64,14 @@ class DrawerItemClickListener implements DrawerAdapter.OnItemSelectedListener {
                 navigationMenu.closeMenu(true);
                 break;
             case MainActivity.TIEBREAKER:
-                mRedFencer.setPoints(0);
-                mGreenFencer.setPoints(0);
+                MainActivity.mRedFencer.setPoints(0);
+                MainActivity.mGreenFencer.setPoints(0);
                 MainActivity.makeTieBreaker(activity);
                 navigationMenu.closeMenu(true);
                 break;
             case MainActivity.RESET_BOUT:
                 navigationMenu.closeMenu(true);
-                LocalBroadcastManager.getInstance(activity).sendBroadcast(new Intent(RESET_BOUT_INTENT));
+                LocalBroadcastManager.getInstance(activity).sendBroadcast(new Intent(TimerService.RESET_BOUT_INTENT));
                 break;
         }
     }
