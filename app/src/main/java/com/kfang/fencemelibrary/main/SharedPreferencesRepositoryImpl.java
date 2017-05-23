@@ -1,9 +1,7 @@
 package com.kfang.fencemelibrary.main;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Vibrator;
-import android.preference.PreferenceManager;
 
 import static com.kfang.fencemelibrary.Constants.BOUT_LENGTH_MINUTES;
 import static com.kfang.fencemelibrary.Constants.BOUT_LENGTH_POINTS;
@@ -26,10 +24,10 @@ public class SharedPreferencesRepositoryImpl implements SharedPreferencesReposit
     private SharedPreferences prefs;
     private Vibrator v;
 
-    public SharedPreferencesRepositoryImpl(Context context) {
+    public SharedPreferencesRepositoryImpl(SharedPreferences sp, Vibrator v) {
 
-        prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        v = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+        prefs = sp;
+        this.v = v;
     }
 
     @Override

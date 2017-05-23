@@ -1,7 +1,9 @@
-package com.kfang.fencemelibrary.main;
+package com.kfang.fencemelibrary;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+
+import com.kfang.fencemelibrary.main.MainActivity;
 
 import static com.kfang.fencemelibrary.Constants.CURRENT_GAME_PREFERENCES;
 import static com.kfang.fencemelibrary.Constants.CURRENT_GREEN_POINTS;
@@ -24,11 +26,10 @@ import static com.kfang.fencemelibrary.main.TimerService.CURRENT_TIME;
 public class Utility {
 
     // settings string keys
-    static final int TO_ADD = 1;
-    static final int TO_SUBTRACT = 0;
-    private static SharedPreferences prefs;
+    public static final int TO_ADD = 1;
+    public static final int TO_SUBTRACT = 0;
 
-    static void saveCurrentMatchPreferences(Context context) {
+    public static void saveCurrentMatchPreferences(Context context) {
         SharedPreferences gamePrefs = context.getSharedPreferences(CURRENT_GAME_PREFERENCES, Context.MODE_PRIVATE);
         SharedPreferences.Editor gamePrefsEditor = gamePrefs.edit();
         gamePrefsEditor.putInt(CURRENT_RED_POINTS, mRedFencer.getPoints())
@@ -43,7 +44,7 @@ public class Utility {
                 .apply();
     }
 
-    static void updateCurrentMatchPreferences(Context context) {
+    public static void updateCurrentMatchPreferences(Context context) {
         SharedPreferences gamePrefs = context.getSharedPreferences(CURRENT_GAME_PREFERENCES, Context.MODE_PRIVATE);
         mRedFencer.setPoints(gamePrefs.getInt(CURRENT_RED_POINTS, 0));
         mGreenFencer.setPoints(gamePrefs.getInt(CURRENT_GREEN_POINTS, 0));

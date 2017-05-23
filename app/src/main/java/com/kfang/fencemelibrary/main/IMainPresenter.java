@@ -4,10 +4,10 @@ package com.kfang.fencemelibrary.main;
 import android.content.Context;
 
 /**
- * MainPresenter interface
+ * IMainPresenter interface
  */
 
-public interface MainPresenter {
+public interface IMainPresenter {
 
     void toggleTimer(Context context);
 

@@ -6,6 +6,7 @@ package com.kfang.fencemelibrary;
 
 public class Constants {
 
+    public static final int OPEN_CARD_ACTIVITY = 1234;
     public static final int DEFAULT_POINTS = 5;
     public static final int DEFAULT_MINUTES = 3;
     public static final String LAST_VERSION_NUMBER = "last_version_number";

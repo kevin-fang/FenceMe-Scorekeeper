@@ -2,6 +2,8 @@ package com.kfang.fencemelibrary.main;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Vibrator;
 
 import static com.kfang.fencemelibrary.Constants.CHANGE_TIMER;
 
@@ -9,12 +11,14 @@ import static com.kfang.fencemelibrary.Constants.CHANGE_TIMER;
  * Main Presenter Implementation
  */
 
-public class MainPresenterImpl implements MainPresenter {
+public class MainPresenterImpl implements IMainPresenter {
 
     private SharedPreferencesRepository sharedPreferences;
+    private IMainView mainView;
 
-    public MainPresenterImpl(Context context) {
-        sharedPreferences = new SharedPreferencesRepositoryImpl(context);
+    public MainPresenterImpl(IMainView mainView, SharedPreferences sp, Vibrator v) {
+        sharedPreferences = new SharedPreferencesRepositoryImpl(sp, v);
+        this.mainView = mainView;
 
     }
 

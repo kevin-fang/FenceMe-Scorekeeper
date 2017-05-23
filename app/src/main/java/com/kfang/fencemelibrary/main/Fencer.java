@@ -59,7 +59,7 @@ public class Fencer extends BaseObservable {
         return name;
     }
 
-    void setName(String name) {
+    public void setName(String name) {
         this.name = name;
         notifyPropertyChanged(BR.name);
     }

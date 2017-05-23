@@ -1,4 +1,4 @@
-package com.kfang.fencemelibrary.main;
+package com.kfang.fencemelibrary;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -11,7 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.NumberPicker;
 
-import com.kfang.fencemelibrary.R;
+import com.kfang.fencemelibrary.main.MainActivity;
+import com.kfang.fencemelibrary.main.TimerService;
 
 import java.util.Locale;
 

@@ -45,12 +45,15 @@ import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 import com.kfang.fencemelibrary.AboutActivity;
 import com.kfang.fencemelibrary.BuildConfig;
+import com.kfang.fencemelibrary.CardPlayerActivity;
 import com.kfang.fencemelibrary.NavMenu.DrawerAdapter;
 import com.kfang.fencemelibrary.NavMenu.DrawerItem;
 import com.kfang.fencemelibrary.NavMenu.SimpleItem;
 import com.kfang.fencemelibrary.R;
 import com.kfang.fencemelibrary.R2;
 import com.kfang.fencemelibrary.SettingsActivity;
+import com.kfang.fencemelibrary.TimePickerFragment;
+import com.kfang.fencemelibrary.Utility;
 import com.kfang.fencemelibrary.databinding.ActivityMainBinding;
 import com.kobakei.ratethisapp.RateThisApp;
 import com.yarolegovich.slidingrootnav.SlideGravity;
@@ -69,10 +72,12 @@ import static com.kfang.fencemelibrary.Constants.CHANGE_TIMER;
 import static com.kfang.fencemelibrary.Constants.COLOR_GREEN;
 import static com.kfang.fencemelibrary.Constants.COLOR_RED;
 import static com.kfang.fencemelibrary.Constants.LAST_VERSION_NUMBER;
+import static com.kfang.fencemelibrary.Constants.OPEN_CARD_ACTIVITY;
 import static com.kfang.fencemelibrary.Constants.TIMER_RUNNING;
+import static com.kfang.fencemelibrary.Constants.TO_CARD_PLAYER;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements IMainView, DrawerAdapter.OnItemSelectedListener {
 
     public static final int CARD_A_PLAYER = 0;
     public static final int TIEBREAKER = 1;
@@ -93,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
     BroadcastReceiver timerUp;
     BroadcastReceiver resetEntireBout;
 
-    MainPresenter presenter;
+    IMainPresenter presenter;
 
     // timer views
     @BindView(R2.id.start_timer)
@@ -132,6 +137,7 @@ public class MainActivity extends AppCompatActivity {
     Vibrator vibrator;
     @BindView(R2.id.toolbar)
     Toolbar toolbar;
+    SlidingRootNav navigationMenu;
 
     // create a tiebreaker
     public static void makeTieBreaker(final Context context) {
@@ -220,7 +226,7 @@ public class MainActivity extends AppCompatActivity {
         binding.setRedFencer(mRedFencer);
 
         vibrator = (Vibrator) getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
-        presenter = new MainPresenterImpl(this);
+        presenter = new MainPresenterImpl(this, PreferenceManager.getDefaultSharedPreferences(this), vibrator);
 
         ButterKnife.bind(this);
         // set up ads, views, vibrations and action bars.
@@ -341,7 +347,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == DrawerItemClickListener.OPEN_CARD_ACTIVITY && resultCode == Activity.RESULT_OK) {
+        if (requestCode == OPEN_CARD_ACTIVITY && resultCode == Activity.RESULT_OK) {
             if (!checkForVictories(mRedFencer)) {
                 checkForVictories(mGreenFencer);
             }
@@ -700,14 +706,14 @@ public class MainActivity extends AppCompatActivity {
                 .withSavedState(savedInstanceState)
                 .withGravity(SlideGravity.LEFT);
 
-        SlidingRootNav navigationMenu = builder.inject();
+        navigationMenu = builder.inject();
 
         DrawerAdapter adapter = new DrawerAdapter(Arrays.asList(
                 createItemFor(CARD_A_PLAYER),
                 createItemFor(TIEBREAKER),
                 createItemFor(RESET_BOUT)
         ));
-        adapter.setListener(new DrawerItemClickListener(this, navigationMenu));
+        adapter.setListener(this);
         resetPlayerCards();
 
         RecyclerView list = (RecyclerView) findViewById(R.id.list);
@@ -955,5 +961,52 @@ public class MainActivity extends AppCompatActivity {
                     WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
         }
         alertToShow.show();
+    }
+
+    @Override
+    public void onItemSelected(int position) {
+        //Toast.makeText(activity, "selected: " + menuItem.getTitle(), Toast.LENGTH_SHORT).show();
+
+        final Context context = this;
+        switch (position) {
+            case MainActivity.CARD_A_PLAYER:
+                android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
+                final String[] playerArray = {MainActivity.mRedFencer.getName(), MainActivity.mGreenFencer.getName(), "Reset Cards"};
+                builder.setTitle("Card a player")
+                        .setItems(playerArray, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                String player = playerArray[which];
+                                if (player.equals("Reset Cards")) {
+                                    MainActivity.resetPlayerCards();
+                                    Toast.makeText(context, "Cards have been reset!", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    // create intent to card player and pause timer
+                                    if (TimerService.mTimerRunning) {
+                                        Intent startTimer = new Intent(context, TimerService.class);
+                                        startTimer.putExtra(CHANGE_TIMER, TimerService.TOGGLE_TIMER);
+                                        context.startService(startTimer);
+                                    }
+                                    Intent cardPlayer = new Intent(context, CardPlayerActivity.class);
+                                    cardPlayer.putExtra(TO_CARD_PLAYER, player);
+                                    startActivityForResult(cardPlayer, OPEN_CARD_ACTIVITY);
+                                }
+                            }
+                        })
+                        .create()
+                        .show();
+                navigationMenu.closeMenu(true);
+                break;
+            case MainActivity.TIEBREAKER:
+                MainActivity.mRedFencer.setPoints(0);
+                MainActivity.mGreenFencer.setPoints(0);
+                MainActivity.makeTieBreaker(this);
+                navigationMenu.closeMenu(true);
+                break;
+            case MainActivity.RESET_BOUT:
+                navigationMenu.closeMenu(true);
+                LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(TimerService.RESET_BOUT_INTENT));
+                break;
+        }
     }
 }
