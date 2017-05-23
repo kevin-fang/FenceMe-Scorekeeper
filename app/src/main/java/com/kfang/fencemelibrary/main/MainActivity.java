@@ -391,11 +391,6 @@ public class MainActivity extends AppCompatActivity {
         lbm.unregisterReceiver(resetEntireBout);
     }
 
-    public void updateScores() {
-        redScore.setText(String.valueOf(mRedFencer.getPoints()));
-        greenScore.setText(String.valueOf(mGreenFencer.getPoints()));
-    }
-
     // create broadcast receivers to update time, update button, reset bout, and timer up
     private void setupBroadcastReceivers() {
         LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
@@ -615,7 +610,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        updateScores();
         checkAndSetDoubleTouch(this);
     }
 
@@ -634,17 +628,8 @@ public class MainActivity extends AppCompatActivity {
         }
         setSupportActionBar(toolbar);
 
-        if (mRedFencer.getName() != null) {
-            redNameView.setText(mRedFencer.getName());
-        }
-        if (mGreenFencer.getName() != null) {
-            greenNameView.setText(mGreenFencer.getName());
-        }
 
         // set values to redScore and greenScore
-        redScore.setText(String.valueOf(mRedFencer.getPoints()));
-        greenScore.setText(String.valueOf(mGreenFencer.getPoints()));
-
         // set onclickListeners for buttons
         addRed.setOnClickListener(createScoreChanger(redScore, Utility.TO_ADD, mRedFencer));
         subtractRed.setOnClickListener(createScoreChanger(redScore, Utility.TO_SUBTRACT, mRedFencer));
@@ -663,7 +648,6 @@ public class MainActivity extends AppCompatActivity {
                 for (Fencer fencer : fencers) {
                     fencer.incrementNumPoints();
                 }
-                updateScores();
                 if (mRedFencer.getPoints() >= 5) {
                     if (!checkForVictories(mRedFencer)) {
                         checkForVictories(mGreenFencer);
@@ -790,7 +774,6 @@ public class MainActivity extends AppCompatActivity {
         tieBreaker = false;
         mRedFencer.setPoints(0);
         mGreenFencer.setPoints(0);
-        updateScores();
     }
 
     // create options menu
@@ -866,7 +849,6 @@ public class MainActivity extends AppCompatActivity {
                 } else if (toAdd == Utility.TO_SUBTRACT && fencer.getPoints() > 0) {
                     fencer.decrementNumPoints();
                 }
-                score.setText(String.format("%s", fencer.getPoints()));
 
                 if (presenter.pauseOnScoreChange()) {
                     if (TimerService.mTimerRunning) {
@@ -952,7 +934,7 @@ public class MainActivity extends AppCompatActivity {
                 if (name.equals("")) {
                     name = defaultName;
                 }
-                view.setText(name);
+                //view.setText(name);
                 if (defaultName.equals("Green")) {
                     mGreenFencer.setName(name);
                 } else if (defaultName.equals("Red")) {

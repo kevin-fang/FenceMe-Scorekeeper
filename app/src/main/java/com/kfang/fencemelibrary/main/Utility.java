@@ -45,10 +45,8 @@ public class Utility {
 
     static void updateCurrentMatchPreferences(Context context) {
         SharedPreferences gamePrefs = context.getSharedPreferences(CURRENT_GAME_PREFERENCES, Context.MODE_PRIVATE);
-        MainActivity activity = ((MainActivity) context);
         mRedFencer.setPoints(gamePrefs.getInt(CURRENT_RED_POINTS, 0));
         mGreenFencer.setPoints(gamePrefs.getInt(CURRENT_GREEN_POINTS, 0));
-        activity.updateScores();
         MainActivity.mCurrentTime = gamePrefs.getLong(CURRENT_TIME, DEFAULT_MINUTES * 60000);
         mRedFencer.setRedCards(gamePrefs.getInt(RED_CARDRED, 0));
         mRedFencer.setYellowCards(gamePrefs.getInt(RED_CARDYELLOW, 0));
