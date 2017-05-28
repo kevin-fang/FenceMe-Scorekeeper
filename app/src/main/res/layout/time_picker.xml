@@ -28,7 +28,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:text=":"/>
+            android:layout_marginEnd="2dp"
+            android:layout_marginStart="2dp"
+            android:text="@string/colon" />
         <NumberPicker
             android:id="@+id/seconds_picker"
             android:layout_width="wrap_content"

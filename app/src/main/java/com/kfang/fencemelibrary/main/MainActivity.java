@@ -63,14 +63,15 @@ import java.util.Arrays;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.kfang.fencemelibrary.CardPlayerActivity.FENCER_TO_CARD;
 import static com.kfang.fencemelibrary.CardPlayerActivity.GREEN_FENCER;
 import static com.kfang.fencemelibrary.CardPlayerActivity.RED_FENCER;
+import static com.kfang.fencemelibrary.CardPlayerActivity.RETURN_CARD;
 import static com.kfang.fencemelibrary.Constants.COLOR_GREEN;
 import static com.kfang.fencemelibrary.Constants.COLOR_RED;
 import static com.kfang.fencemelibrary.Constants.LAST_VERSION_NUMBER;
 import static com.kfang.fencemelibrary.Constants.OPEN_CARD_ACTIVITY;
 import static com.kfang.fencemelibrary.Constants.TIMER_RUNNING;
-import static com.kfang.fencemelibrary.Constants.TO_CARD_PLAYER;
 
 
 public class MainActivity extends AppCompatActivity implements MainContract.MainView, DrawerAdapter.OnItemSelectedListener {
@@ -140,9 +141,10 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 //Toast.makeText(context, "Starting Tiebreaker...", Toast.LENGTH_SHORT).show();
+                presenter.resetScores();
                 presenter.setTimer(60);
                 presenter.startTimer();
-                tieBreaker = true;
+                presenter.setTieBreaker(true);
                 enableTimerButton();
             }
         })
@@ -199,7 +201,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
         if (presenter.restoreOnAppReset()) {
             Utility.updateCurrentMatchPreferences(this, presenter);
         } else { // restore default time
-            presenter.setTimer(presenter.getBoutLength() * 60);
+            presenter.setTimer(presenter.getBoutLengthMinutes() * 60);
         }
 
         if (savedInstanceState != null) {
@@ -293,6 +295,9 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        String cardingPlayer = data.getStringExtra(FENCER_TO_CARD); // string, not a fencer
+        String cardToGive = data.getStringExtra(RETURN_CARD);
+        presenter.handleCarding(cardingPlayer, cardToGive);
         if (requestCode == OPEN_CARD_ACTIVITY && resultCode == Activity.RESULT_OK) {
             if (!presenter.checkForVictories(presenter.getRedFencer())) {
                 presenter.checkForVictories(presenter.getGreenFencer());
@@ -368,7 +373,6 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
 
     @Override
     public void displayWinnerDialog(Fencer winner) {
-
         AlertDialog.Builder winnerDialogBuilder = new AlertDialog.Builder(this);
         winnerDialogBuilder.setTitle(winner.getName() + " wins!")
                 .setMessage(winner.getName() + " has won the bout!")
@@ -806,6 +810,8 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
         switch (position) {
             case MainActivity.CARD_A_PLAYER:
                 android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
+                final String redFencerName = presenter.getRedFencer().getName();
+                String greenFencerName = presenter.getGreenFencer().getName();
                 final String[] playerArray = {presenter.getRedFencer().getName(), presenter.getGreenFencer().getName(), "Reset Cards"};
                 builder.setTitle("Card a player")
                         .setItems(playerArray, new DialogInterface.OnClickListener() {
@@ -824,7 +830,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
                                     Bundle b = new Bundle();
                                     b.putSerializable(RED_FENCER, presenter.getRedFencer());
                                     b.putSerializable(GREEN_FENCER, presenter.getGreenFencer());
-                                    b.putString(TO_CARD_PLAYER, player);
+                                    b.putString(FENCER_TO_CARD, player);
                                     cardPlayer.putExtras(b);
                                     startActivityForResult(cardPlayer, OPEN_CARD_ACTIVITY);
                                 }
@@ -835,7 +841,6 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
                 navigationMenu.closeMenu(true);
                 break;
             case MainActivity.TIEBREAKER:
-                presenter.resetScores();
                 navigationMenu.closeMenu(true);
                 makeTieBreaker();
                 break;

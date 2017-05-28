@@ -8,7 +8,7 @@
     </string-array>
 
     <string-array name="change_log">
-        <item>Fixed device staying awake while timer wasn\'t running</item>
-        <item>Massively overhauled back end of application</item>
+        <item>Fixed minor bug where cards weren\'t handled correctly</item>
+        <item>Fixed minor bug where wins weren\'t correctly handled</item>
     </string-array>
 </resources>

@@ -73,7 +73,7 @@ public class TimePickerFragment extends DialogFragment {
 
     public void setTimer(int minutes, int seconds) {
         if (seconds == 0 && minutes == 0) {
-            presenter.setTimer(presenter.getBoutLength() * 60);
+            presenter.setTimer(presenter.getBoutLengthMinutes() * 60);
         } else {
             presenter.setTimer(seconds + minutes * 60);
         }

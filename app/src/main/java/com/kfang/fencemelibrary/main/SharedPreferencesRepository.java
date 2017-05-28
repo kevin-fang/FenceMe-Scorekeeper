@@ -21,6 +21,6 @@ public interface SharedPreferencesRepository {
 
     boolean pauseOnScoreChange();
 
-    int getBoutLength();
+    int getBoutLengthMinutes();
 
 }

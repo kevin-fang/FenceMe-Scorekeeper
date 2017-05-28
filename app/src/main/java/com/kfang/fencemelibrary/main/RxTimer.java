@@ -33,7 +33,7 @@ public class RxTimer implements MainContract.FenceTimer {
         long currentSeconds = seconds % 60;
         long currentMinutes = seconds / 60;
         //Log.d(LOG_TAG, "minutes: " + currentMinutes + ", seconds: " + currentSeconds + ", total: " + seconds);
-        return String.format(Locale.getDefault(), "%02d:%02d", currentMinutes, currentSeconds);
+        return String.format(Locale.getDefault(), "%01d:%02d", currentMinutes, currentSeconds);
     }
 
     @Override // returns in seconds the current time
@@ -81,7 +81,7 @@ public class RxTimer implements MainContract.FenceTimer {
 
     public void resetTimer() {
         disposable.clear();
-        totalSeconds = presenter.getBoutLength() * 60;
+        totalSeconds = presenter.getBoutLengthMinutes() * 60;
         currentTime = -1;
         timerView.updateTime(formatTime(totalSeconds));
     }

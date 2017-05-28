@@ -9,6 +9,7 @@ public class Constants {
     public static final int OPEN_CARD_ACTIVITY = 1234;
     public static final int DEFAULT_POINTS = 5;
     public static final int DEFAULT_MINUTES = 3;
+
     public static final String LAST_VERSION_NUMBER = "last_version_number";
     public static final String RESTORE_ON_EXIT = "restore_status";
     public static final String RED_NAME = "red_name";
@@ -34,7 +35,6 @@ public class Constants {
     public static final String TOGGLE_DOUBLE_TOUCH = "toggle_double_touch";
 
     public static final String TO_CARD_PLAYER = "card_player";
-    public static final String CHANGE_TIMER = "TOGGLE";
     public static final String TIMER_RUNNING = "timer_running";
     public static final String COLOR_GREEN = "green";
     public static final String COLOR_RED = "red";

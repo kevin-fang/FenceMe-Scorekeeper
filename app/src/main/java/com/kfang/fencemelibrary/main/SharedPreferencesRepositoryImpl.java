@@ -71,7 +71,7 @@ public class SharedPreferencesRepositoryImpl implements SharedPreferencesReposit
     }
 
     @Override
-    public int getBoutLength() {
+    public int getBoutLengthMinutes() {
         return prefs.getInt(BOUT_LENGTH_MINUTES, DEFAULT_MINUTES);
     }
 }

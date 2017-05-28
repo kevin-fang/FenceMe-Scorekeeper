@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import static com.kfang.fencemelibrary.CardPlayerActivity.RED_CARD;
 import static com.kfang.fencemelibrary.Constants.COLOR_GREEN;
 import static com.kfang.fencemelibrary.Constants.COLOR_RED;
 
@@ -32,7 +33,7 @@ public class MainPresenterImpl implements MainContract.MainPresenter {
     public MainPresenterImpl(MainContract.MainView mainView, SharedPreferences sp, Vibrator v) {
         sharedPreferences = new SharedPreferencesRepositoryImpl(sp, v);
         this.mainView = mainView;
-        fenceTimer = new RxTimer(getBoutLength(), mainView, this);
+        fenceTimer = new RxTimer(getBoutLengthMinutes(), mainView, this);
 
         redFencer = new Fencer("Red");
         greenFencer = new Fencer("Green");
@@ -41,6 +42,24 @@ public class MainPresenterImpl implements MainContract.MainPresenter {
         fencers.add(greenFencer);
     }
 
+    @Override
+    public void handleCarding(String cardingPlayer, String cardToGive) {
+        if (cardingPlayer.equals(redFencer.getName())) {
+            if (cardToGive.equals(RED_CARD)) {
+                redFencer.incrementRedCards();
+                greenFencer.incrementNumPoints();
+            } else {
+                redFencer.incrementYellowCards();
+            }
+        } else if (cardingPlayer.equals(greenFencer.getName())) {
+            if (cardToGive.equals(RED_CARD)) {
+                greenFencer.incrementRedCards();
+                redFencer.incrementNumPoints();
+            } else {
+                greenFencer.incrementYellowCards();
+            }
+        }
+    }
 
     @Override
     public Fencer higherPoints() {
@@ -104,7 +123,7 @@ public class MainPresenterImpl implements MainContract.MainPresenter {
 
     @Override
     public void resetTimer() {
-        fenceTimer.setTimer(getBoutLength() * 60);
+        fenceTimer.setTimer(getBoutLengthMinutes() * 60);
         setStartButton();
         timerRunning = false;
     }
@@ -141,8 +160,8 @@ public class MainPresenterImpl implements MainContract.MainPresenter {
     }
 
     @Override
-    public int getBoutLength() {
-        return sharedPreferences.getBoutLength();
+    public int getBoutLengthMinutes() {
+        return sharedPreferences.getBoutLengthMinutes();
     }
 
     @Override
@@ -151,7 +170,6 @@ public class MainPresenterImpl implements MainContract.MainPresenter {
         resetScores();
         resetTimer();
         mainView.enableTimerButton();
-
     }
 
     @Override
@@ -169,7 +187,7 @@ public class MainPresenterImpl implements MainContract.MainPresenter {
 
     @Override
     public Fencer checkForVictories() {
-        if (redFencer.getPoints() >= getBoutLength()) {
+        if (redFencer.getPoints() >= getPointsToWin() || greenFencer.getPoints() >= getPointsToWin() || tieBreakerStatus) {
             if (checkForVictories(redFencer)) {
                 return redFencer;
             } else if (checkForVictories(greenFencer)) {
@@ -177,6 +195,11 @@ public class MainPresenterImpl implements MainContract.MainPresenter {
             }
         }
         return null;
+    }
+
+    @Override
+    public void setTieBreaker(boolean status) {
+        tieBreakerStatus = status;
     }
 
     @Override

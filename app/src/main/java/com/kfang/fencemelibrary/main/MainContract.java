@@ -10,6 +10,10 @@ public class MainContract {
 
         Fencer getGreenFencer();
 
+        void setTieBreaker(boolean status);
+
+        void handleCarding(String cardingPlayer, String cardToGive);
+
         void toggleTimer();
 
         void startTimer();
@@ -42,7 +46,7 @@ public class MainContract {
 
         int getCurrentTime();
 
-        int getBoutLength();
+        int getBoutLengthMinutes();
 
         boolean vibrateOnTimerFinish();
 
