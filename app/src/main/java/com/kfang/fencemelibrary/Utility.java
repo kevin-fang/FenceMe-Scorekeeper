@@ -51,7 +51,11 @@ public class Utility {
         SharedPreferences gamePrefs = context.getSharedPreferences(CURRENT_GAME_PREFERENCES, Context.MODE_PRIVATE);
         redFencer.setPoints(gamePrefs.getInt(CURRENT_RED_POINTS, 0));
         greenFencer.setPoints(gamePrefs.getInt(CURRENT_GREEN_POINTS, 0));
-        presenter.setTimer(gamePrefs.getInt(CURRENT_TIME, DEFAULT_MINUTES * 60));
+        try {
+            presenter.setTimer(gamePrefs.getInt(CURRENT_TIME, DEFAULT_MINUTES * 60));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         redFencer.setRedCards(gamePrefs.getInt(RED_CARDRED, 0));
         redFencer.setYellowCards(gamePrefs.getInt(RED_CARDYELLOW, 0));
         greenFencer.setRedCards(gamePrefs.getInt(GREEN_CARDRED, 0));

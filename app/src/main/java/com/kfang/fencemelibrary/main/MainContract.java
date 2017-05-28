@@ -1,7 +1,7 @@
 package com.kfang.fencemelibrary.main;
 
 /**
- * Created by kfang on 5/28/2017.
+ * Main Contract class
  */
 
 public class MainContract {

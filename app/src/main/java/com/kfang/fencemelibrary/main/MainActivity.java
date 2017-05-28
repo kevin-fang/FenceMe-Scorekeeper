@@ -578,10 +578,10 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
         // set onClickListener for start and reset
         startTimerButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                if (presenter.stayAwakeDuringTimer()) {
-                    getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-                } else {
+                if (presenter.timerRunning()) {
                     getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                } else if (presenter.stayAwakeDuringTimer()) {
+                    getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
                 }
                 presenter.toggleTimer();
             }
