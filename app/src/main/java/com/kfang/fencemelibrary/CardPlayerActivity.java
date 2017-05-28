@@ -13,7 +13,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kfang.fencemelibrary.main.Fencer;
-import com.kfang.fencemelibrary.main.MainActivity;
 
 import java.util.Locale;
 
@@ -21,11 +20,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static com.kfang.fencemelibrary.Constants.TO_CARD_PLAYER;
-import static com.kfang.fencemelibrary.main.MainActivity.mGreenFencer;
-import static com.kfang.fencemelibrary.main.MainActivity.mRedFencer;
 
 
 public class CardPlayerActivity extends AppCompatActivity {
+
+    public static final String RED_FENCER = "red.fencer";
+    public static final String GREEN_FENCER = "green.fencer";
+
     String playerToCard;
     @BindView(R2.id.yellow_card)
     Button yellowButton;
@@ -38,6 +39,8 @@ public class CardPlayerActivity extends AppCompatActivity {
     TextView currentlyCarding;
     LinearLayout cardLayout;
 
+    Fencer redFencer;
+    Fencer greenFencer;
 
     // TODO: Change card player to fragment
     // TODO: Full brightness + setting
@@ -48,16 +51,20 @@ public class CardPlayerActivity extends AppCompatActivity {
         Intent intent = getIntent();
 
         ButterKnife.bind(this);
-        playerToCard = intent.getStringExtra(TO_CARD_PLAYER);
+        Bundle b = intent.getExtras();
+        playerToCard = b.getString(TO_CARD_PLAYER);
+        redFencer = (Fencer) b.getSerializable(RED_FENCER);
+        greenFencer = (Fencer) b.getSerializable(GREEN_FENCER);
+        
         currentlyCarding = (TextView) findViewById(R.id.currently_carding);
-        if (playerToCard.equals(mRedFencer.getName())) {
-            numYellow = mRedFencer.getYellowCards();
-            numRed = mRedFencer.getRedCards();
-            currentlyCarding.setText(getString(R.string.currently_carding) + " " + mRedFencer.getName());
-        } else if (playerToCard.equals(MainActivity.mGreenFencer.getName())) {
-            numYellow = mGreenFencer.getYellowCards();
-            numRed = mGreenFencer.getRedCards();
-            currentlyCarding.setText(getString(R.string.currently_carding) + " " + mGreenFencer.getName());
+        if (playerToCard.equals(redFencer.getName())) {
+            numYellow = redFencer.getYellowCards();
+            numRed = redFencer.getRedCards();
+            currentlyCarding.setText(getString(R.string.currently_carding) + " " + redFencer.getName());
+        } else if (playerToCard.equals(greenFencer.getName())) {
+            numYellow = greenFencer.getYellowCards();
+            numRed = greenFencer.getRedCards();
+            currentlyCarding.setText(getString(R.string.currently_carding) + " " + greenFencer.getName());
         }
         yellowButton.setText(String.format(Locale.getDefault(), "Yellow\nCard\n%d", numYellow));
         redButton.setText(String.format(Locale.getDefault(), "Red\nCard\n%d", numRed));
@@ -80,12 +87,12 @@ public class CardPlayerActivity extends AppCompatActivity {
     public void displayRed(View v) {
         // Toast.makeText(this, "Clicked Red", Toast.LENGTH_SHORT).show();
         Fencer oppositeFencer;
-        if (playerToCard.equals(mRedFencer.getName())) {
-            oppositeFencer = mGreenFencer;
-            mRedFencer.incrementRedCards();
+        if (playerToCard.equals(redFencer.getName())) {
+            oppositeFencer = greenFencer;
+            redFencer.incrementRedCards();
         } else {
-            oppositeFencer = mRedFencer;
-            mGreenFencer.incrementRedCards();
+            oppositeFencer = redFencer;
+            greenFencer.incrementRedCards();
         }
         oppositeFencer.incrementNumPoints();
 
@@ -103,10 +110,10 @@ public class CardPlayerActivity extends AppCompatActivity {
     }
 
     public void displayYellow(View v) {
-        if (playerToCard.equals(mRedFencer.getName())) {
-            mRedFencer.incrementYellowCards();
-        } else if (playerToCard.equals(mGreenFencer.getName())) {
-            mGreenFencer.incrementYellowCards();
+        if (playerToCard.equals(redFencer.getName())) {
+            redFencer.incrementYellowCards();
+        } else if (playerToCard.equals(greenFencer.getName())) {
+            greenFencer.incrementYellowCards();
         }
         setContentView(R.layout.card_display);
         View cardView = findViewById(R.id.card);

@@ -5,12 +5,14 @@ import android.databinding.Bindable;
 
 import com.kfang.fencemelibrary.BR;
 
+import java.io.Serializable;
+
 
 /**
  * Class to contain fencers
  */
 
-public class Fencer extends BaseObservable {
+public class Fencer extends BaseObservable implements Serializable {
     public int points;
     public String name;
     private int redCards;
@@ -24,6 +26,10 @@ public class Fencer extends BaseObservable {
         this.name = name;
         this.redCards = 0;
         this.yellowCards = 0;
+    }
+
+    String getDefaultName() {
+        return name;
     }
 
     void assignPriority() {

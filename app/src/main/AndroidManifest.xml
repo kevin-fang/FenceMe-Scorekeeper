@@ -28,7 +28,6 @@
 
         </activity>
 
-        <service android:name="com.kfang.fencemelibrary.main.TimerService" />
     </application>
 
 </manifest>

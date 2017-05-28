@@ -1,6 +1,5 @@
 package com.kfang.fencemelibrary;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -10,10 +9,8 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
-import android.view.WindowManager;
 
 import com.kfang.fencemelibrary.main.NumberPickerPreference;
-import com.kfang.fencemelibrary.main.TimerService;
 
 
 /**
@@ -70,9 +67,9 @@ public class SettingsActivity extends AppCompatActivity {
                     settingsEditor.putInt(Constants.BOUT_LENGTH_POINTS, Constants.DEFAULT_POINTS);
                     settingsEditor.putInt(Constants.BOUT_LENGTH_MINUTES, Constants.DEFAULT_MINUTES);
 
-                    Intent stopTimer = new Intent(getActivity(), TimerService.class);
+                    /* Intent stopTimer = new Intent(getActivity(), TimerService.class);
                     stopTimer.putExtra(Constants.CHANGE_TIMER, TimerService.RESET_TIMER);
-                    getActivity().startService(stopTimer);
+                    getActivity().startService(stopTimer); */
 
                     return true;
                 }
@@ -100,9 +97,9 @@ public class SettingsActivity extends AppCompatActivity {
                                     settingsEditor.putBoolean(Constants.PAUSE_ON_SCORE_CHANGE, pausePreference.isChecked());
                                     break;
                                 case Constants.KEEP_DEVICE_AWAKE:
-                                    if (TimerService.mTimerRunning) { // if timer is already running, don't let screen turn off
+                                    /*if (presenter.timerRunning()) { // if timer is already running, don't let screen turn off
                                         getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-                                    }
+                                    } */
                                     settingsEditor.putBoolean(Constants.KEEP_DEVICE_AWAKE, awakePreference.isChecked());
                                     break;
                                 case Constants.POPUP_ON_SCORE:
