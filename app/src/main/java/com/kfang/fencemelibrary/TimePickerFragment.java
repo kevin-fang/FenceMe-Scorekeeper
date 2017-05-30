@@ -45,28 +45,12 @@ public class TimePickerFragment extends DialogFragment {
         secondsPicker.setMaxValue(59);
         secondsPicker.setMinValue(0);
         secondsPicker.setValue(presenter.getCurrentTime() % 60);
-        secondsPicker.setFormatter(new NumberPicker.Formatter() {
-            @Override
-            public String format(int value) {
-                return String.format(Locale.getDefault(), "%02d", value);
-
-            }
-        });
+        secondsPicker.setFormatter(value -> String.format(Locale.getDefault(), "%02d", value));
 
 
         builder.setView(pickerView)
-                .setPositiveButton(R.string.button_set_timer, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        setTimer(minutesPicker.getValue(), secondsPicker.getValue());
-                    }
-                })
-                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        TimePickerFragment.this.getDialog().cancel();
-                    }
-                });
+                .setPositiveButton(R.string.button_set_timer, (dialog, which) -> setTimer(minutesPicker.getValue(), secondsPicker.getValue()))
+                .setNegativeButton(R.string.cancel, (dialog, which) -> TimePickerFragment.this.getDialog().cancel());
 
         return builder.create();
     }

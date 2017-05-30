@@ -137,16 +137,13 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Tiebreaker");
         builder.setMessage(chosenFencer.getName() + " has priority!");
-        builder.setPositiveButton("Start Tiebreaker", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
+        builder.setPositiveButton("Start Tiebreaker", (dialog, which) -> {
                 //Toast.makeText(context, "Starting Tiebreaker...", Toast.LENGTH_SHORT).show();
                 presenter.resetScores();
                 presenter.setTimer(60);
                 presenter.startTimer();
                 presenter.setTieBreaker(true);
                 enableTimerButton();
-            }
         })
                 .create()
                 .show();
@@ -257,19 +254,11 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
         AlertDialog.Builder whatsNew = new AlertDialog.Builder(this);
         whatsNew.setTitle("What's new in FenceMe! " + proVersion + versionName + ":")
                 .setMessage(changeLog)
-                .setPositiveButton("Dismiss", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                })
-                .setNegativeButton("Rate app", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        launchRateApp();
-                        dialog.dismiss();
-                    }
-                })
+                .setPositiveButton("Dismiss", (dialog, which) -> dialog.dismiss())
+                .setNegativeButton("Rate app", (dialog, which) -> {
+                    launchRateApp();
+                    dialog.dismiss();
+                        })
                 .create()
                 .show();
     }
@@ -316,12 +305,10 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
         ValueAnimator anim = new ValueAnimator();
         anim.setIntValues(ContextCompat.getColor(this, R.color.colorBrightRed), ContextCompat.getColor(this, R.color.colorBrightGreen));
         anim.setEvaluator(new ArgbEvaluator());
-        anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                startTimerButton.setBackgroundColor((Integer) valueAnimator.getAnimatedValue());
-            }
-        });
+        anim.addUpdateListener((valueAnim) ->
+            startTimerButton.setBackgroundColor((Integer) valueAnim.getAnimatedValue()));
+        anim.addUpdateListener((valueAnimator) ->
+                startTimerButton.setBackgroundColor((Integer) valueAnimator.getAnimatedValue()));
         anim.setDuration(150);
 
         switch (color) {
@@ -376,18 +363,10 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
         AlertDialog.Builder winnerDialogBuilder = new AlertDialog.Builder(this);
         winnerDialogBuilder.setTitle(winner.getName() + " wins!")
                 .setMessage(winner.getName() + " has won the bout!")
-                .setPositiveButton("Reset Bout", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        presenter.resetBout();
-                    }
-                })
-                .setOnCancelListener(new DialogInterface.OnCancelListener() {
-                    @Override
-                    public void onCancel(DialogInterface dialog) {
-                        presenter.stopTimer();
-                        enableChangingScore();
-                    }
+                .setPositiveButton("Reset Bout", (dialog, which) -> presenter.resetBout())
+                .setOnCancelListener((dialog) -> {
+                    presenter.stopTimer();
+                    enableChangingScore();
                 })
                 .create()
                 .show();
@@ -401,9 +380,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
 
         disableTimerButton();
         // play alarm in background thread
-        final Thread alarms = new Thread(new Runnable() {
-            @Override
-            public void run() {
+        final Thread alarms = new Thread(() -> {
                 // create alarm
                 alarmTone.play();
                 long[] pattern = {0, 500, 500};
@@ -411,8 +388,6 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
                 if (presenter.vibrateOnTimerFinish()) {
                     vibrator.vibrate(pattern, 0);
                 }
-            }
-
         });
         // disable keep screen on
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -429,26 +404,20 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
             AlertDialog.Builder winnerDialogBuilder = new AlertDialog.Builder(mContext);
             winnerDialogBuilder.setTitle(winnerFencer.getName() + " wins!")
                     .setMessage(winnerFencer.getName() + " has won the bout!")
-                    .setPositiveButton("Reset Bout", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
+                    .setPositiveButton("Reset Bout", (dialog, which) -> {
                             alarmHandler.removeCallbacks(alarms);
-                            alarmTone.stop();
+                            stopRingTone();
                             vibrator.cancel();
                             Toast.makeText(getApplicationContext(), "Bout reset!", Toast.LENGTH_SHORT).show();
                             presenter.resetBout();
                             enableChangingScore();
-                        }
                     })
-                    .setOnCancelListener(new DialogInterface.OnCancelListener() {
-                        @Override
-                        public void onCancel(DialogInterface dialog) {
+                    .setOnCancelListener((dialog) -> {
                             alarmHandler.removeCallbacks(alarms);
-                            alarmTone.stop();
+                            stopRingTone();
                             vibrator.cancel();
                             presenter.stopTimer();
                             enableChangingScore();
-                        }
                     })
                     .create()
                     .show();
@@ -461,24 +430,18 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
             AlertDialog.Builder winnerDialogBuilder = new AlertDialog.Builder(mContext);
             winnerDialogBuilder.setTitle(winnerFencer.getName() + " wins!")
                     .setMessage(winnerFencer.getName() + " has won the bout!")
-                    .setPositiveButton("Reset Bout", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            alarmHandler.removeCallbacks(alarms);
-                            vibrator.cancel();
-                            Toast.makeText(getApplicationContext(), "Bout reset!", Toast.LENGTH_SHORT).show();
-                            presenter.resetBout();
-                            enableChangingScore();
-                        }
+                    .setPositiveButton("Reset Bout", (dialog, which) -> {
+                        alarmHandler.removeCallbacks(alarms);
+                        vibrator.cancel();
+                        Toast.makeText(getApplicationContext(), "Bout reset!", Toast.LENGTH_SHORT).show();
+                        presenter.resetBout();
+                        enableChangingScore();
                     })
-                    .setOnCancelListener(new DialogInterface.OnCancelListener() {
-                        @Override
-                        public void onCancel(DialogInterface dialog) {
-                            alarmHandler.removeCallbacks(alarms);
-                            vibrator.cancel();
-                            presenter.stopTimer();
-                            enableChangingScore();
-                        }
+                    .setOnCancelListener(dialog -> {
+                        alarmHandler.removeCallbacks(alarms);
+                        vibrator.cancel();
+                        presenter.stopTimer();
+                        enableChangingScore();
                     })
                     .create()
                     .show();
@@ -486,24 +449,18 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
             AlertDialog.Builder tiebreakerBuilder = new AlertDialog.Builder(mContext);
             tiebreakerBuilder.setTitle("Tie")
                     .setMessage("Score is tied!")
-                    .setPositiveButton("Start Tiebreaker", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            alarmHandler.removeCallbacks(alarms);
-                            alarmTone.stop();
-                            vibrator.cancel();
-                            enableChangingScore();
-                            makeTieBreaker();
-                        }
-                    }).setOnCancelListener(new DialogInterface.OnCancelListener() {
-                @Override
-                public void onCancel(DialogInterface dialog) {
-                    alarmHandler.removeCallbacks(alarms);
-                    alarmTone.stop();
-                    vibrator.cancel();
-                    enableChangingScore();
-                }
-            })
+                    .setPositiveButton("Start Tiebreaker", (dialog, which) -> {
+                        alarmHandler.removeCallbacks(alarms);
+                        stopRingTone();
+                        vibrator.cancel();
+                        enableChangingScore();
+                        makeTieBreaker();
+                    }).setOnCancelListener(dialog -> {
+                        alarmHandler.removeCallbacks(alarms);
+                        stopRingTone();
+                        vibrator.cancel();
+                        enableChangingScore();
+                    })
                     .create()
                     .show();
         }
@@ -548,29 +505,23 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
 
         // set values to redScore and greenScore
         // set onclickListeners for buttons
-        addRed.setOnClickListener(createScoreChanger(redScore, Utility.TO_ADD, presenter.getRedFencer()));
-        subtractRed.setOnClickListener(createScoreChanger(redScore, Utility.TO_SUBTRACT, presenter.getRedFencer()));
-        addGreen.setOnClickListener(createScoreChanger(greenScore, Utility.TO_ADD, presenter.getGreenFencer()));
-        subtractGreen.setOnClickListener(createScoreChanger(greenScore, Utility.TO_SUBTRACT, presenter.getGreenFencer()));
-        doubleTouch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (presenter.pauseOnScoreChange()) {
-                    if (presenter.timerRunning()) {
-                        presenter.stopTimer();
-                    }
+        addRed.setOnClickListener(createScoreChanger(Utility.TO_ADD, presenter.getRedFencer()));
+        subtractRed.setOnClickListener(createScoreChanger(Utility.TO_SUBTRACT, presenter.getRedFencer()));
+        addGreen.setOnClickListener(createScoreChanger(Utility.TO_ADD, presenter.getGreenFencer()));
+        subtractGreen.setOnClickListener(createScoreChanger(Utility.TO_SUBTRACT, presenter.getGreenFencer()));
+        doubleTouch.setOnClickListener(v -> {
+            if (presenter.pauseOnScoreChange()) {
+                if (presenter.timerRunning()) {
+                    presenter.stopTimer();
                 }
-                presenter.incrementBothPoints();
-                presenter.checkForVictories();
-                if (presenter.popupOnScoreChange()) {
-                    Snackbar.make(mCoordinatorLayout, "Gave double touch", Snackbar.LENGTH_SHORT)
-                            .setAction("Dismiss", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                }
-                            })
-                            .show();
-                }
+            }
+            presenter.incrementBothPoints();
+            presenter.checkForVictories();
+            if (presenter.popupOnScoreChange()) {
+                Snackbar.make(mCoordinatorLayout, "Gave double touch", Snackbar.LENGTH_SHORT)
+                        .setAction("Dismiss", v1 -> {
+                        })
+                        .show();
             }
         });
 
@@ -580,22 +531,15 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
         }
 
         // set onClickListener for start and reset
-        startTimerButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                if (presenter.timerRunning()) {
-                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-                } else if (presenter.stayAwakeDuringTimer()) {
-                    getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-                }
-                presenter.toggleTimer();
+        startTimerButton.setOnClickListener(v -> {
+            if (presenter.timerRunning()) {
+                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+            } else if (presenter.stayAwakeDuringTimer()) {
+                getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
             }
+            presenter.toggleTimer();
         });
-        resetTimer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                presenter.resetTimer();
-            }
-        });
+        resetTimer.setOnClickListener(v -> presenter.resetTimer());
 
         checkAndSetDoubleTouch(this);
 
@@ -648,20 +592,13 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
     public void resetBout(View v) {
         new AlertDialog.Builder(this)
                 .setTitle("Are you sure?")
-                .setPositiveButton("Reset", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        startTimerButton.setText(getString(R.string.button_start_timer));
-                        presenter.resetBout();
-                        vibrator.cancel();
-                        Toast.makeText(mContext, "Bout reset!", Toast.LENGTH_SHORT).show();
-                    }
+                .setPositiveButton("Reset", (dialog, which) -> {
+                    startTimerButton.setText(getString(R.string.button_start_timer));
+                    presenter.resetBout();
+                    vibrator.cancel();
+                    Toast.makeText(mContext, "Bout reset!", Toast.LENGTH_SHORT).show();
                 })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                })
+                .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
                 .setMessage("Resetting will reset all points, the timer, and all cards awarded.")
                 .create()
                 .show();
@@ -712,12 +649,9 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
         if (presenter.timerRunning()) {
             /* Toast.makeText(getApplicationContext(), "Pause timer before changing time", Toast.LENGTH_SHORT).show();*/
             final Snackbar snackbar = Snackbar.make(mCoordinatorLayout, "Pause before changing time", Snackbar.LENGTH_SHORT);
-            snackbar.setAction("Pause Timer", new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (presenter.timerRunning()) {
-                        presenter.stopTimer();
-                    }
+            snackbar.setAction("Pause Timer", v1 -> {
+                if (presenter.timerRunning()) {
+                    presenter.stopTimer();
                 }
             }).show();
             return;
@@ -726,33 +660,25 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
         newFragment.show(mFragmentManager, "dialog");
     }
     // create an on click listener for each of the plus/minus buttons.
-    private View.OnClickListener createScoreChanger(final TextView score, final int toAdd, final Fencer fencer) {
-        return new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (toAdd == Utility.TO_ADD && (fencer.getPoints() < presenter.getPointsToWin() || presenter.equalPoints())) {
-                    fencer.incrementNumPoints();
-                } else if (toAdd == Utility.TO_SUBTRACT && fencer.getPoints() > 0) {
-                    fencer.decrementNumPoints();
-                }
-
-                if (presenter.pauseOnScoreChange()) {
-                    if (presenter.timerRunning()) {
-                        presenter.toggleTimer();
-                    }
-                }
-                if (!presenter.checkForVictories(fencer) && toAdd == Utility.TO_ADD && presenter.popupOnScoreChange()) {
-                    Snackbar.make(mCoordinatorLayout, "Gave touch to " + fencer.getName(), Snackbar.LENGTH_SHORT)
-                            .setAction("Dismiss", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-
-                                }
-                            })
-                            .show();
-                }
+    private View.OnClickListener createScoreChanger(final int toAdd, final Fencer fencer) {
+        return v -> {
+            if (toAdd == Utility.TO_ADD && (fencer.getPoints() < presenter.getPointsToWin() || presenter.equalPoints())) {
+                fencer.incrementNumPoints();
+            } else if (toAdd == Utility.TO_SUBTRACT && fencer.getPoints() > 0) {
+                fencer.decrementNumPoints();
             }
 
+            if (presenter.pauseOnScoreChange()) {
+                if (presenter.timerRunning()) {
+                    presenter.toggleTimer();
+                }
+            }
+            if (!presenter.checkForVictories(fencer) && toAdd == Utility.TO_ADD && presenter.popupOnScoreChange()) {
+                Snackbar.make(mCoordinatorLayout, "Gave touch to " + fencer.getName(), Snackbar.LENGTH_SHORT)
+                        .setAction("Dismiss", v1 -> {
+                        })
+                        .show();
+            }
         };
     }
 
@@ -775,24 +701,16 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
         inputName.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS);
         inputName.setFilters(new InputFilter[]{new InputFilter.LengthFilter(MAX_NAME_LENGTH)});
         builder.setView(inputName);
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                String name;
-                name = inputName.getText().toString();
-                if (name.equals("")) {
-                    name = fencer.getDefaultName();
-                }
-                //view.setText(name);
-                fencer.setName(name);
+        builder.setPositiveButton("OK", (dialog, which) -> {
+            String name;
+            name = inputName.getText().toString();
+            if (name.equals("")) {
+                name = fencer.getDefaultName();
             }
+            //view.setText(name);
+            fencer.setName(name);
         });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
+        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
 
         AlertDialog alertToShow = builder.create();
         if (alertToShow.getWindow() != null) {
@@ -810,30 +728,25 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
         switch (position) {
             case MainActivity.CARD_A_PLAYER:
                 android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
-                final String redFencerName = presenter.getRedFencer().getName();
-                String greenFencerName = presenter.getGreenFencer().getName();
                 final String[] playerArray = {presenter.getRedFencer().getName(), presenter.getGreenFencer().getName(), "Reset Cards"};
                 builder.setTitle("Card a player")
-                        .setItems(playerArray, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                String player = playerArray[which];
-                                if (player.equals("Reset Cards")) {
-                                    presenter.resetCards();
-                                    Toast.makeText(context, "Cards have been reset!", Toast.LENGTH_SHORT).show();
-                                } else {
-                                    // create intent to card player and pause timer
-                                    if (presenter.timerRunning()) {
-                                        presenter.stopTimer();
-                                    }
-                                    Intent cardPlayer = new Intent(context, CardPlayerActivity.class);
-                                    Bundle b = new Bundle();
-                                    b.putSerializable(RED_FENCER, presenter.getRedFencer());
-                                    b.putSerializable(GREEN_FENCER, presenter.getGreenFencer());
-                                    b.putString(FENCER_TO_CARD, player);
-                                    cardPlayer.putExtras(b);
-                                    startActivityForResult(cardPlayer, OPEN_CARD_ACTIVITY);
+                        .setItems(playerArray, (dialog, which) -> {
+                            String player = playerArray[which];
+                            if (player.equals("Reset Cards")) {
+                                presenter.resetCards();
+                                Toast.makeText(context, "Cards have been reset!", Toast.LENGTH_SHORT).show();
+                            } else {
+                                // create intent to card player and pause timer
+                                if (presenter.timerRunning()) {
+                                    presenter.stopTimer();
                                 }
+                                Intent cardPlayer = new Intent(context, CardPlayerActivity.class);
+                                Bundle b = new Bundle();
+                                b.putSerializable(RED_FENCER, presenter.getRedFencer());
+                                b.putSerializable(GREEN_FENCER, presenter.getGreenFencer());
+                                b.putString(FENCER_TO_CARD, player);
+                                cardPlayer.putExtras(b);
+                                startActivityForResult(cardPlayer, OPEN_CARD_ACTIVITY);
                             }
                         })
                         .create()

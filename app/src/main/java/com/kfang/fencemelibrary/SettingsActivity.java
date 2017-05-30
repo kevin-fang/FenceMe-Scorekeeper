@@ -70,62 +70,54 @@ public class SettingsActivity extends AppCompatActivity {
             final CheckBoxPreference doubleTouchPreference = (CheckBoxPreference) findPreference(Constants.TOGGLE_DOUBLE_TOUCH);
             final Preference resetPreferences = findPreference(Constants.RESET_BOUT_PREFERENCES);
 
-            resetPreferences.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                @Override
-                public boolean onPreferenceClick(Preference preference) {
-                    boutMinutesPreference.setValue(Constants.DEFAULT_MINUTES);
-                    boutPointsPreference.setValue(Constants.DEFAULT_POINTS);
-                    settingsEditor.putInt(Constants.BOUT_LENGTH_POINTS, Constants.DEFAULT_POINTS);
-                    settingsEditor.putInt(Constants.BOUT_LENGTH_MINUTES, Constants.DEFAULT_MINUTES);
+            resetPreferences.setOnPreferenceClickListener(preference -> {
+                boutMinutesPreference.setValue(Constants.DEFAULT_MINUTES);
+                boutPointsPreference.setValue(Constants.DEFAULT_POINTS);
+                settingsEditor.putInt(Constants.BOUT_LENGTH_POINTS, Constants.DEFAULT_POINTS);
+                settingsEditor.putInt(Constants.BOUT_LENGTH_MINUTES, Constants.DEFAULT_MINUTES);
 
-                    /* Intent stopTimer = new Intent(getActivity(), TimerService.class);
-                    stopTimer.putExtra(Constants.CHANGE_TIMER, TimerService.RESET_TIMER);
-                    getActivity().startService(stopTimer); */
+                /* Intent stopTimer = new Intent(getActivity(), TimerService.class);
+                stopTimer.putExtra(Constants.CHANGE_TIMER, TimerService.RESET_TIMER);
+                getActivity().startService(stopTimer); */
 
-                    return true;
-                }
+                return true;
             });
 
-            SharedPreferences.OnSharedPreferenceChangeListener spChanged = new
-                    SharedPreferences.OnSharedPreferenceChangeListener() {
-                        @Override
-                        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
-                                                              String key) {
-                            switch (key) {
-                                case Constants.BOUT_LENGTH_MINUTES:
-                                    settingsEditor.putInt(Constants.BOUT_LENGTH_MINUTES, boutMinutesPreference.getValue());
-                                    break;
-                                case Constants.BOUT_LENGTH_POINTS:
-                                    settingsEditor.putInt(Constants.BOUT_LENGTH_POINTS, boutPointsPreference.getValue());
-                                    break;
-                                case Constants.RESTORE_ON_EXIT:
-                                    settingsEditor.putBoolean(Constants.RESTORE_ON_EXIT, restorePreference.isChecked());
-                                    break;
-                                case Constants.VIBRATE_AT_END:
-                                    settingsEditor.putBoolean(Constants.VIBRATE_AT_END, vibratePreference.isChecked());
-                                    break;
-                                case Constants.PAUSE_ON_SCORE_CHANGE:
-                                    settingsEditor.putBoolean(Constants.PAUSE_ON_SCORE_CHANGE, pausePreference.isChecked());
-                                    break;
-                                case Constants.KEEP_DEVICE_AWAKE:
-                                    /*if (presenter.timerRunning()) { // if timer is already running, don't let screen turn off
-                                        getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-                                    } */
-                                    settingsEditor.putBoolean(Constants.KEEP_DEVICE_AWAKE, awakePreference.isChecked());
-                                    break;
-                                case Constants.POPUP_ON_SCORE:
-                                    settingsEditor.putBoolean(Constants.POPUP_ON_SCORE, popupPreference.isChecked());
-                                    break;
-                                case Constants.VIBRATE_TIMER:
-                                    settingsEditor.putBoolean(Constants.VIBRATE_TIMER, vibrateTimerPreference.isChecked());
-                                    break;
-                                case Constants.TOGGLE_DOUBLE_TOUCH:
-                                    settingsEditor.putBoolean(Constants.TOGGLE_DOUBLE_TOUCH, doubleTouchPreference.isChecked());
-                                    break;
-                            }
+            SharedPreferences.OnSharedPreferenceChangeListener spChanged = (sharedPreferences, key) -> {
+                switch (key) {
+                    case Constants.BOUT_LENGTH_MINUTES:
+                        settingsEditor.putInt(Constants.BOUT_LENGTH_MINUTES, boutMinutesPreference.getValue());
+                        break;
+                    case Constants.BOUT_LENGTH_POINTS:
+                        settingsEditor.putInt(Constants.BOUT_LENGTH_POINTS, boutPointsPreference.getValue());
+                        break;
+                    case Constants.RESTORE_ON_EXIT:
+                        settingsEditor.putBoolean(Constants.RESTORE_ON_EXIT, restorePreference.isChecked());
+                        break;
+                    case Constants.VIBRATE_AT_END:
+                        settingsEditor.putBoolean(Constants.VIBRATE_AT_END, vibratePreference.isChecked());
+                        break;
+                    case Constants.PAUSE_ON_SCORE_CHANGE:
+                        settingsEditor.putBoolean(Constants.PAUSE_ON_SCORE_CHANGE, pausePreference.isChecked());
+                        break;
+                    case Constants.KEEP_DEVICE_AWAKE:
+                        /*if (presenter.timerRunning()) { // if timer is already running, don't let screen turn off
+                            getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                        } */
+                        settingsEditor.putBoolean(Constants.KEEP_DEVICE_AWAKE, awakePreference.isChecked());
+                        break;
+                    case Constants.POPUP_ON_SCORE:
+                        settingsEditor.putBoolean(Constants.POPUP_ON_SCORE, popupPreference.isChecked());
+                        break;
+                    case Constants.VIBRATE_TIMER:
+                        settingsEditor.putBoolean(Constants.VIBRATE_TIMER, vibrateTimerPreference.isChecked());
+                        break;
+                    case Constants.TOGGLE_DOUBLE_TOUCH:
+                        settingsEditor.putBoolean(Constants.TOGGLE_DOUBLE_TOUCH, doubleTouchPreference.isChecked());
+                        break;
+                }
 
-                        }
-                    };
+            };
             prefs.registerOnSharedPreferenceChangeListener(spChanged);
             settingsEditor.apply();
         }

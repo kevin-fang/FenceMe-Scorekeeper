@@ -17,7 +17,7 @@ import static com.kfang.fencemelibrary.Constants.COLOR_RED;
  * Main Presenter Implementation
  */
 
-public class MainPresenterImpl implements MainContract.MainPresenter {
+class MainPresenterImpl implements MainContract.MainPresenter {
 
     private SharedPreferencesRepository sharedPreferences;
     private MainContract.MainView mainView;
@@ -30,10 +30,10 @@ public class MainPresenterImpl implements MainContract.MainPresenter {
 
     private List<Fencer> fencers;
 
-    public MainPresenterImpl(MainContract.MainView mainView, SharedPreferences sp, Vibrator v) {
+    MainPresenterImpl(MainContract.MainView mainView, SharedPreferences sp, Vibrator v) {
         sharedPreferences = new SharedPreferencesRepositoryImpl(sp, v);
         this.mainView = mainView;
-        fenceTimer = new RxTimer(getBoutLengthMinutes(), mainView, this);
+        fenceTimer = new RxTimer(getBoutLengthMinutes(), mainView);
 
         redFencer = new Fencer("Red");
         greenFencer = new Fencer("Green");
@@ -101,11 +101,11 @@ public class MainPresenterImpl implements MainContract.MainPresenter {
 
     }
 
-    void setStopButton() {
+    private void setStopButton() {
         mainView.updateToggle(COLOR_RED, R.string.button_stop_timer);
     }
 
-    void setStartButton() {
+    private void setStartButton() {
         mainView.updateToggle(COLOR_GREEN, R.string.button_start_timer);
     }
 

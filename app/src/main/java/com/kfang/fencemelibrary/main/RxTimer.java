@@ -16,20 +16,19 @@ import io.reactivex.schedulers.Schedulers;
  * ReactiveX Async Timer
  */
 
-public class RxTimer implements MainContract.FenceTimer {
+class RxTimer implements MainContract.FenceTimer {
     private final CompositeDisposable disposable = new CompositeDisposable();
     private int initialMinutes;
     private MainContract.MainView timerView;
-    private MainContract.MainPresenter presenter;
     private long currentTime = -1;
     private long totalSeconds;
 
-    RxTimer(int initialMinutes, MainContract.MainView mainView, MainContract.MainPresenter presenter) {
+    RxTimer(int initialMinutes, MainContract.MainView mainView) {
         this.initialMinutes = initialMinutes;
         this.timerView = mainView;
     }
 
-    static String formatTime(long seconds) {
+    private static String formatTime(long seconds) {
         long currentSeconds = seconds % 60;
         long currentMinutes = seconds / 60;
         //Log.d(LOG_TAG, "minutes: " + currentMinutes + ", seconds: " + currentSeconds + ", total: " + seconds);
@@ -53,12 +52,9 @@ public class RxTimer implements MainContract.FenceTimer {
                 .take((int) totalSeconds)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .map(new Function<Long, String>() {
-                    @Override
-                    public String apply(@NonNull Long aLong) throws Exception {
-                        currentTime = totalSeconds - aLong.intValue() - 1;
-                        return formatTime(currentTime);
-                    }
+                .map(aLong -> {
+                    currentTime = totalSeconds - aLong.intValue() - 1;
+                    return formatTime(currentTime);
                 })
                 .subscribeWith(new DisposableObserver<String>() {
                     @Override
@@ -79,17 +75,9 @@ public class RxTimer implements MainContract.FenceTimer {
                 }));
     }
 
-    public void resetTimer() {
-        disposable.clear();
-        totalSeconds = presenter.getBoutLengthMinutes() * 60;
-        currentTime = -1;
-        timerView.updateTime(formatTime(totalSeconds));
-    }
-
     @Override
     public void stopTimer() {
         disposable.clear();
-
     }
 
     @Override
