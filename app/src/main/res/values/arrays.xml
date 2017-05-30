@@ -8,6 +8,7 @@
     </string-array>
 
     <string-array name="change_log">
-        <item>Fixed bug where resetting bout preferences would cause the app to crash</item>
+        <item>Fixed minor bug where cards weren\'t handled correctly</item>
+        <item>Fixed minor bug where wins weren\'t correctly handled</item>
     </string-array>
 </resources>

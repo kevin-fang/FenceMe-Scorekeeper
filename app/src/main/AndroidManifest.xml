@@ -12,7 +12,7 @@
         android:resizeableActivity="false"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.kfang.fencemelibrary.MainActivity">
+        <activity android:name="com.kfang.fencemelibrary.main.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -28,7 +28,6 @@
 
         </activity>
 
-        <service android:name="com.kfang.fencemelibrary.TimerService" />
     </application>
 
 </manifest>

@@ -3,13 +3,13 @@ package com.kfang.fencemelibrary;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.NumberPicker;
+
+import com.kfang.fencemelibrary.main.MainContract;
 
 import java.util.Locale;
 
@@ -19,9 +19,13 @@ import java.util.Locale;
 
 
 public class TimePickerFragment extends DialogFragment {
-    public static TimePickerFragment newInstance(int title) {
+
+    MainContract.MainPresenter presenter;
+
+    public static TimePickerFragment newInstance(int title, MainContract.MainPresenter presenter) {
         TimePickerFragment fragment = new TimePickerFragment();
         Bundle args = new Bundle();
+        fragment.presenter = presenter;
         args.putInt("title", title);
         fragment.setArguments(args);
         return fragment;
@@ -31,17 +35,16 @@ public class TimePickerFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        LayoutInflater inflater = getActivity().getLayoutInflater();
-        View pickerView = inflater.inflate(R.layout.time_picker, null);
+        View pickerView = View.inflate(getActivity(), R.layout.time_picker, null);
         final NumberPicker minutesPicker = (NumberPicker) pickerView.findViewById(R.id.minutes_picker);
         final NumberPicker secondsPicker = (NumberPicker) pickerView.findViewById(R.id.seconds_picker);
 
         minutesPicker.setMinValue(0);
         minutesPicker.setMaxValue(59);
-        minutesPicker.setValue((int) MainActivity.mCurrentTime / 1000 / 60);
+        minutesPicker.setValue(presenter.getCurrentTime() / 60);
         secondsPicker.setMaxValue(59);
         secondsPicker.setMinValue(0);
-        secondsPicker.setValue((int) MainActivity.mCurrentTime / 1000 % 60);
+        secondsPicker.setValue(presenter.getCurrentTime() % 60);
         secondsPicker.setFormatter(new NumberPicker.Formatter() {
             @Override
             public String format(int value) {
@@ -69,15 +72,11 @@ public class TimePickerFragment extends DialogFragment {
     }
 
     public void setTimer(int minutes, int seconds) {
-        if (minutes == seconds && minutes == 0) {
-            MainActivity.mCurrentTime = Utility.updateCurrentTime(getContext()) * 60000;
+        if (seconds == 0 && minutes == 0) {
+            presenter.setTimer(presenter.getBoutLengthMinutes() * 60);
         } else {
-            MainActivity.mCurrentTime = seconds * 1000 + minutes * 60000;
+            presenter.setTimer(seconds + minutes * 60);
         }
-        Intent setTimer = new Intent(getContext(), TimerService.class);
-        setTimer.putExtra(Utility.CHANGE_TIMER, TimerService.SET_TIMER);
-        //Toast.makeText(getContext(), "" + MainActivity.mCurrentTime, Toast.LENGTH_SHORT).show();
-        getActivity().startService(setTimer);
     }
 
 }

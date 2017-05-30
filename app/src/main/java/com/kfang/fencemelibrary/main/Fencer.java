@@ -1,10 +1,18 @@
-package com.kfang.fencemelibrary;
+package com.kfang.fencemelibrary.main;
+
+import android.databinding.BaseObservable;
+import android.databinding.Bindable;
+
+import com.kfang.fencemelibrary.BR;
+
+import java.io.Serializable;
+
 
 /**
  * Class to contain fencers
  */
 
-public class Fencer {
+public class Fencer extends BaseObservable implements Serializable {
     public int points;
     public String name;
     private int redCards;
@@ -20,6 +28,10 @@ public class Fencer {
         this.yellowCards = 0;
     }
 
+    String getDefaultName() {
+        return name;
+    }
+
     void assignPriority() {
         this.hasPriority = true;
     }
@@ -28,51 +40,59 @@ public class Fencer {
         return this.hasPriority;
     }
 
-    int getPoints() {
+    @Bindable
+    public int getPoints() {
         return points;
     }
 
-    void setPoints(int points) {
+    public void setPoints(int points) {
         this.points = points;
+        notifyPropertyChanged(BR.points);
     }
 
-    void incrementNumPoints() {
+    public void incrementNumPoints() {
         this.points++;
+        notifyPropertyChanged(BR.points);
     }
 
-    void decrementNumPoints() {
+    public void decrementNumPoints() {
         this.points--;
+        notifyPropertyChanged(BR.points);
     }
 
+    @Bindable
     public String getName() {
         return name;
     }
 
-    void setName(String name) {
+    public void setName(String name) {
         this.name = name;
+        notifyPropertyChanged(BR.name);
     }
 
-    int getRedCards() {
+    @Bindable
+    public int getRedCards() {
         return redCards;
     }
 
-    void setRedCards(int cards) {
+    public void setRedCards(int cards) {
         this.redCards = cards;
     }
 
-    void incrementRedCards() {
+    public void incrementRedCards() {
         this.redCards++;
     }
 
-    int getYellowCards() {
+    @Bindable
+    public int getYellowCards() {
         return yellowCards;
     }
 
-    void setYellowCards(int cards) {
+    public void setYellowCards(int cards) {
         this.yellowCards = cards;
     }
 
-    void incrementYellowCards() {
+    public void incrementYellowCards() {
         this.yellowCards++;
     }
 

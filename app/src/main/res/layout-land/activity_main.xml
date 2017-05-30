@@ -8,11 +8,11 @@
 
         <variable
             name="redFencer"
-            type="com.kfang.fencemelibrary.Fencer" />
+            type="com.kfang.fencemelibrary.main.Fencer" />
 
         <variable
             name="greenFencer"
-            type="com.kfang.fencemelibrary.Fencer" />
+            type="com.kfang.fencemelibrary.main.Fencer" />
     </data>
 
     <LinearLayout
@@ -21,7 +21,7 @@
     android:layout_height="match_parent"
     android:background="@android:color/white"
     android:orientation="vertical"
-    tools:context="com.kfang.fencemelibrary.MainActivity"
+        tools:context="com.kfang.fencemelibrary.main.MainActivity"
     tools:ignore="PxUsage">
 
     <android.support.design.widget.AppBarLayout
