@@ -40,19 +40,18 @@ import android.widget.Toast;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
-import com.kfang.fencemelibrary.AboutActivity;
 import com.kfang.fencemelibrary.BuildConfig;
-import com.kfang.fencemelibrary.CardPlayerActivity;
-import com.kfang.fencemelibrary.Fencer;
-import com.kfang.fencemelibrary.NavMenu.DrawerAdapter;
-import com.kfang.fencemelibrary.NavMenu.DrawerItem;
-import com.kfang.fencemelibrary.NavMenu.SimpleItem;
 import com.kfang.fencemelibrary.R;
 import com.kfang.fencemelibrary.R2;
-import com.kfang.fencemelibrary.SettingsActivity;
-import com.kfang.fencemelibrary.TimePickerFragment;
-import com.kfang.fencemelibrary.Utility;
+import com.kfang.fencemelibrary.activity.AboutActivity;
+import com.kfang.fencemelibrary.activity.CardPlayerActivity;
+import com.kfang.fencemelibrary.activity.SettingsActivity;
 import com.kfang.fencemelibrary.databinding.ActivityMainBinding;
+import com.kfang.fencemelibrary.misc.TimePickerFragment;
+import com.kfang.fencemelibrary.misc.Utility;
+import com.kfang.fencemelibrary.navmenu.DrawerAdapter;
+import com.kfang.fencemelibrary.navmenu.DrawerItem;
+import com.kfang.fencemelibrary.navmenu.SimpleItem;
 import com.kobakei.ratethisapp.RateThisApp;
 import com.yarolegovich.slidingrootnav.SlideGravity;
 import com.yarolegovich.slidingrootnav.SlidingRootNav;
@@ -63,16 +62,16 @@ import java.util.Arrays;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.kfang.fencemelibrary.CardPlayerActivity.FENCER_TO_CARD;
-import static com.kfang.fencemelibrary.CardPlayerActivity.GREEN_FENCER;
-import static com.kfang.fencemelibrary.CardPlayerActivity.RED_FENCER;
-import static com.kfang.fencemelibrary.CardPlayerActivity.RETURN_CARD;
-import static com.kfang.fencemelibrary.Constants.COLOR_GREEN;
-import static com.kfang.fencemelibrary.Constants.COLOR_RED;
-import static com.kfang.fencemelibrary.Constants.CURRENT_TIME;
-import static com.kfang.fencemelibrary.Constants.LAST_VERSION_NUMBER;
-import static com.kfang.fencemelibrary.Constants.OPEN_CARD_ACTIVITY;
-import static com.kfang.fencemelibrary.Constants.TIMER_RUNNING;
+import static com.kfang.fencemelibrary.activity.CardPlayerActivity.FENCER_TO_CARD;
+import static com.kfang.fencemelibrary.activity.CardPlayerActivity.GREEN_FENCER;
+import static com.kfang.fencemelibrary.activity.CardPlayerActivity.RED_FENCER;
+import static com.kfang.fencemelibrary.activity.CardPlayerActivity.RETURN_CARD;
+import static com.kfang.fencemelibrary.misc.Constants.COLOR_GREEN;
+import static com.kfang.fencemelibrary.misc.Constants.COLOR_RED;
+import static com.kfang.fencemelibrary.misc.Constants.CURRENT_TIME;
+import static com.kfang.fencemelibrary.misc.Constants.LAST_VERSION_NUMBER;
+import static com.kfang.fencemelibrary.misc.Constants.OPEN_CARD_ACTIVITY;
+import static com.kfang.fencemelibrary.misc.Constants.TIMER_RUNNING;
 
 
 public class MainActivity extends AppCompatActivity implements MainContract.MainView, DrawerAdapter.OnItemSelectedListener {
@@ -299,6 +298,9 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (data == null) {
+            return;
+        }
         String cardingPlayer = data.getStringExtra(FENCER_TO_CARD); // string, not a fencer
         String cardToGive = data.getStringExtra(RETURN_CARD);
         presenter.handleCarding(cardingPlayer, cardToGive);

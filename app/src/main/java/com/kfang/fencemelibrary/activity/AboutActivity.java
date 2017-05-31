@@ -1,4 +1,4 @@
-package com.kfang.fencemelibrary;
+package com.kfang.fencemelibrary.activity;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
@@ -8,6 +8,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.kfang.fencemelibrary.BuildConfig;
+import com.kfang.fencemelibrary.R;
 import com.kfang.fencemelibrary.main.MainActivity;
 
 import mehdi.sakout.aboutpage.AboutPage;
@@ -23,6 +25,7 @@ public class AboutActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle(R.string.about);
         }
 
         Element versionElement = new Element();
@@ -42,8 +45,8 @@ public class AboutActivity extends AppCompatActivity {
             page.addPlayStore("com.helionlabs.fencemepro");
         }
 
-        setContentView(page.create());
-
+        View aboutPage = page.create();
+        setContentView(aboutPage);
     }
 
     @Override

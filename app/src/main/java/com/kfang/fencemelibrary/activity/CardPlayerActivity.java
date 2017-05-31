@@ -1,4 +1,4 @@
-package com.kfang.fencemelibrary;
+package com.kfang.fencemelibrary.activity;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -13,10 +13,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.kfang.fencemelibrary.R;
+import com.kfang.fencemelibrary.R2;
+import com.kfang.fencemelibrary.main.Fencer;
+
 import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 import static com.kfang.fencemelibrary.main.MainActivity.LOG_TAG;
 
@@ -30,17 +35,13 @@ public class CardPlayerActivity extends AppCompatActivity {
     public static final String YELLOW_CARD = "yellow.card";
     public static final String RED_CARD = "red.card";
 
-    String playerToCard;
     @BindView(R2.id.yellow_card)
     Button yellowButton;
     @BindView(R2.id.red_card)
     Button redButton;
-    @BindView(R2.id.black_card)
-    Button blackButton;
-    int numYellow = 0;
-    int numRed = 0;
     @BindView(R2.id.currently_carding)
     TextView currentlyCarding;
+
     LinearLayout cardLayout;
 
     Fencer redFencer;
@@ -57,6 +58,10 @@ public class CardPlayerActivity extends AppCompatActivity {
         Intent intent = getIntent();
 
         ButterKnife.bind(this);
+
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(R.string.nav_card_player);
+        }
         Bundle b = intent.getExtras();
         redFencer = (Fencer) b.getSerializable(RED_FENCER);
         greenFencer = (Fencer) b.getSerializable(GREEN_FENCER);
@@ -86,6 +91,7 @@ public class CardPlayerActivity extends AppCompatActivity {
         }
     }
 
+    @OnClick(R2.id.red_card)
     // display different cards based on what was clicked
     public void displayRed(View v) {
         // Toast.makeText(this, "Clicked Red", Toast.LENGTH_SHORT).show();
@@ -113,6 +119,7 @@ public class CardPlayerActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
+    @OnClick(R2.id.yellow_card)
     public void displayYellow(View v) {
         setContentView(R.layout.card_display);
         View cardView = findViewById(R.id.card);
@@ -123,6 +130,7 @@ public class CardPlayerActivity extends AppCompatActivity {
         setResult(Activity.RESULT_OK, returnIntent);
     }
 
+    @OnClick(R2.id.black_card)
     public void displayBlack(View v) {
         setContentView(R.layout.card_display);
         View cardView = findViewById(R.id.card);

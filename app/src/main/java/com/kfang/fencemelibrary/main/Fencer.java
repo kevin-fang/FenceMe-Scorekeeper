@@ -1,7 +1,9 @@
-package com.kfang.fencemelibrary;
+package com.kfang.fencemelibrary.main;
 
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
+
+import com.kfang.fencemelibrary.BR;
 
 import java.io.Serializable;
 

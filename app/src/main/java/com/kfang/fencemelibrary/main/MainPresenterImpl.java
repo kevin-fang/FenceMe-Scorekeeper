@@ -3,16 +3,15 @@ package com.kfang.fencemelibrary.main;
 import android.content.SharedPreferences;
 import android.os.Vibrator;
 
-import com.kfang.fencemelibrary.Fencer;
 import com.kfang.fencemelibrary.R;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import static com.kfang.fencemelibrary.CardPlayerActivity.RED_CARD;
-import static com.kfang.fencemelibrary.Constants.COLOR_GREEN;
-import static com.kfang.fencemelibrary.Constants.COLOR_RED;
+import static com.kfang.fencemelibrary.activity.CardPlayerActivity.RED_CARD;
+import static com.kfang.fencemelibrary.misc.Constants.COLOR_GREEN;
+import static com.kfang.fencemelibrary.misc.Constants.COLOR_RED;
 
 /**
  * Main Presenter Implementation

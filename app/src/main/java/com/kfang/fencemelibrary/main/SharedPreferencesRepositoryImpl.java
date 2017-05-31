@@ -3,17 +3,17 @@ package com.kfang.fencemelibrary.main;
 import android.content.SharedPreferences;
 import android.os.Vibrator;
 
-import static com.kfang.fencemelibrary.Constants.BOUT_LENGTH_MINUTES;
-import static com.kfang.fencemelibrary.Constants.BOUT_LENGTH_POINTS;
-import static com.kfang.fencemelibrary.Constants.DEFAULT_MINUTES;
-import static com.kfang.fencemelibrary.Constants.DEFAULT_POINTS;
-import static com.kfang.fencemelibrary.Constants.KEEP_DEVICE_AWAKE;
-import static com.kfang.fencemelibrary.Constants.PAUSE_ON_SCORE_CHANGE;
-import static com.kfang.fencemelibrary.Constants.POPUP_ON_SCORE;
-import static com.kfang.fencemelibrary.Constants.RESTORE_ON_EXIT;
-import static com.kfang.fencemelibrary.Constants.TOGGLE_DOUBLE_TOUCH;
-import static com.kfang.fencemelibrary.Constants.VIBRATE_AT_END;
-import static com.kfang.fencemelibrary.Constants.VIBRATE_TIMER;
+import static com.kfang.fencemelibrary.misc.Constants.BOUT_LENGTH_MINUTES;
+import static com.kfang.fencemelibrary.misc.Constants.BOUT_LENGTH_POINTS;
+import static com.kfang.fencemelibrary.misc.Constants.DEFAULT_MINUTES;
+import static com.kfang.fencemelibrary.misc.Constants.DEFAULT_POINTS;
+import static com.kfang.fencemelibrary.misc.Constants.KEEP_DEVICE_AWAKE;
+import static com.kfang.fencemelibrary.misc.Constants.PAUSE_ON_SCORE_CHANGE;
+import static com.kfang.fencemelibrary.misc.Constants.POPUP_ON_SCORE;
+import static com.kfang.fencemelibrary.misc.Constants.RESTORE_ON_EXIT;
+import static com.kfang.fencemelibrary.misc.Constants.TOGGLE_DOUBLE_TOUCH;
+import static com.kfang.fencemelibrary.misc.Constants.VIBRATE_AT_END;
+import static com.kfang.fencemelibrary.misc.Constants.VIBRATE_TIMER;
 
 /**
  * SharedPreferences repository implementation
@@ -25,7 +25,6 @@ public class SharedPreferencesRepositoryImpl implements SharedPreferencesReposit
     private Vibrator v;
 
     public SharedPreferencesRepositoryImpl(SharedPreferences sp, Vibrator v) {
-
         prefs = sp;
         this.v = v;
     }

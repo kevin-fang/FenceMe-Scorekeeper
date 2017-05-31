@@ -1,4 +1,4 @@
-package com.kfang.fencemelibrary;
+package com.kfang.fencemelibrary.activity;
 
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -8,13 +8,11 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
-import com.kfang.fencemelibrary.main.NumberPickerPreference;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
+import com.kfang.fencemelibrary.R;
+import com.kfang.fencemelibrary.misc.Constants;
+import com.kfang.fencemelibrary.misc.NumberPickerPreference;
 
 
 /**
@@ -25,17 +23,13 @@ public class SettingsActivity extends AppCompatActivity {
 
     static SharedPreferences prefs;
 
-    @BindView(R2.id.toolbar)
-    Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.pref_activity_toolbar);
-        ButterKnife.bind(this);
-        toolbar.setTitle(R.string.settings);
-        setSupportActionBar(toolbar);
+
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }

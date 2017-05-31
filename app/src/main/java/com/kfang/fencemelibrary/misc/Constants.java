@@ -1,4 +1,4 @@
-package com.kfang.fencemelibrary;
+package com.kfang.fencemelibrary.misc;
 
 /**
  * File containing all constants

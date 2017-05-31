@@ -11,5 +11,6 @@
         <item>Made settings page more visually appealing with a toolbar</item>
         <item>Allowed timer to continue running after device is rotated</item>
         <item>Fixed alarms not being disabled on bout resets</item>
+        <item>Added toolbar to card player and about player page</item>
     </string-array>
 </resources>

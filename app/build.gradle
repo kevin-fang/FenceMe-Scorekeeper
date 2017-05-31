@@ -9,6 +9,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 25
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        versionName "2.6.4"
     }
     buildTypes {
         release {

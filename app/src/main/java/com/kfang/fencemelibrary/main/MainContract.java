@@ -1,7 +1,5 @@
 package com.kfang.fencemelibrary.main;
 
-import com.kfang.fencemelibrary.Fencer;
-
 /**
  * Main Contract class
  */

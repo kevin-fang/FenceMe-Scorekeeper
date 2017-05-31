@@ -1,4 +1,4 @@
-package com.kfang.fencemelibrary.main;
+package com.kfang.fencemelibrary.misc;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -9,8 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.NumberPicker;
-
-import static com.kfang.fencemelibrary.Constants.DEFAULT_POINTS;
 
 /**
  * Number Picker Preference
@@ -68,7 +66,7 @@ public class NumberPickerPreference extends DialogPreference {
 
     @Override
     protected Object onGetDefaultValue(TypedArray a, int index) {
-        return a.getInt(index, DEFAULT_POINTS);
+        return a.getInt(index, Constants.DEFAULT_POINTS);
     }
 
     @Override
