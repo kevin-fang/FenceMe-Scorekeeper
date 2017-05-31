@@ -3,6 +3,7 @@ package com.kfang.fencemelibrary.main;
 import android.content.SharedPreferences;
 import android.os.Vibrator;
 
+import com.kfang.fencemelibrary.Fencer;
 import com.kfang.fencemelibrary.R;
 
 import java.util.ArrayList;
@@ -76,6 +77,11 @@ class MainPresenterImpl implements MainContract.MainPresenter {
     public void incrementBothPoints() {
         redFencer.incrementNumPoints();
         greenFencer.incrementNumPoints();
+    }
+
+    @Override
+    public boolean getTiebreaker() {
+        return tieBreakerStatus;
     }
 
     @Override
@@ -205,7 +211,7 @@ class MainPresenterImpl implements MainContract.MainPresenter {
     @Override
     public boolean checkForVictories(Fencer fencer) {
         // check if the points are not equal and there is a fencer with enough points to win or there is a tiebreaker and the points aren't equal
-        if (!equalPoints() && fencer.getPoints() >= getPointsToWin() || (tieBreakerStatus && equalPoints())) {
+        if (!equalPoints() && fencer.getPoints() >= getPointsToWin() || (tieBreakerStatus && !equalPoints())) {
             if (timerRunning) {
                 fenceTimer.stopTimer();
             }

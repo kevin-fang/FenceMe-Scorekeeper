@@ -1,5 +1,7 @@
 package com.kfang.fencemelibrary.main;
 
+import com.kfang.fencemelibrary.Fencer;
+
 /**
  * Main Contract class
  */
@@ -44,6 +46,8 @@ public class MainContract {
 
         boolean timerRunning();
 
+        boolean getTiebreaker();
+
         int getCurrentTime();
 
         int getBoutLengthMinutes();
@@ -65,7 +69,7 @@ public class MainContract {
         boolean pauseOnScoreChange();
     }
 
-    public interface MainView {
+    interface MainView {
         void updateTime(String time);
 
         void enableChangingScore();
@@ -85,7 +89,7 @@ public class MainContract {
         void vibrateTimer();
     }
 
-    public interface FenceTimer {
+    interface FenceTimer {
         void startTimer();
 
         void stopTimer();

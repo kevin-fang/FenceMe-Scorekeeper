@@ -3,7 +3,6 @@ package com.kfang.fencemelibrary;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.kfang.fencemelibrary.main.Fencer;
 import com.kfang.fencemelibrary.main.MainContract;
 
 import static com.kfang.fencemelibrary.Constants.CURRENT_GAME_PREFERENCES;

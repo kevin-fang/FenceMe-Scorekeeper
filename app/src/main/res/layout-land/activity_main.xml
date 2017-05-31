@@ -8,11 +8,11 @@
 
         <variable
             name="redFencer"
-            type="com.kfang.fencemelibrary.main.Fencer" />
+            type="com.kfang.fencemelibrary.Fencer" />
 
         <variable
             name="greenFencer"
-            type="com.kfang.fencemelibrary.main.Fencer" />
+            type="com.kfang.fencemelibrary.Fencer" />
     </data>
 
     <LinearLayout
@@ -50,7 +50,6 @@
             <RelativeLayout
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:layout_marginBottom="4dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toRightOf="@+id/linearLayout5"
                 app:layout_constraintRight_toLeftOf="@+id/linearLayout6"

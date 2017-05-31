@@ -5,7 +5,6 @@ import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.databinding.DataBindingUtil;
@@ -44,6 +43,7 @@ import com.google.android.gms.ads.MobileAds;
 import com.kfang.fencemelibrary.AboutActivity;
 import com.kfang.fencemelibrary.BuildConfig;
 import com.kfang.fencemelibrary.CardPlayerActivity;
+import com.kfang.fencemelibrary.Fencer;
 import com.kfang.fencemelibrary.NavMenu.DrawerAdapter;
 import com.kfang.fencemelibrary.NavMenu.DrawerItem;
 import com.kfang.fencemelibrary.NavMenu.SimpleItem;
@@ -69,6 +69,7 @@ import static com.kfang.fencemelibrary.CardPlayerActivity.RED_FENCER;
 import static com.kfang.fencemelibrary.CardPlayerActivity.RETURN_CARD;
 import static com.kfang.fencemelibrary.Constants.COLOR_GREEN;
 import static com.kfang.fencemelibrary.Constants.COLOR_RED;
+import static com.kfang.fencemelibrary.Constants.CURRENT_TIME;
 import static com.kfang.fencemelibrary.Constants.LAST_VERSION_NUMBER;
 import static com.kfang.fencemelibrary.Constants.OPEN_CARD_ACTIVITY;
 import static com.kfang.fencemelibrary.Constants.TIMER_RUNNING;
@@ -82,11 +83,9 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
     static final int MAX_NAME_LENGTH = 20;
     public static String LOG_TAG;
     public static String[] screenTitles = {"Card a Player", "Tiebreaker", "Reset Bout"};
-    static boolean tieBreaker = false;
-
+    final Handler alarmHandler = new Handler();
     public Ringtone alarmTone;
     public MainContract.MainPresenter presenter;
-
     // timer views
     @BindView(R2.id.start_timer)
     Button startTimerButton;
@@ -122,6 +121,15 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
     FragmentManager mFragmentManager = getSupportFragmentManager();
     Context mContext;
     Vibrator vibrator;
+    final Thread alarms = new Thread(() -> {
+        // create alarm
+        alarmTone.play();
+        long[] pattern = {0, 500, 500};
+        // create vibration
+        if (presenter.vibrateOnTimerFinish()) {
+            vibrator.vibrate(pattern, 0);
+        }
+    });
     @BindView(R2.id.toolbar)
     Toolbar toolbar;
     SlidingRootNav navigationMenu;
@@ -168,7 +176,6 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
 
     @Override
     protected void onStop() {
-
         super.onStop();
     }
 
@@ -202,8 +209,10 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
         }
 
         if (savedInstanceState != null) {
+            presenter.setTimer(savedInstanceState.getInt(CURRENT_TIME));
             if (savedInstanceState.getBoolean(TIMER_RUNNING)) {
                 setTimerButtonColor(COLOR_RED);
+                presenter.startTimer();
             }
         } else {
             RateThisApp.showRateDialogIfNeeded(this);
@@ -212,6 +221,12 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
         checkIfFirstRun();
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putInt(CURRENT_TIME, presenter.getCurrentTime());
+        outState.putBoolean(TIMER_RUNNING, presenter.timerRunning());
+        super.onSaveInstanceState(outState);
+    }
 
     private DrawerItem createItemFor(int position) {
         return new SimpleItem(screenTitles[position])
@@ -344,6 +359,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
 
     public void stopRingTone() {
         if (alarmTone != null && alarmTone.isPlaying()) { // stop the alarm if it is currently playing.
+            alarmHandler.removeCallbacks(alarms);
             alarmTone.stop();
         }
     }
@@ -363,7 +379,10 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
         AlertDialog.Builder winnerDialogBuilder = new AlertDialog.Builder(this);
         winnerDialogBuilder.setTitle(winner.getName() + " wins!")
                 .setMessage(winner.getName() + " has won the bout!")
-                .setPositiveButton("Reset Bout", (dialog, which) -> presenter.resetBout())
+                .setPositiveButton("Reset Bout", (dialog, which) -> {
+                    presenter.resetBout();
+                    stopRingTone();
+                })
                 .setOnCancelListener((dialog) -> {
                     presenter.stopTimer();
                     enableChangingScore();
@@ -380,19 +399,10 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
 
         disableTimerButton();
         // play alarm in background thread
-        final Thread alarms = new Thread(() -> {
-                // create alarm
-                alarmTone.play();
-                long[] pattern = {0, 500, 500};
-                // create vibration
-                if (presenter.vibrateOnTimerFinish()) {
-                    vibrator.vibrate(pattern, 0);
-                }
-        });
+
         // disable keep screen on
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        final Handler alarmHandler = new Handler();
         alarmHandler.post(alarms);
 
         // check for victories
@@ -405,7 +415,6 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
             winnerDialogBuilder.setTitle(winnerFencer.getName() + " wins!")
                     .setMessage(winnerFencer.getName() + " has won the bout!")
                     .setPositiveButton("Reset Bout", (dialog, which) -> {
-                            alarmHandler.removeCallbacks(alarms);
                             stopRingTone();
                             vibrator.cancel();
                             Toast.makeText(getApplicationContext(), "Bout reset!", Toast.LENGTH_SHORT).show();
@@ -413,7 +422,6 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
                             enableChangingScore();
                     })
                     .setOnCancelListener((dialog) -> {
-                            alarmHandler.removeCallbacks(alarms);
                             stopRingTone();
                             vibrator.cancel();
                             presenter.stopTimer();
@@ -421,7 +429,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
                     })
                     .create()
                     .show();
-        } else if (tieBreaker) {
+        } else if (presenter.getTiebreaker()) {
             if (presenter.getGreenFencer().hasPriority()) {
                 winnerFencer = presenter.getGreenFencer();
             } else {
@@ -431,14 +439,13 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
             winnerDialogBuilder.setTitle(winnerFencer.getName() + " wins!")
                     .setMessage(winnerFencer.getName() + " has won the bout!")
                     .setPositiveButton("Reset Bout", (dialog, which) -> {
-                        alarmHandler.removeCallbacks(alarms);
+                        stopRingTone();
                         vibrator.cancel();
                         Toast.makeText(getApplicationContext(), "Bout reset!", Toast.LENGTH_SHORT).show();
                         presenter.resetBout();
                         enableChangingScore();
                     })
                     .setOnCancelListener(dialog -> {
-                        alarmHandler.removeCallbacks(alarms);
                         vibrator.cancel();
                         presenter.stopTimer();
                         enableChangingScore();
@@ -450,13 +457,11 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
             tiebreakerBuilder.setTitle("Tie")
                     .setMessage("Score is tied!")
                     .setPositiveButton("Start Tiebreaker", (dialog, which) -> {
-                        alarmHandler.removeCallbacks(alarms);
                         stopRingTone();
                         vibrator.cancel();
                         enableChangingScore();
                         makeTieBreaker();
                     }).setOnCancelListener(dialog -> {
-                        alarmHandler.removeCallbacks(alarms);
                         stopRingTone();
                         vibrator.cancel();
                         enableChangingScore();

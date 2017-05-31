@@ -1,9 +1,7 @@
-package com.kfang.fencemelibrary.main;
+package com.kfang.fencemelibrary;
 
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
-
-import com.kfang.fencemelibrary.BR;
 
 import java.io.Serializable;
 
@@ -21,22 +19,22 @@ public class Fencer extends BaseObservable implements Serializable {
 
     // is decrement card functionality really needed?
 
-    Fencer(String name) {
+    public Fencer(String name) {
         this.points = 0;
         this.name = name;
         this.redCards = 0;
         this.yellowCards = 0;
     }
 
-    String getDefaultName() {
+    public String getDefaultName() {
         return name;
     }
 
-    void assignPriority() {
+    public void assignPriority() {
         this.hasPriority = true;
     }
 
-    boolean hasPriority() {
+    public boolean hasPriority() {
         return this.hasPriority;
     }
 
@@ -96,7 +94,7 @@ public class Fencer extends BaseObservable implements Serializable {
         this.yellowCards++;
     }
 
-    void resetCards() {
+    public void resetCards() {
         this.redCards = 0;
         this.yellowCards = 0;
     }

@@ -13,8 +13,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.kfang.fencemelibrary.main.Fencer;
-
 import java.util.Locale;
 
 import butterknife.BindView;

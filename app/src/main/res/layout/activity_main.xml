@@ -8,11 +8,11 @@
 
         <variable
             name="redFencer"
-            type="com.kfang.fencemelibrary.main.Fencer" />
+            type="com.kfang.fencemelibrary.Fencer" />
 
         <variable
             name="greenFencer"
-            type="com.kfang.fencemelibrary.main.Fencer" />
+            type="com.kfang.fencemelibrary.Fencer" />
     </data>
 
     <LinearLayout
@@ -157,7 +157,7 @@
                 android:id="@+id/red_body"
                 android:layout_width="0dp"
                 android:layout_height="125dp"
-                android:layout_marginTop="-15dp"
+                android:layout_marginTop="0dp"
                 android:layout_weight="1"
                 android:background="@drawable/layout_red"
                 android:orientation="vertical"
@@ -168,13 +168,14 @@
 
                 <TextView
                     android:id="@+id/redSide"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
                     android:layout_gravity="center_horizontal"
                     android:clickable="true"
                     android:ellipsize="end"
                     android:fontFamily="sans-serif-light"
+                    android:gravity="center_horizontal"
                     android:lines="1"
                     android:onClick="changeRedName"
                     android:paddingTop="6dp"
@@ -233,13 +234,14 @@
 
                 <TextView
                     android:id="@+id/greenSide"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
                     android:layout_gravity="center_horizontal"
                     android:clickable="true"
                     android:ellipsize="end"
                     android:fontFamily="sans-serif-light"
+                    android:gravity="center_horizontal"
                     android:lines="1"
                     android:onClick="changeGreenName"
                     android:paddingTop="6dp"

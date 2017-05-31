@@ -8,7 +8,8 @@
     </string-array>
 
     <string-array name="change_log">
-        <item>Fixed minor bug where cards weren\'t handled correctly</item>
-        <item>Fixed minor bug where wins weren\'t correctly handled</item>
+        <item>Made settings page more visually appealing with a toolbar</item>
+        <item>Allowed timer to continue running after device is rotated</item>
+        <item>Fixed alarms not being disabled on bout resets</item>
     </string-array>
 </resources>
