@@ -1,4 +1,4 @@
-package com.kfang.fencemelibrary.activity;
+package com.kfang.fencemelibrary.main;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
@@ -10,7 +10,6 @@ import android.view.View;
 
 import com.kfang.fencemelibrary.BuildConfig;
 import com.kfang.fencemelibrary.R;
-import com.kfang.fencemelibrary.main.MainActivity;
 
 import mehdi.sakout.aboutpage.AboutPage;
 import mehdi.sakout.aboutpage.Element;

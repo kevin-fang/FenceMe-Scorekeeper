@@ -1,4 +1,4 @@
-package com.kfang.fencemelibrary.navmenu;
+package com.kfang.fencemelibrary.misc.navmenu;
 
 import android.view.ViewGroup;
 

@@ -1,4 +1,4 @@
-package com.kfang.fencemelibrary.navmenu;
+package com.kfang.fencemelibrary.misc.navmenu;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,7 +47,7 @@ public class SimpleItem extends DrawerItem<SimpleItem.ViewHolder> {
 
         private TextView title;
 
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
             title = (TextView) itemView.findViewById(R.id.title);
         }

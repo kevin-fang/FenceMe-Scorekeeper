@@ -8,6 +8,6 @@
     </string-array>
 
     <string-array name="change_log">
-        <item>Fixed crash on returning from card player screen</item>
+        <item>New! Swipe up/down on the red/green score to change score!</item>
     </string-array>
 </resources>

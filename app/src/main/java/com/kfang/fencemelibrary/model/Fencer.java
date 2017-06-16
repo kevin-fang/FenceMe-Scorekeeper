@@ -1,4 +1,4 @@
-package com.kfang.fencemelibrary.main;
+package com.kfang.fencemelibrary.model;
 
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;

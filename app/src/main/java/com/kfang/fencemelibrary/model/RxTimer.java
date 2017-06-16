@@ -1,5 +1,7 @@
-package com.kfang.fencemelibrary.main;
+package com.kfang.fencemelibrary.model;
 
+
+import com.kfang.fencemelibrary.presentation.MainContract;
 
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
@@ -8,7 +10,6 @@ import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.functions.Function;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 
@@ -16,14 +17,14 @@ import io.reactivex.schedulers.Schedulers;
  * ReactiveX Async Timer
  */
 
-class RxTimer implements MainContract.FenceTimer {
+public class RxTimer implements MainContract.FenceTimer {
     private final CompositeDisposable disposable = new CompositeDisposable();
     private int initialMinutes;
     private MainContract.MainView timerView;
     private long currentTime = -1;
     private long totalSeconds;
 
-    RxTimer(int initialMinutes, MainContract.MainView mainView) {
+    public RxTimer(int initialMinutes, MainContract.MainView mainView) {
         this.initialMinutes = initialMinutes;
         this.timerView = mainView;
     }

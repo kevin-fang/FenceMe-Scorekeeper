@@ -1,4 +1,6 @@
-package com.kfang.fencemelibrary.main;
+package com.kfang.fencemelibrary.presentation;
+
+import com.kfang.fencemelibrary.model.Fencer;
 
 /**
  * Main Contract class
@@ -67,7 +69,7 @@ public class MainContract {
         boolean pauseOnScoreChange();
     }
 
-    interface MainView {
+    public interface MainView {
         void updateTime(String time);
 
         void enableChangingScore();
@@ -87,7 +89,7 @@ public class MainContract {
         void vibrateTimer();
     }
 
-    interface FenceTimer {
+    public interface FenceTimer {
         void startTimer();
 
         void stopTimer();

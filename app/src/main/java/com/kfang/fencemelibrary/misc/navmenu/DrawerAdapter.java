@@ -1,4 +1,4 @@
-package com.kfang.fencemelibrary.navmenu;
+package com.kfang.fencemelibrary.misc.navmenu;
 
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseArray;
@@ -63,7 +63,7 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.ViewHolder
         }
     }
 
-    public void setSelected(int position) {
+    void setSelected(int position) {
         DrawerItem newChecked = items.get(position);
         if (!newChecked.isSelectable()) {
             return;
@@ -98,7 +98,7 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.ViewHolder
 
         private DrawerAdapter adapter;
 
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
         }

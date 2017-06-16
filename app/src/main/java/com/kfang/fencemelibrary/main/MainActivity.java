@@ -46,15 +46,15 @@ import com.google.android.gms.ads.MobileAds;
 import com.kfang.fencemelibrary.BuildConfig;
 import com.kfang.fencemelibrary.R;
 import com.kfang.fencemelibrary.R2;
-import com.kfang.fencemelibrary.activity.AboutActivity;
-import com.kfang.fencemelibrary.activity.CardPlayerActivity;
-import com.kfang.fencemelibrary.activity.SettingsActivity;
 import com.kfang.fencemelibrary.databinding.ActivityMainBinding;
 import com.kfang.fencemelibrary.misc.TimePickerFragment;
 import com.kfang.fencemelibrary.misc.Utility;
-import com.kfang.fencemelibrary.navmenu.DrawerAdapter;
-import com.kfang.fencemelibrary.navmenu.DrawerItem;
-import com.kfang.fencemelibrary.navmenu.SimpleItem;
+import com.kfang.fencemelibrary.misc.navmenu.DrawerAdapter;
+import com.kfang.fencemelibrary.misc.navmenu.DrawerItem;
+import com.kfang.fencemelibrary.misc.navmenu.SimpleItem;
+import com.kfang.fencemelibrary.model.Fencer;
+import com.kfang.fencemelibrary.presentation.MainContract;
+import com.kfang.fencemelibrary.presentation.MainPresenterImpl;
 import com.kobakei.ratethisapp.RateThisApp;
 import com.yarolegovich.slidingrootnav.SlideGravity;
 import com.yarolegovich.slidingrootnav.SlidingRootNav;
@@ -65,10 +65,10 @@ import java.util.Arrays;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.kfang.fencemelibrary.activity.CardPlayerActivity.FENCER_TO_CARD;
-import static com.kfang.fencemelibrary.activity.CardPlayerActivity.GREEN_FENCER;
-import static com.kfang.fencemelibrary.activity.CardPlayerActivity.RED_FENCER;
-import static com.kfang.fencemelibrary.activity.CardPlayerActivity.RETURN_CARD;
+import static com.kfang.fencemelibrary.main.CardPlayerActivity.FENCER_TO_CARD;
+import static com.kfang.fencemelibrary.main.CardPlayerActivity.GREEN_FENCER;
+import static com.kfang.fencemelibrary.main.CardPlayerActivity.RED_FENCER;
+import static com.kfang.fencemelibrary.main.CardPlayerActivity.RETURN_CARD;
 import static com.kfang.fencemelibrary.misc.Constants.COLOR_GREEN;
 import static com.kfang.fencemelibrary.misc.Constants.COLOR_RED;
 import static com.kfang.fencemelibrary.misc.Constants.CURRENT_TIME;
@@ -131,7 +131,6 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
     @BindView(R2.id.green_body)
     RelativeLayout greenBody;
 
-
     FragmentManager mFragmentManager = getSupportFragmentManager();
     Context mContext;
     Vibrator vibrator;
@@ -146,6 +145,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
     });
     @BindView(R2.id.toolbar)
     Toolbar toolbar;
+
     SlidingRootNav navigationMenu;
 
     public static boolean isPro(Context context) {
@@ -201,13 +201,11 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
         mContext = MainActivity.this;
         setContentView(R.layout.activity_main);
 
-
-        // initialize fencers and add to fencers array
-
-
+        // set up MVP
         vibrator = (Vibrator) getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
         presenter = new MainPresenterImpl(this, PreferenceManager.getDefaultSharedPreferences(this), vibrator);
 
+        // set up data binding for scores and names
         ActivityMainBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         binding.setGreenFencer(presenter.getGreenFencer());
         binding.setRedFencer(presenter.getRedFencer());
@@ -235,6 +233,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
 
         checkIfFirstRun();
 
+        // set up gestures
         greenBody.setOnTouchListener((v, event) -> {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
@@ -279,6 +278,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
+        // save current time and whether the timer is running
         outState.putInt(CURRENT_TIME, presenter.getCurrentTime());
         outState.putBoolean(TIMER_RUNNING, presenter.timerRunning());
         super.onSaveInstanceState(outState);
@@ -376,6 +376,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
     }
 
     public void setTimerButtonColor(String color) {
+        // change the timer button color using transitions.
         ValueAnimator anim = new ValueAnimator();
         anim.setIntValues(ContextCompat.getColor(this, R.color.colorBrightRed), ContextCompat.getColor(this, R.color.colorBrightGreen));
         anim.setEvaluator(new ArgbEvaluator());
@@ -410,7 +411,6 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
 
     @Override
     public void updateToggle(String colorTo, int text) {
-        //startTimerButton.setEnabled(true);
         // set text in button to corresponding value.
         startTimerButton.setText(text);
         setTimerButtonColor(colorTo);
@@ -746,9 +746,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
 
     // create an on click listener for each of the plus/minus buttons.
     private View.OnClickListener createScoreChanger(final int toAdd, final Fencer fencer) {
-        return v -> {
-            changeScoreAndCheckForVictories(fencer, toAdd);
-        };
+        return v -> changeScoreAndCheckForVictories(fencer, toAdd);
     }
 
     public void changeRedName(View v) {

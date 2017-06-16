@@ -1,4 +1,4 @@
-package com.kfang.fencemelibrary.activity;
+package com.kfang.fencemelibrary.main;
 
 import android.content.SharedPreferences;
 import android.graphics.Color;

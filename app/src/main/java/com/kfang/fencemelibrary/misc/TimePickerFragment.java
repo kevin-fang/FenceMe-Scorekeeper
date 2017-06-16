@@ -9,7 +9,7 @@ import android.view.View;
 import android.widget.NumberPicker;
 
 import com.kfang.fencemelibrary.R;
-import com.kfang.fencemelibrary.main.MainContract;
+import com.kfang.fencemelibrary.presentation.MainContract;
 
 import java.util.Locale;
 

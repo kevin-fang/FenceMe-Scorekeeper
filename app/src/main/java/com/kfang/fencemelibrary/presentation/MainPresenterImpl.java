@@ -1,15 +1,17 @@
-package com.kfang.fencemelibrary.main;
+package com.kfang.fencemelibrary.presentation;
 
 import android.content.SharedPreferences;
 import android.os.Vibrator;
 
 import com.kfang.fencemelibrary.R;
+import com.kfang.fencemelibrary.model.Fencer;
+import com.kfang.fencemelibrary.model.RxTimer;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import static com.kfang.fencemelibrary.activity.CardPlayerActivity.RED_CARD;
+import static com.kfang.fencemelibrary.main.CardPlayerActivity.RED_CARD;
 import static com.kfang.fencemelibrary.misc.Constants.COLOR_GREEN;
 import static com.kfang.fencemelibrary.misc.Constants.COLOR_RED;
 
@@ -17,7 +19,7 @@ import static com.kfang.fencemelibrary.misc.Constants.COLOR_RED;
  * Main Presenter Implementation
  */
 
-class MainPresenterImpl implements MainContract.MainPresenter {
+public class MainPresenterImpl implements MainContract.MainPresenter {
 
     private SharedPreferencesRepository sharedPreferences;
     private MainContract.MainView mainView;
@@ -30,7 +32,7 @@ class MainPresenterImpl implements MainContract.MainPresenter {
 
     private List<Fencer> fencers;
 
-    MainPresenterImpl(MainContract.MainView mainView, SharedPreferences sp, Vibrator v) {
+    public MainPresenterImpl(MainContract.MainView mainView, SharedPreferences sp, Vibrator v) {
         sharedPreferences = new SharedPreferencesRepositoryImpl(sp, v);
         this.mainView = mainView;
         fenceTimer = new RxTimer(getBoutLengthMinutes(), mainView);

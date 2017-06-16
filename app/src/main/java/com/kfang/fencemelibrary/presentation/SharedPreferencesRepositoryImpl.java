@@ -1,4 +1,4 @@
-package com.kfang.fencemelibrary.main;
+package com.kfang.fencemelibrary.presentation;
 
 import android.content.SharedPreferences;
 import android.os.Vibrator;
@@ -19,12 +19,12 @@ import static com.kfang.fencemelibrary.misc.Constants.VIBRATE_TIMER;
  * SharedPreferences repository implementation
  */
 
-public class SharedPreferencesRepositoryImpl implements SharedPreferencesRepository {
+class SharedPreferencesRepositoryImpl implements SharedPreferencesRepository {
 
     private SharedPreferences prefs;
     private Vibrator v;
 
-    public SharedPreferencesRepositoryImpl(SharedPreferences sp, Vibrator v) {
+    SharedPreferencesRepositoryImpl(SharedPreferences sp, Vibrator v) {
         prefs = sp;
         this.v = v;
     }

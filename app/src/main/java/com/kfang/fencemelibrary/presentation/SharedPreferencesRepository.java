@@ -1,10 +1,10 @@
-package com.kfang.fencemelibrary.main;
+package com.kfang.fencemelibrary.presentation;
 
 /**
  * Interface used for Shared Preferences
  **/
 
-public interface SharedPreferencesRepository {
+interface SharedPreferencesRepository {
     boolean stayAwakeDuringTimer();
 
     int pointsToWin();

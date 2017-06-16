@@ -1,4 +1,4 @@
-package com.kfang.fencemelibrary.activity;
+package com.kfang.fencemelibrary.main;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -15,7 +15,7 @@ import android.widget.Toast;
 
 import com.kfang.fencemelibrary.R;
 import com.kfang.fencemelibrary.R2;
-import com.kfang.fencemelibrary.main.Fencer;
+import com.kfang.fencemelibrary.model.Fencer;
 
 import java.util.Locale;
 

@@ -8,11 +8,11 @@
 
         <variable
             name="redFencer"
-            type="com.kfang.fencemelibrary.main.Fencer" />
+            type="com.kfang.fencemelibrary.model.Fencer" />
 
         <variable
             name="greenFencer"
-            type="com.kfang.fencemelibrary.main.Fencer" />
+            type="com.kfang.fencemelibrary.model.Fencer" />
     </data>
 
     <LinearLayout

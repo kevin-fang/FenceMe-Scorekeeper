@@ -3,8 +3,8 @@ package com.kfang.fencemelibrary.misc;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.kfang.fencemelibrary.main.Fencer;
-import com.kfang.fencemelibrary.main.MainContract;
+import com.kfang.fencemelibrary.model.Fencer;
+import com.kfang.fencemelibrary.presentation.MainContract;
 
 /**
  * Class to get preferences.
