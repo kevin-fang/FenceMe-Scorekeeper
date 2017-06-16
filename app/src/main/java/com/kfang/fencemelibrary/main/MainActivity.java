@@ -27,13 +27,16 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.InputFilter;
 import android.text.InputType;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -85,6 +88,12 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
     final Handler alarmHandler = new Handler();
     public Ringtone alarmTone;
     public MainContract.MainPresenter presenter;
+
+    float greenY1;
+    float redY1;
+    float greenY2;
+    float redY2;
+
     // timer views
     @BindView(R2.id.start_timer)
     Button startTimerButton;
@@ -116,6 +125,12 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
     AdView mAdView;
     @BindView(R2.id.coordinator)
     CoordinatorLayout mCoordinatorLayout;
+
+    @BindView(R2.id.red_body)
+    RelativeLayout redBody;
+    @BindView(R2.id.green_body)
+    RelativeLayout greenBody;
+
 
     FragmentManager mFragmentManager = getSupportFragmentManager();
     Context mContext;
@@ -186,6 +201,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
         mContext = MainActivity.this;
         setContentView(R.layout.activity_main);
 
+
         // initialize fencers and add to fencers array
 
 
@@ -218,6 +234,47 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
         }
 
         checkIfFirstRun();
+
+        greenBody.setOnTouchListener((v, event) -> {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    greenY1 = event.getY();
+                    return true;
+                case MotionEvent.ACTION_UP:
+                    greenY2 = event.getY();
+                    if (greenY1 > greenY2) {
+                        // swipe up
+                        Log.d(LOG_TAG, "Swipe up green, y1: " + greenY1 + ", y2: " + greenY2);
+                        changeScoreAndCheckForVictories(presenter.getGreenFencer(), Utility.TO_ADD);
+                    } else if (greenY2 > greenY1) {
+                        // swipe down
+                        Log.d(LOG_TAG, "Swipe down green, y1: " + greenY1 + ", y2: " + greenY2);
+                        changeScoreAndCheckForVictories(presenter.getGreenFencer(), Utility.TO_SUBTRACT);
+                    }
+                    return true;
+            }
+            return false;
+        });
+        redBody.setOnTouchListener(((v, event) -> {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    redY1 = event.getY();
+                    return true;
+                case MotionEvent.ACTION_UP:
+                    redY2 = event.getY();
+                    if (redY1 > redY2) {
+                        // swipe up
+                        Log.d(LOG_TAG, "Swipe up red, y1: " + redY1 + ", y2: " + redY2);
+                        changeScoreAndCheckForVictories(presenter.getRedFencer(), Utility.TO_ADD);
+                    } else if (redY2 > redY1) {
+                        // swipe down
+                        Log.d(LOG_TAG, "Swipe down red, y1: " + redY1 + ", y2: " + redY2);
+                        changeScoreAndCheckForVictories(presenter.getRedFencer(), Utility.TO_SUBTRACT);
+                    }
+                    return true;
+            }
+            return false;
+        }));
     }
 
     @Override
@@ -666,26 +723,31 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
         DialogFragment newFragment = TimePickerFragment.newInstance(R.string.button_set_timer, presenter);
         newFragment.show(mFragmentManager, "dialog");
     }
+
+    void changeScoreAndCheckForVictories(Fencer fencer, int toAdd) {
+        if (toAdd == Utility.TO_ADD && (fencer.getPoints() < presenter.getPointsToWin() || presenter.equalPoints())) {
+            fencer.incrementNumPoints();
+        } else if (toAdd == Utility.TO_SUBTRACT && fencer.getPoints() > 0) {
+            fencer.decrementNumPoints();
+        }
+
+        if (presenter.pauseOnScoreChange()) {
+            if (presenter.timerRunning()) {
+                presenter.toggleTimer();
+            }
+        }
+        if (!presenter.checkForVictories(fencer) && toAdd == Utility.TO_ADD && presenter.popupOnScoreChange()) {
+            Snackbar.make(mCoordinatorLayout, "Gave touch to " + fencer.getName(), Snackbar.LENGTH_SHORT)
+                    .setAction("Dismiss", v1 -> {
+                    })
+                    .show();
+        }
+    }
+
     // create an on click listener for each of the plus/minus buttons.
     private View.OnClickListener createScoreChanger(final int toAdd, final Fencer fencer) {
         return v -> {
-            if (toAdd == Utility.TO_ADD && (fencer.getPoints() < presenter.getPointsToWin() || presenter.equalPoints())) {
-                fencer.incrementNumPoints();
-            } else if (toAdd == Utility.TO_SUBTRACT && fencer.getPoints() > 0) {
-                fencer.decrementNumPoints();
-            }
-
-            if (presenter.pauseOnScoreChange()) {
-                if (presenter.timerRunning()) {
-                    presenter.toggleTimer();
-                }
-            }
-            if (!presenter.checkForVictories(fencer) && toAdd == Utility.TO_ADD && presenter.popupOnScoreChange()) {
-                Snackbar.make(mCoordinatorLayout, "Gave touch to " + fencer.getName(), Snackbar.LENGTH_SHORT)
-                        .setAction("Dismiss", v1 -> {
-                        })
-                        .show();
-            }
+            changeScoreAndCheckForVictories(fencer, toAdd);
         };
     }
 
