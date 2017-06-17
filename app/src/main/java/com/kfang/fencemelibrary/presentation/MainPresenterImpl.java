@@ -130,7 +130,7 @@ public class MainPresenterImpl implements MainContract.MainPresenter {
 
     @Override
     public void resetTimer() {
-        fenceTimer.setTimer(getBoutLengthMinutes() * 60);
+        fenceTimer.setTimer(getBoutLengthMinutes() * 60 * 1000);
         setStartButton();
         timerRunning = false;
     }
@@ -143,8 +143,8 @@ public class MainPresenterImpl implements MainContract.MainPresenter {
     }
 
     @Override
-    public void setTimer(int time) {
-        fenceTimer.setTimer(time);
+    public void setTimer(int seconds) {
+        fenceTimer.setTimer(seconds);
     }
 
     @Override
@@ -156,7 +156,7 @@ public class MainPresenterImpl implements MainContract.MainPresenter {
     }
 
     @Override
-    public int getCurrentTime() {
+    public int getCurrentSeconds() {
         return fenceTimer.getTime();
     }
 

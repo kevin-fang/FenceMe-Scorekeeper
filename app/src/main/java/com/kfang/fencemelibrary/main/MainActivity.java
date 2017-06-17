@@ -36,7 +36,6 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -127,9 +126,9 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
     CoordinatorLayout mCoordinatorLayout;
 
     @BindView(R2.id.red_body)
-    RelativeLayout redBody;
+    View redBody;
     @BindView(R2.id.green_body)
-    RelativeLayout greenBody;
+    View greenBody;
 
     FragmentManager mFragmentManager = getSupportFragmentManager();
     Context mContext;
@@ -162,7 +161,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
         builder.setPositiveButton("Start Tiebreaker", (dialog, which) -> {
                 //Toast.makeText(context, "Starting Tiebreaker...", Toast.LENGTH_SHORT).show();
                 presenter.resetScores();
-                presenter.setTimer(60);
+            presenter.setTimer(60 * 1000);
                 presenter.startTimer();
                 presenter.setTieBreaker(true);
                 enableTimerButton();
@@ -218,7 +217,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
         if (presenter.restoreOnAppReset()) {
             Utility.updateCurrentMatchPreferences(this, presenter);
         } else { // restore default time
-            presenter.setTimer(presenter.getBoutLengthMinutes() * 60);
+            presenter.setTimer(presenter.getBoutLengthMinutes() * 60 * 1000);
         }
 
         if (savedInstanceState != null) {
@@ -279,7 +278,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         // save current time and whether the timer is running
-        outState.putInt(CURRENT_TIME, presenter.getCurrentTime());
+        outState.putInt(CURRENT_TIME, presenter.getCurrentSeconds());
         outState.putBoolean(TIMER_RUNNING, presenter.timerRunning());
         super.onSaveInstanceState(outState);
     }

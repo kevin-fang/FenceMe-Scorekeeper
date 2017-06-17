@@ -22,18 +22,25 @@ public class RxTimer implements MainContract.FenceTimer {
     private int initialMinutes;
     private MainContract.MainView timerView;
     private long currentTime = -1;
-    private long totalSeconds;
+    private long totalMilliSeconds;
 
     public RxTimer(int initialMinutes, MainContract.MainView mainView) {
         this.initialMinutes = initialMinutes;
         this.timerView = mainView;
     }
 
-    private static String formatTime(long seconds) {
-        long currentSeconds = seconds % 60;
-        long currentMinutes = seconds / 60;
-        //Log.d(LOG_TAG, "minutes: " + currentMinutes + ", seconds: " + currentSeconds + ", total: " + seconds);
-        return String.format(Locale.getDefault(), "%01d:%02d", currentMinutes, currentSeconds);
+    private static String formatTime(long milliseconds) {
+        long hundredthseconds = milliseconds / 10;
+        if (hundredthseconds / 100 < 10) {
+            long currentSeconds = hundredthseconds / 100;
+            long currentHundredths = hundredthseconds % 100;
+            //Log.d(LOG_TAG, "minutes: " + currentMinutes + ", seconds: " + currentSeconds + ", total: " + seconds);
+            return String.format(Locale.getDefault(), "%1d.%02d", currentSeconds, currentHundredths);
+        } else {
+            long currentSeconds = hundredthseconds / 100 % 60;
+            long currentMinutes = hundredthseconds / 100 / 60;
+            return String.format(Locale.getDefault(), "%01d:%02d", currentMinutes, currentSeconds);
+        }
     }
 
     @Override // returns in seconds the current time
@@ -41,20 +48,20 @@ public class RxTimer implements MainContract.FenceTimer {
         if (currentTime != -1) {
             return (int) currentTime;
         } else {
-            return initialMinutes * 60;
+            return initialMinutes * 60000;
         }
     }
 
     @Override
     public void startTimer() {
-        totalSeconds = getTime();
-        timerView.updateTime(formatTime(totalSeconds));
-        disposable.add(Observable.interval(1, TimeUnit.SECONDS)
-                .take((int) totalSeconds)
+        totalMilliSeconds = getTime();
+        timerView.updateTime(formatTime(totalMilliSeconds));
+        disposable.add(Observable.interval(1, TimeUnit.MILLISECONDS)
+                .take((int) totalMilliSeconds)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .map(aLong -> {
-                    currentTime = totalSeconds - aLong.intValue() - 1;
+                    currentTime = totalMilliSeconds - aLong.intValue() - 1;
                     return formatTime(currentTime);
                 })
                 .subscribeWith(new DisposableObserver<String>() {
@@ -71,7 +78,7 @@ public class RxTimer implements MainContract.FenceTimer {
                     @Override
                     public void onComplete() {
                         timerView.timerUp();
-                        totalSeconds = initialMinutes * 60;
+                        totalMilliSeconds = initialMinutes * 60;
                     }
                 }));
     }
@@ -82,10 +89,10 @@ public class RxTimer implements MainContract.FenceTimer {
     }
 
     @Override
-    public void setTimer(int time) {
+    public void setTimer(int milliseconds) {
         disposable.clear();
-        totalSeconds = time;
-        currentTime = totalSeconds;
-        timerView.updateTime(formatTime(totalSeconds));
+        totalMilliSeconds = milliseconds;
+        currentTime = totalMilliSeconds;
+        timerView.updateTime(formatTime(totalMilliSeconds));
     }
 }

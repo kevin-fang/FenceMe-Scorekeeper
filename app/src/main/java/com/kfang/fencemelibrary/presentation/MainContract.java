@@ -48,7 +48,7 @@ public class MainContract {
 
         boolean getTiebreaker();
 
-        int getCurrentTime();
+        int getCurrentSeconds();
 
         int getBoutLengthMinutes();
 

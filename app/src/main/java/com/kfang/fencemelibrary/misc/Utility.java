@@ -23,7 +23,7 @@ public class Utility {
         SharedPreferences.Editor gamePrefsEditor = gamePrefs.edit();
         gamePrefsEditor.putInt(Constants.CURRENT_RED_POINTS, redFencer.getPoints())
                 .putInt(Constants.CURRENT_GREEN_POINTS, greenFencer.getPoints())
-                .putInt(Constants.CURRENT_TIME, presenter.getCurrentTime())
+                .putInt(Constants.CURRENT_TIME, presenter.getCurrentSeconds())
                 .putInt(Constants.RED_CARDRED, redFencer.getRedCards())
                 .putInt(Constants.GREEN_CARDRED, greenFencer.getRedCards())
                 .putInt(Constants.RED_CARDYELLOW, redFencer.getYellowCards())

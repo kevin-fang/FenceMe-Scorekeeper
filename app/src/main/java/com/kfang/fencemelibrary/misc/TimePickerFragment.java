@@ -41,10 +41,10 @@ public class TimePickerFragment extends DialogFragment {
 
         minutesPicker.setMinValue(0);
         minutesPicker.setMaxValue(59);
-        minutesPicker.setValue(presenter.getCurrentTime() / 60);
+        minutesPicker.setValue(presenter.getCurrentSeconds() / 1000 / 60);
         secondsPicker.setMaxValue(59);
         secondsPicker.setMinValue(0);
-        secondsPicker.setValue(presenter.getCurrentTime() % 60);
+        secondsPicker.setValue(presenter.getCurrentSeconds() / 1000 % 60);
         secondsPicker.setFormatter(value -> String.format(Locale.getDefault(), "%02d", value));
 
 
@@ -57,9 +57,9 @@ public class TimePickerFragment extends DialogFragment {
 
     public void setTimer(int minutes, int seconds) {
         if (seconds == 0 && minutes == 0) {
-            presenter.setTimer(presenter.getBoutLengthMinutes() * 60);
+            presenter.setTimer(presenter.getBoutLengthMinutes() * 60 * 1000);
         } else {
-            presenter.setTimer(seconds + minutes * 60);
+            presenter.setTimer((seconds + minutes * 60) * 1000);
         }
     }
 

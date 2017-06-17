@@ -51,8 +51,8 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toRightOf="@+id/linearLayout5"
-                app:layout_constraintRight_toLeftOf="@+id/linearLayout6"
+                app:layout_constraintLeft_toRightOf="@+id/red_body"
+                app:layout_constraintRight_toLeftOf="@+id/green_body"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.0">
 
@@ -151,7 +151,7 @@
             </RelativeLayout>
 
             <LinearLayout
-                android:id="@+id/linearLayout5"
+                android:id="@+id/red_body"
                 android:layout_width="140dp"
                 android:layout_height="0dp"
                 android:background="@drawable/layout_red"
@@ -196,7 +196,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="@string/no_score"
+                    android:text="@{Integer.toString(redFencer.points)}"
                     android:textSize="@dimen/score_text_size" />
 
                 <Button
@@ -210,7 +210,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/linearLayout6"
+                android:id="@+id/green_body"
                 android:layout_width="140dp"
                 android:layout_height="0dp"
                 android:background="@drawable/layout_green"
@@ -255,7 +255,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="@string/no_score"
+                    android:text="@{Integer.toString(greenFencer.points)}"
                     android:textSize="@dimen/score_text_size" />
 
                 <Button
