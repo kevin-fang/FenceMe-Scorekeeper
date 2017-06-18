@@ -229,11 +229,13 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
         } else {
             RateThisApp.showRateDialogIfNeeded(this);
         }
-
+        setupSwipeDetectors();
         checkIfFirstRun();
 
-        // set up gestures
-        greenBody.setOnTouchListener((v, event) -> {
+    }
+
+    void setupSwipeDetectors() {
+        View.OnTouchListener greenOnTouchListener = (v, event) -> {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     greenY1 = event.getY();
@@ -248,12 +250,19 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
                         // swipe down
                         Log.d(LOG_TAG, "Swipe down green, y1: " + greenY1 + ", y2: " + greenY2);
                         changeScoreAndCheckForVictories(presenter.getGreenFencer(), Utility.TO_SUBTRACT);
+                    } else {
+                        getNewName(greenNameView, presenter.getGreenFencer());
                     }
                     return true;
             }
             return false;
-        });
-        redBody.setOnTouchListener(((v, event) -> {
+        };
+
+        // set up gestures
+        greenBody.setOnTouchListener(greenOnTouchListener);
+        greenNameView.setOnTouchListener(greenOnTouchListener);
+
+        View.OnTouchListener redOnTouchListener = (v, event) -> {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     redY1 = event.getY();
@@ -268,11 +277,16 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
                         // swipe down
                         Log.d(LOG_TAG, "Swipe down red, y1: " + redY1 + ", y2: " + redY2);
                         changeScoreAndCheckForVictories(presenter.getRedFencer(), Utility.TO_SUBTRACT);
+                    } else {
+                        getNewName(redNameView, presenter.getRedFencer());
                     }
                     return true;
             }
             return false;
-        }));
+        };
+
+        redBody.setOnTouchListener(redOnTouchListener);
+        redNameView.setOnTouchListener(redOnTouchListener);
     }
 
     @Override
