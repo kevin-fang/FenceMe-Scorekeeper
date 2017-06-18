@@ -238,6 +238,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
         View.OnTouchListener greenOnTouchListener = (v, event) -> {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
+                    presenter.stopTimer();
                     greenY1 = event.getY();
                     return true;
                 case MotionEvent.ACTION_UP:
@@ -265,6 +266,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
         View.OnTouchListener redOnTouchListener = (v, event) -> {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
+                    presenter.stopTimer();
                     redY1 = event.getY();
                     return true;
                 case MotionEvent.ACTION_UP:

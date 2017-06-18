@@ -11,7 +11,9 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"> <!-- Todo: replace appthemeactionbar with just apptheme and make another appthemenoactionbar-->
-        <activity android:name="com.kfang.fencemelibrary.main.MainActivity">
+        <activity
+            android:name="com.kfang.fencemelibrary.main.MainActivity"
+            android:windowSoftInputMode="adjustNothing">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

@@ -137,9 +137,11 @@ public class MainPresenterImpl implements MainContract.MainPresenter {
 
     @Override
     public void stopTimer() {
-        fenceTimer.stopTimer();
-        setStartButton();
-        timerRunning = false;
+        if (timerRunning()) {
+            fenceTimer.stopTimer();
+            setStartButton();
+            timerRunning = false;
+        }
     }
 
     @Override
