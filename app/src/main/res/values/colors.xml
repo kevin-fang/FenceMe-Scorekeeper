@@ -8,8 +8,8 @@
     <color name="colorRedSelected">#f9bfbe</color>
     <color name="colorGreen">#8BC34A</color>
     <color name="colorGreenSelected">#8eeb24</color>
-    <color name="colorBrightGreen">#00d10a</color>
-    <color name="colorBrightRed">#ff2424</color>
+    <color name="colorTimerStop">#adebad</color>
+    <color name="colorTimerStart">#ff9999</color>
     <color name="blackCard">#212121</color>
     <color name="yellowCard">#FFEB3B</color>
     <color name="redCard">#FF3D00</color>

@@ -94,8 +94,8 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
     float redY2;
 
     // timer views
-    @BindView(R2.id.start_timer)
-    Button startTimerButton;
+    @BindView(R2.id.change_timer)
+    Button changeTimerButton;
     @BindView(R2.id.timer)
     TextView currentTimerView;
 
@@ -377,21 +377,21 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
     public void setTimerButtonColor(String color) {
         // change the timer button color using transitions.
         ValueAnimator anim = new ValueAnimator();
-        anim.setIntValues(ContextCompat.getColor(this, R.color.colorBrightRed), ContextCompat.getColor(this, R.color.colorBrightGreen));
+        anim.setIntValues(ContextCompat.getColor(this, R.color.colorTimerStop), ContextCompat.getColor(this, R.color.colorTimerStart));
         anim.setEvaluator(new ArgbEvaluator());
         anim.addUpdateListener((valueAnim) ->
-            startTimerButton.setBackgroundColor((Integer) valueAnim.getAnimatedValue()));
+                mCoordinatorLayout.setBackgroundColor((Integer) valueAnim.getAnimatedValue()));
         anim.addUpdateListener((valueAnimator) ->
-                startTimerButton.setBackgroundColor((Integer) valueAnimator.getAnimatedValue()));
+                mCoordinatorLayout.setBackgroundColor((Integer) valueAnimator.getAnimatedValue()));
         anim.setDuration(150);
 
         switch (color) {
             case COLOR_GREEN:
-                anim.setIntValues(ContextCompat.getColor(this, R.color.colorBrightRed), ContextCompat.getColor(this, R.color.colorBrightGreen));
+                anim.setIntValues(ContextCompat.getColor(this, R.color.colorTimerStop), ContextCompat.getColor(this, R.color.colorTimerStart));
                 anim.start();
                 break;
             case COLOR_RED:
-                anim.setIntValues(ContextCompat.getColor(this, R.color.colorBrightGreen), ContextCompat.getColor(this, R.color.colorBrightRed));
+                anim.setIntValues(ContextCompat.getColor(this, R.color.colorTimerStart), ContextCompat.getColor(this, R.color.colorTimerStop));
                 anim.start();
                 break;
         }
@@ -411,7 +411,6 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
     @Override
     public void updateToggle(String colorTo, int text) {
         // set text in button to corresponding value.
-        startTimerButton.setText(text);
         setTimerButtonColor(colorTo);
     }
 
@@ -424,12 +423,12 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
 
     @Override
     public void enableTimerButton() {
-        startTimerButton.setEnabled(true);
+        //changeTimerButton.setEnabled(true);
     }
 
     @Override
     public void disableTimerButton() {
-        startTimerButton.setEnabled(false);
+        //changeTimerButton.setEnabled(false);
     }
 
     @Override
@@ -560,7 +559,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
     private void setViews(Bundle savedInstanceState) {
 
         if (!isPro(this)) {
-            setupAds(BuildConfig.DEBUG);
+            //setupAds(BuildConfig.DEBUG);
         } else {
             currentTimerView.setTextSize(148);
         }
@@ -588,13 +587,17 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
             }
         });
 
-        // set textViews and buttons for timekeeping
-        if (presenter.timerRunning()) {
-            startTimerButton.setText(getResources().getString(R.string.button_stop_timer));
-        }
-
         // set onClickListener for start and reset
-        startTimerButton.setOnClickListener(v -> {
+        mCoordinatorLayout.setOnClickListener(v -> {
+            if (presenter.timerRunning()) {
+                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+            } else if (presenter.stayAwakeDuringTimer()) {
+                getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+            }
+            presenter.toggleTimer();
+        });
+
+        currentTimerView.setOnClickListener(v -> {
             if (presenter.timerRunning()) {
                 getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
             } else if (presenter.stayAwakeDuringTimer()) {
@@ -656,7 +659,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
         new AlertDialog.Builder(this)
                 .setTitle("Are you sure?")
                 .setPositiveButton("Reset", (dialog, which) -> {
-                    startTimerButton.setText(getString(R.string.button_start_timer));
+                    //changeTimerButton.setText(getString(R.string.button_start_timer));
                     presenter.resetBout();
                     vibrator.cancel();
                     Toast.makeText(mContext, "Bout reset!", Toast.LENGTH_SHORT).show();
@@ -749,10 +752,12 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
     }
 
     public void changeRedName(View v) {
+        presenter.stopTimer();
         getNewName(v, presenter.getRedFencer());
     }
 
     public void changeGreenName(View v) {
+        presenter.stopTimer();
         getNewName(v, presenter.getGreenFencer());
     }
 

@@ -40,7 +40,8 @@
     <android.support.design.widget.CoordinatorLayout
         android:id="@+id/coordinator"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/colorTimerStart">
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
@@ -60,17 +61,19 @@
                 app:layout_constraintTop_toBottomOf="@+id/red_body" />
 
             <Button
-                android:id="@+id/start_timer"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:id="@+id/change_timer"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
                 android:layout_gravity="center"
-                android:layout_marginBottom="2dp"
+                android:layout_marginBottom="0dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
                 android:layout_marginStart="8dp"
-                android:background="@color/colorBrightGreen"
-                android:text="@string/button_start_timer"
+                android:backgroundTint="@color/colorAccent"
+                android:onClick="setTimer"
+                android:text="@string/button_change_timer"
+                ads:layout_constraintHorizontal_bias="0.498"
                 ads:layout_constraintLeft_toLeftOf="parent"
                 ads:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintBottom_toTopOf="@+id/linearLayout2" />
@@ -139,17 +142,16 @@
 
             <TextView
                 android:id="@+id/timer"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
                 android:clickable="true"
                 android:fontFamily="sans-serif-thin"
                 android:gravity="center"
                 android:isScrollContainer="false"
-                android:onClick="setTimer"
                 android:text="@string/timer_full_time"
                 android:textSize="120sp"
+                ads:layout_constraintBottom_toTopOf="@+id/change_timer"
                 ads:layout_constraintTop_toBottomOf="@+id/adView"
-                app:layout_constraintBottom_toTopOf="@+id/start_timer"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent" />
 

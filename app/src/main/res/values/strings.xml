@@ -14,6 +14,7 @@
 
     <string name="button_start_timer">Start Timer</string>
     <string name="button_stop_timer">Pause Timer</string>
+    <string name="button_change_timer">Change Time</string>
     <string name="button_reset_timer">Reset Timer</string>
     <string name="button_set_timer">Set Timer</string>
 

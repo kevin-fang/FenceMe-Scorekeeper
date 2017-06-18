@@ -8,8 +8,9 @@
     </string-array>
 
     <string-array name="change_log">
+        <item>New! Tap anywhere on the main timer display to stop/start the timer</item>
         <item>New! Swipe up/down on the red/green score to change score!</item>
         <item>Added hundredth second countdown when timer reaches 10 seconds</item>
-        <item>Fixed bug where landscape scores weren't counted</item>
+        <item>Fixed bug where landscape scores weren\'t counted</item>
     </string-array>
 </resources>
