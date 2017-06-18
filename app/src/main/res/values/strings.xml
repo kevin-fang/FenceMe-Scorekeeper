@@ -26,6 +26,9 @@
     <string name="red_card">Red\nCard</string>
     <string name="yellow_card">Yellow\nCard</string>
 
+    <string name="one_minute">1 min</string>
+    <string name="three_minutes">3 min</string>
+
     <string name="button_dismiss">Dismiss</string>
     <string name="settings" translatable="false">Settings</string>
     <string name="whats_new">What\'s new</string>

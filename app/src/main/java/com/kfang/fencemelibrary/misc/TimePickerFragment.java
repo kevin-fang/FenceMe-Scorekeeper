@@ -9,9 +9,14 @@ import android.view.View;
 import android.widget.NumberPicker;
 
 import com.kfang.fencemelibrary.R;
+import com.kfang.fencemelibrary.R2;
 import com.kfang.fencemelibrary.presentation.MainContract;
 
 import java.util.Locale;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Time Picker Fragment for setting timer
@@ -21,6 +26,11 @@ import java.util.Locale;
 public class TimePickerFragment extends DialogFragment {
 
     MainContract.MainPresenter presenter;
+    @BindView(R2.id.minutes_picker)
+    NumberPicker minutesPicker;
+    @BindView(R2.id.seconds_picker)
+    NumberPicker secondsPicker;
+    Dialog mainDialog;
 
     public static TimePickerFragment newInstance(int title, MainContract.MainPresenter presenter) {
         TimePickerFragment fragment = new TimePickerFragment();
@@ -31,13 +41,24 @@ public class TimePickerFragment extends DialogFragment {
         return fragment;
     }
 
+    @OnClick(R2.id.one_minute_shortcut)
+    void setOneMin() {
+        setTimer(1, 0);
+        mainDialog.dismiss();
+    }
+
+    @OnClick(R2.id.three_minutes_shortcut)
+    void setThreeMin() {
+        setTimer(3, 0);
+        mainDialog.dismiss();
+    }
+
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         View pickerView = View.inflate(getActivity(), R.layout.time_picker, null);
-        final NumberPicker minutesPicker = (NumberPicker) pickerView.findViewById(R.id.minutes_picker);
-        final NumberPicker secondsPicker = (NumberPicker) pickerView.findViewById(R.id.seconds_picker);
+        ButterKnife.bind(this, pickerView);
 
         minutesPicker.setMinValue(0);
         minutesPicker.setMaxValue(59);
@@ -52,7 +73,8 @@ public class TimePickerFragment extends DialogFragment {
                 .setPositiveButton(R.string.button_set_timer, (dialog, which) -> setTimer(minutesPicker.getValue(), secondsPicker.getValue()))
                 .setNegativeButton(R.string.cancel, (dialog, which) -> TimePickerFragment.this.getDialog().cancel());
 
-        return builder.create();
+        mainDialog = builder.create();
+        return mainDialog;
     }
 
     public void setTimer(int minutes, int seconds) {

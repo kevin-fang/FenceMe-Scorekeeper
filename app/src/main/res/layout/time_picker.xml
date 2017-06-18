@@ -37,4 +37,32 @@
             android:layout_height="wrap_content"
             />
     </LinearLayout>
+
+    <LinearLayout
+        style="?android:attr/buttonBarStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/one_minute_shortcut"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/one_minute" />
+
+        <View
+            android:layout_width="2px"
+            android:layout_height="fill_parent"
+            android:layout_marginBottom="4dp"
+            android:layout_marginTop="4dp"
+            android:background="#90909090" />
+
+        <Button
+            android:id="@+id/three_minutes_shortcut"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/three_minutes" />
+    </LinearLayout>
 </LinearLayout>
