@@ -575,7 +575,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
     private void setViews(Bundle savedInstanceState) {
 
         if (!isPro(this)) {
-            //setupAds(BuildConfig.DEBUG);
+            setupAds(BuildConfig.DEBUG);
         } else {
             currentTimerView.setTextSize(148);
         }

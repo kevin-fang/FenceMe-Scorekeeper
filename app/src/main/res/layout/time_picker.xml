@@ -49,7 +49,8 @@
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/one_minute" />
+            android:text="@string/one_minute"
+            android:textColor="@color/primary_text" />
 
         <View
             android:layout_width="2px"
@@ -63,6 +64,7 @@
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/three_minutes" />
+            android:text="@string/three_minutes"
+            android:textColor="@color/primary_text" />
     </LinearLayout>
 </LinearLayout>

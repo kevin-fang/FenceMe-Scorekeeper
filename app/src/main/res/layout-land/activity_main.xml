@@ -204,12 +204,14 @@
 
                     <Button
                         android:id="@+id/plus_red"
+                        style="?android:attr/buttonBarButtonStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginTop="15dp"
                         android:fontFamily="sans-serif-light"
                         android:text="@string/add_point"
+                        android:textColor="@color/primary_text"
                         android:textSize="@dimen/button_text_size" />
 
                     <TextView
@@ -222,11 +224,13 @@
 
                     <Button
                         android:id="@+id/minus_red"
+                        style="?android:attr/buttonBarButtonStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:fontFamily="sans-serif-light"
                         android:text="@string/subtract_point"
+                        android:textColor="@color/primary_text"
                         android:textSize="@dimen/button_text_size" />
                 </LinearLayout>
 
@@ -263,12 +267,14 @@
 
                     <Button
                         android:id="@+id/plus_green"
+                        style="?android:attr/buttonBarButtonStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginTop="15dp"
                         android:fontFamily="sans-serif-light"
                         android:text="@string/add_point"
+                        android:textColor="@color/primary_text"
                         android:textSize="@dimen/button_text_size" />
 
                     <TextView
@@ -281,11 +287,13 @@
 
                     <Button
                         android:id="@+id/minus_green"
+                        style="?android:attr/buttonBarButtonStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:fontFamily="sans-serif-light"
                         android:text="@string/subtract_point"
+                        android:textColor="@color/primary_text"
                         android:textSize="@dimen/button_text_size" />
                 </LinearLayout>
 
