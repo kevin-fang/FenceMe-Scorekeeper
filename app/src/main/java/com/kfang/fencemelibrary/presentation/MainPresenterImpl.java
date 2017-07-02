@@ -35,7 +35,7 @@ public class MainPresenterImpl implements MainContract.MainPresenter {
     public MainPresenterImpl(MainContract.MainView mainView, SharedPreferences sp, Vibrator v) {
         sharedPreferences = new SharedPreferencesRepositoryImpl(sp, v);
         this.mainView = mainView;
-        fenceTimer = new RxTimer(getBoutLengthMinutes(), mainView);
+        fenceTimer = new RxTimer(getBoutLengthMinutes() * 1000 * 60, mainView);
 
         redFencer = new Fencer("Red");
         greenFencer = new Fencer("Green");

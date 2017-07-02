@@ -10,9 +10,6 @@
     <string-array name="change_log">
         <item>New! Tap anywhere on the main timer display to stop/start the timer</item>
         <item>New! Swipe up/down on the red/green score to change score</item>
-        <item>Fixed buttons in landscape version.</item>
-        <item>Increased space for swiping</item>
-        <item>Cleaned up + and - buttons</item>
-        <item>Added shortcuts for one minute and three minute in timers</item>
+        <item>Fixed bug where timer would start at .18 seconds</item>
     </string-array>
 </resources>

@@ -40,7 +40,7 @@ public class Utility {
         redFencer.setPoints(gamePrefs.getInt(Constants.CURRENT_RED_POINTS, 0));
         greenFencer.setPoints(gamePrefs.getInt(Constants.CURRENT_GREEN_POINTS, 0));
         try {
-            presenter.setTimer(gamePrefs.getInt(Constants.CURRENT_TIME, Constants.DEFAULT_MINUTES * 60));
+            presenter.setTimer(gamePrefs.getInt(Constants.CURRENT_TIME, Constants.DEFAULT_MINUTES * 60 * 1000));
         } catch (Exception e) {
             e.printStackTrace();
         }
