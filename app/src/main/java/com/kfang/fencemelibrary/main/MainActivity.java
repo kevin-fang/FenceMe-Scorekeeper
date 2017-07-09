@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.databinding.DataBindingUtil;
+import android.graphics.Typeface;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -39,6 +40,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.getkeepsafe.taptargetview.TapTarget;
+import com.getkeepsafe.taptargetview.TapTargetSequence;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
@@ -71,6 +74,7 @@ import static com.kfang.fencemelibrary.main.CardPlayerActivity.RETURN_CARD;
 import static com.kfang.fencemelibrary.misc.Constants.COLOR_GREEN;
 import static com.kfang.fencemelibrary.misc.Constants.COLOR_RED;
 import static com.kfang.fencemelibrary.misc.Constants.CURRENT_TIME;
+import static com.kfang.fencemelibrary.misc.Constants.FIRST_RUN;
 import static com.kfang.fencemelibrary.misc.Constants.LAST_VERSION_NUMBER;
 import static com.kfang.fencemelibrary.misc.Constants.OPEN_CARD_ACTIVITY;
 import static com.kfang.fencemelibrary.misc.Constants.TIMER_RUNNING;
@@ -95,9 +99,9 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
 
     // timer views
     @BindView(R2.id.change_timer)
-    Button changeTimerButton;
+    Button changeTimeButton;
     @BindView(R2.id.timer)
-    TextView currentTimerView;
+    TextView currentTimeView;
 
     // buttons in main drawable resource file
     @BindView(R2.id.plus_red)
@@ -197,6 +201,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
         super.onCreate(savedInstanceState);
         LOG_TAG = this.getPackageName();
 
+
         mContext = MainActivity.this;
         setContentView(R.layout.activity_main);
 
@@ -230,9 +235,58 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
             RateThisApp.showRateDialogIfNeeded(this);
         }
         setupSwipeDetectors();
-        checkIfFirstRun();
+        String versionNum;
+        if ((versionNum = checkIfNewVersion()) != null) {
+            displayNewDialog(versionNum);
+        }
 
+        if (firstRun()) {
+            new TapTargetSequence(this)
+                    .targets(
+                            TapTarget.forView(currentTimeView, "Tap the clock to start timer.")
+                                    .outerCircleColor(android.R.color.holo_blue_bright)
+                                    .outerCircleAlpha(0.5f)
+                                    .titleTextSize(20)
+                                    .titleTextColor(android.R.color.white)
+                                    .descriptionTextSize(10)
+                                    .targetCircleColor(R.color.colorSplash)
+                                    .descriptionTextColor(R.color.colorRed)
+                                    .textTypeface(Typeface.SANS_SERIF)
+                                    .dimColor(R.color.blackCard)
+                                    .drawShadow(true)
+                                    .transparentTarget(true)
+                                    .targetRadius(120),
+                            TapTarget.forView(greenNameView, "Swipe up/down or use buttons to change the score.\nClick to change player name.")
+                                    .outerCircleColor(android.R.color.holo_blue_bright)
+                                    .outerCircleAlpha(0.5f)
+                                    .titleTextSize(20)
+                                    .titleTextColor(android.R.color.white)
+                                    .targetCircleColor(R.color.colorSplash)
+                                    .descriptionTextSize(10)
+                                    .descriptionTextColor(R.color.colorRed)
+                                    .textTypeface(Typeface.SANS_SERIF)
+                                    .dimColor(R.color.blackCard)
+                                    .drawShadow(true)
+                                    .tintTarget(false)
+                                    .transparentTarget(true)
+                                    .targetRadius(70)
+                    ).start();
+        }
     }
+
+    private boolean firstRun() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        boolean firstRun = prefs.getBoolean(FIRST_RUN, true);
+        if (firstRun) {
+            // first run of the app
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putBoolean(FIRST_RUN, false);
+            editor.apply();
+            return true;
+        }
+        return false;
+    }
+
 
     void setupSwipeDetectors() {
         View.OnTouchListener greenOnTouchListener = (v, event) -> {
@@ -306,18 +360,18 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
     }
 
     // check if the app is being first run (since last update)
-    public void checkIfFirstRun() {
+    public String checkIfNewVersion() {
         String versionName = BuildConfig.VERSION_NAME;
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         String lastVersion = prefs.getString(LAST_VERSION_NUMBER, null);
         if (lastVersion == null || !lastVersion.equals(versionName)) {
             // first run of the app
-            displayNewDialog(versionName);
             SharedPreferences.Editor editor = prefs.edit();
             editor.putString(LAST_VERSION_NUMBER, versionName);
             editor.apply();
-
+            return versionName;
         }
+        return null;
     }
 
     // display a dialog containing what's new
@@ -439,12 +493,12 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
 
     @Override
     public void enableTimerButton() {
-        //changeTimerButton.setEnabled(true);
+        //changeTimeButton.setEnabled(true);
     }
 
     @Override
     public void disableTimerButton() {
-        //changeTimerButton.setEnabled(false);
+        //changeTimeButton.setEnabled(false);
     }
 
     @Override
@@ -569,7 +623,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
 
     @Override
     public void updateTime(String time) {
-        currentTimerView.setText(time);
+        currentTimeView.setText(time);
     }
 
     private void setViews(Bundle savedInstanceState) {
@@ -577,7 +631,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
         if (!isPro(this)) {
             setupAds(BuildConfig.DEBUG);
         } else {
-            currentTimerView.setTextSize(148);
+            currentTimeView.setTextSize(148);
         }
         setSupportActionBar(toolbar);
 
@@ -613,7 +667,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
             presenter.toggleTimer();
         });
 
-        currentTimerView.setOnClickListener(v -> {
+        currentTimeView.setOnClickListener(v -> {
             if (presenter.timerRunning()) {
                 getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
             } else if (presenter.stayAwakeDuringTimer()) {
@@ -675,7 +729,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
         new AlertDialog.Builder(this)
                 .setTitle("Are you sure?")
                 .setPositiveButton("Reset", (dialog, which) -> {
-                    //changeTimerButton.setText(getString(R.string.button_start_timer));
+                    //changeTimeButton.setText(getString(R.string.button_start_timer));
                     presenter.resetBout();
                     vibrator.cancel();
                     Toast.makeText(mContext, "Bout reset!", Toast.LENGTH_SHORT).show();
@@ -691,6 +745,15 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_menu, menu);
         return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (!navigationMenu.isMenuHidden()) {
+            navigationMenu.closeMenu(true);
+        } else {
+            super.onBackPressed();
+        }
     }
 
     // create activities for options menu selections

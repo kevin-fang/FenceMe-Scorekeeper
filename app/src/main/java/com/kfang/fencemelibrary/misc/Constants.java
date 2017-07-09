@@ -11,6 +11,7 @@ public class Constants {
     public static final int DEFAULT_MINUTES = 3;
 
     public static final String LAST_VERSION_NUMBER = "last_version_number";
+    public static final String FIRST_RUN = "first_run";
     public static final String RESTORE_ON_EXIT = "restore_status";
     public static final String RED_NAME = "red_name";
     public static final String GREEN_NAME = "green_name";
