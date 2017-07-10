@@ -9,14 +9,14 @@
             android:title="@string/pause_on_score_change" />
 
         <com.kfang.fencemelibrary.misc.NumberPickerPreference
-            android:defaultValue="5"
+            android:defaultValue="@string/default_minutes"
             android:key="bout_length_points"
             android:summary="@string/change_point_summary"
             android:title="@string/max_points_per_bout" />
 
 
         <com.kfang.fencemelibrary.misc.NumberPickerPreference
-            android:defaultValue="3"
+            android:defaultValue="@string/default_points"
             android:key="bout_length_time"
             android:summary="@string/change_timer_summary"
             android:title="@string/default_bout_length" />

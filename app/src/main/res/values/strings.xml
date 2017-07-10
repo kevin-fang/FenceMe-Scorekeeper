@@ -43,4 +43,7 @@
 
     <bool name="lite_version">true</bool>
     <string name="go_pro">Get FenceMe! Pro</string>
+    <string name="default_minutes">5</string>
+    <string name="default_points">3</string>
+
 </resources>

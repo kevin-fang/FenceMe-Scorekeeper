@@ -8,8 +8,7 @@
     </string-array>
 
     <string-array name="change_log">
-        <item>New! Tap anywhere on the main timer display to stop/start the timer</item>
-        <item>New! Swipe up/down on the red/green score to change score</item>
-        <item>Fixed bug where timer would start at .18 seconds</item>
+        <item>Added instructions for first launch</item>
+        <item>The back button now closes the navigation menu if it is open</item>
     </string-array>
 </resources>

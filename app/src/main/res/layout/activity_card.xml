@@ -22,7 +22,7 @@
         android:background="@drawable/yellowcard"
         android:fontFamily="sans-serif-light"
         android:text="@string/yellow_card"
-        android:textSize="@dimen/button_text_size" />
+        android:textSize="@dimen/card_button_text_size" />
 
     <Button
         android:id="@+id/red_card"
@@ -33,7 +33,7 @@
         android:background="@drawable/redcard"
         android:fontFamily="sans-serif-light"
         android:text="@string/red_card"
-        android:textSize="@dimen/button_text_size" />
+        android:textSize="@dimen/card_button_text_size" />
 
     <Button
         android:id="@+id/black_card"
@@ -45,6 +45,6 @@
         android:fontFamily="sans-serif-light"
         android:text="@string/black_card"
         android:textColor="@color/colorNames"
-        android:textSize="@dimen/button_text_size" />
+        android:textSize="@dimen/card_button_text_size" />
 
 </LinearLayout>

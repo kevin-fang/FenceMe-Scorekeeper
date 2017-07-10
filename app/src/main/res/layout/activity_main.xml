@@ -73,7 +73,7 @@
                 android:backgroundTint="@color/colorAccent"
                 android:onClick="setTimer"
                 android:text="@string/button_change_timer"
-                ads:layout_constraintHorizontal_bias="0.498"
+                android:textSize="@dimen/change_timer_size"
                 ads:layout_constraintLeft_toLeftOf="parent"
                 ads:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintBottom_toTopOf="@+id/linearLayout2" />
@@ -98,7 +98,8 @@
                     android:layout_gravity="center"
                     android:layout_weight=".35"
                     android:text="@string/button_reset_timer"
-                    android:textColor="@color/primary_text" />
+                    android:textColor="@color/primary_text"
+                    android:textSize="@dimen/button_bar_size" />
 
                 <View
                     android:id="@+id/double_touch_divider"
@@ -117,7 +118,8 @@
                     android:layout_gravity="center"
                     android:layout_weight=".35"
                     android:text="@string/double_touch"
-                    android:textColor="@color/primary_text" />
+                    android:textColor="@color/primary_text"
+                    android:textSize="@dimen/button_bar_size" />
 
                 <View
                     android:layout_width="2px"
@@ -135,7 +137,8 @@
                     android:layout_weight=".35"
                     android:onClick="resetBout"
                     android:text="@string/button_reset_bout"
-                    android:textColor="@color/primary_text" />
+                    android:textColor="@color/primary_text"
+                    android:textSize="@dimen/button_bar_size" />
 
 
             </LinearLayout>
@@ -144,21 +147,24 @@
                 android:id="@+id/timer"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
+                android:layout_marginTop="0dp"
                 android:clickable="true"
                 android:fontFamily="sans-serif-thin"
                 android:gravity="center"
                 android:isScrollContainer="false"
                 android:text="@string/timer_full_time"
-                android:textSize="120sp"
+                android:textSize="@dimen/timer_size"
                 ads:layout_constraintBottom_toTopOf="@+id/change_timer"
+                ads:layout_constraintHorizontal_bias="0.0"
                 ads:layout_constraintTop_toBottomOf="@+id/adView"
+                ads:layout_constraintVertical_bias="0.0"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent" />
 
             <RelativeLayout
                 android:id="@+id/red_body"
                 android:layout_width="0dp"
-                android:layout_height="125dp"
+                android:layout_height="@dimen/player_box_size"
                 android:layout_marginTop="0dp"
                 android:layout_weight="1"
                 android:background="@drawable/layout_red"
@@ -172,7 +178,8 @@
                     android:id="@+id/redSide"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
                     android:layout_gravity="center_horizontal"
                     android:clickable="true"
                     android:ellipsize="end"
@@ -180,7 +187,6 @@
                     android:gravity="center_horizontal"
                     android:lines="1"
                     android:onClick="changeRedName"
-                    android:paddingTop="6dp"
                     android:text="@{redFencer.name}"
                     android:textColor="@color/colorNames"
                     android:textSize="@dimen/player_name_size" />
@@ -200,7 +206,7 @@
                         android:fontFamily="sans-serif-light"
                         android:text="@string/subtract_point"
                         android:textColor="@color/primary_text"
-                        android:textSize="@dimen/button_text_size" />
+                        android:textSize="@dimen/card_button_text_size" />
 
                     <TextView
                         android:id="@+id/red_score"
@@ -220,14 +226,14 @@
                         android:fontFamily="sans-serif-light"
                         android:text="@string/add_point"
                         android:textColor="@color/primary_text"
-                        android:textSize="@dimen/button_text_size" />
+                        android:textSize="@dimen/card_button_text_size" />
                 </LinearLayout>
             </RelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/green_body"
                 android:layout_width="0dp"
-                android:layout_height="125dp"
+                android:layout_height="@dimen/player_box_size"
                 android:layout_marginBottom="-12dp"
                 android:layout_weight="1"
                 android:background="@drawable/layout_green"
@@ -250,7 +256,6 @@
                     android:gravity="center_horizontal"
                     android:lines="1"
                     android:onClick="changeGreenName"
-                    android:paddingTop="6dp"
                     android:text="@{greenFencer.name}"
                     android:textColor="@color/colorNames"
                     android:textSize="@dimen/player_name_size" />
@@ -270,7 +275,7 @@
                         android:fontFamily="sans-serif-light"
                         android:text="@string/subtract_point"
                         android:textColor="@color/primary_text"
-                        android:textSize="@dimen/button_text_size" />
+                        android:textSize="@dimen/card_button_text_size" />
 
                     <TextView
                         android:id="@+id/green_score"
@@ -291,7 +296,7 @@
                         android:fontFamily="sans-serif-light"
                         android:text="@string/add_point"
                         android:textColor="@color/primary_text"
-                        android:textSize="@dimen/button_text_size" />
+                        android:textSize="@dimen/card_button_text_size" />
                 </LinearLayout>
             </RelativeLayout>
 
