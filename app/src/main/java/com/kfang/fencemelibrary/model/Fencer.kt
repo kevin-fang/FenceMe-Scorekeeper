@@ -19,20 +19,12 @@ class Fencer
     internal var points: Int = 0
     var redCards: Int = 0
     var yellowCards: Int = 0
-    private var hasPriority: Boolean = false
+    var priority: Boolean = false
 
     init {
         this.points = 0
         this.redCards = 0
         this.yellowCards = 0
-    }
-
-    fun assignPriority() {
-        this.hasPriority = true
-    }
-
-    fun hasPriority(): Boolean {
-        return this.hasPriority
     }
 
     @Bindable

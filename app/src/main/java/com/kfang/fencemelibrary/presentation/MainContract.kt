@@ -42,7 +42,7 @@ class MainContract {
 
         fun incrementBothPoints()
 
-        fun timerRunning(): Boolean
+        var timerRunning: Boolean
 
         var tiebreaker: Boolean
 
@@ -70,21 +70,15 @@ class MainContract {
     interface MainView {
         fun updateTime(time: String)
 
-        fun enableChangingScore()
-
-        fun enableTimerButton()
-
-        fun disableTimerButton()
-
-        fun disableChangingScore()
+        fun setScoreChangeability(allowChange: Boolean)
 
         fun timerUp()
 
-        fun updateToggle(colorTo: String, text: Int)
-
         fun displayWinnerDialog(winner: Fencer)
 
-        fun vibrateTimer()
+        fun vibrateTimeUp()
+
+        fun setTimerColor(color: String)
     }
 
     interface FenceTimer {

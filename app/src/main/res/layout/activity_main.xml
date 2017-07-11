@@ -300,6 +300,15 @@
                 </LinearLayout>
             </RelativeLayout>
 
+            <ImageView
+                android:contentDescription="@string/assign_card_desc"
+                android:id="@+id/assign_card_button"
+                android:layout_width="47dp"
+                android:layout_height="56dp"
+                ads:srcCompat="@drawable/give_card"
+                ads:layout_constraintRight_toRightOf="parent"
+                ads:layout_constraintBottom_toTopOf="@+id/linearLayout2" />
+
         </android.support.constraint.ConstraintLayout>
     </android.support.design.widget.CoordinatorLayout>
 

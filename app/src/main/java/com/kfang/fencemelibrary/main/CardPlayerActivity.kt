@@ -26,9 +26,8 @@ class CardPlayerActivity : AppCompatActivity() {
         setContentView(R.layout.activity_card)
         val intent = intent
 
-        if (supportActionBar != null) {
-            supportActionBar!!.setTitle(R.string.nav_card_player)
-        }
+        supportActionBar?.setTitle(R.string.nav_card_player)
+
         val b = intent.extras
         redFencer = b.getSerializable(RED_FENCER) as Fencer
         greenFencer = b.getSerializable(GREEN_FENCER) as Fencer

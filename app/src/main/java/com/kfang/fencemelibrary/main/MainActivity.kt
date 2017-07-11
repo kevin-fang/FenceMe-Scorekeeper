@@ -51,27 +51,29 @@ import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 
 class MainActivity : AppCompatActivity(), MainContract.MainView, DrawerAdapter.OnItemSelectedListener {
+    // alarm handling
     val alarmHandler: Handler = Handler()
     var alarmTone: Ringtone? = null
     lateinit var presenter: MainContract.MainPresenter
 
+    // set menu items
     var screenTitles: Array<String> = kotlin.arrayOf("Card a Player", "Tiebreaker", "Reset Bout")
 
-    var greenY1: Float = 0.toFloat()
-    var redY1: Float = 0.toFloat()
-    var greenY2: Float = 0.toFloat()
-    var redY2: Float = 0.toFloat()
+    // set values used for gesture tracking
+    var greenY1: Float = 0F
+    var redY1: Float = 0F
+    var greenY2: Float = 0F
+    var redY2: Float = 0F
 
-    lateinit var mContext: Context
-
+    // set vibrator
     lateinit var vibrator: Vibrator
 
+    // set up alarm thread
     val alarms: Thread
-
     init {
         alarms = Thread {
             // create alarm
-            alarmTone!!.play()
+            alarmTone?.play()
             val pattern = longArrayOf(0, 500, 500)
             // create vibration
             if (presenter.vibrateOnTimerFinish()) {
@@ -85,32 +87,33 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, DrawerAdapter.O
 
     // create a tiebreaker
     fun makeTieBreaker() {
+        // choose a random fencer and assign priority to that fencer
         val chosenFencer = presenter.randomFencer()
         // create tiebreaker dialog that sets time to 1 minute
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle("Tiebreaker")
-        builder.setMessage(chosenFencer.name + " has priority!")
-        builder.setPositiveButton("Start Tiebreaker") { _, _ ->
-            //Toast.makeText(context, "Starting Tiebreaker...", Toast.LENGTH_SHORT).show();
-            presenter.resetScores()
-            presenter.setTimer(60 * 1000)
-            presenter.startTimer()
-            presenter.tiebreaker = true
-            enableTimerButton()
-        }
+        AlertDialog.Builder(this)
+                .setTitle("Tiebreaker")
+                .setMessage(chosenFencer.name + " has priority!")
+                .setPositiveButton("Start Tiebreaker") { _, _ ->
+                    presenter.resetScores()
+                    presenter.setTimer(60 * 1000)
+                    presenter.startTimer()
+                    presenter.tiebreaker = true
+                }
                 .create()
                 .show()
 
     }
 
-    fun checkAndSetDoubleTouch(activity: Activity) {
+    // check and set whether the double touch button is visible
+    fun checkAndSetDoubleTouch() {
+        val viewState: Int
         if (presenter.enableDoubleTouch()) {
-            activity.findViewById(R.id.double_touch).visibility = View.VISIBLE
-            activity.findViewById(R.id.double_touch_divider).visibility = View.VISIBLE
+            viewState = View.VISIBLE
         } else {
-            activity.findViewById(R.id.double_touch).visibility = View.GONE
-            activity.findViewById(R.id.double_touch_divider).visibility = View.GONE
+            viewState = View.GONE
         }
+        double_touch.visibility = viewState
+        double_touch_divider.visibility = viewState
     }
 
     override fun onStart() {
@@ -118,15 +121,14 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, DrawerAdapter.O
         RateThisApp.onStart(this)
     }
 
-    override fun onStop() {
-        super.onStop()
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        LOG_TAG = this.packageName
+        LOG_TAG = this.packageName // used for debugging
 
-        mContext = this@MainActivity
+        // set alarms
+        val alarm = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE)
+        alarmTone = RingtoneManager.getRingtone(applicationContext, alarm)
+
         setContentView(R.layout.activity_main)
 
         // set up MVP
@@ -151,50 +153,73 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, DrawerAdapter.O
         if (savedInstanceState != null) {
             presenter.setTimer(savedInstanceState.getInt(Constants.CURRENT_TIME))
             if (savedInstanceState.getBoolean(Constants.TIMER_RUNNING)) {
-                setTimerButtonColor(Constants.COLOR_RED)
+                setTimerColor(Constants.COLOR_RED)
                 presenter.startTimer()
             }
         } else {
             RateThisApp.showRateDialogIfNeeded(this)
         }
-        setupSwipeDetectors()
-        val versionNum = checkIfNewVersion()
-        if (versionNum != null) {
-            displayNewDialog(versionNum)
-        }
 
+        // set up the gesture detection
+        setupSwipeDetectors()
+
+
+        // show first run instructions or new version instructions
         if (firstRun()) {
-            TapTargetSequence(this)
-                    .targets(
-                            TapTarget.forView(timer, "Tap the clock to start timer.")
-                                    .outerCircleColor(android.R.color.holo_blue_bright)
-                                    .outerCircleAlpha(0.5f)
-                                    .titleTextSize(20)
-                                    .titleTextColor(android.R.color.white)
-                                    .descriptionTextSize(10)
-                                    .targetCircleColor(R.color.colorSplash)
-                                    .descriptionTextColor(R.color.colorRed)
-                                    .textTypeface(Typeface.SANS_SERIF)
-                                    .dimColor(R.color.blackCard)
-                                    .drawShadow(true)
-                                    .transparentTarget(true)
-                                    .targetRadius(120),
-                            TapTarget.forView(greenSide, "Swipe up/down or use buttons to change the score.\nClick to change player name.")
-                                    .outerCircleColor(android.R.color.holo_blue_bright)
-                                    .outerCircleAlpha(0.5f)
-                                    .titleTextSize(20)
-                                    .titleTextColor(android.R.color.white)
-                                    .targetCircleColor(R.color.colorSplash)
-                                    .descriptionTextSize(10)
-                                    .descriptionTextColor(R.color.colorRed)
-                                    .textTypeface(Typeface.SANS_SERIF)
-                                    .dimColor(R.color.blackCard)
-                                    .drawShadow(true)
-                                    .tintTarget(false)
-                                    .transparentTarget(true)
-                                    .targetRadius(70)
-                    ).start()
+            showFirstInstructions()
+        } else {
+            val versionNum = getNewVersionIfFirstLaunch()
+            if (versionNum != null) {
+                displayNewDialog(versionNum)
+            }
         }
+    }
+
+    private fun showFirstInstructions() {
+        TapTargetSequence(this)
+                .targets(
+                        TapTarget.forView(timer, "Tap the clock to toggle timer!")
+                                .outerCircleColor(android.R.color.holo_blue_bright)
+                                .outerCircleAlpha(0.5f)
+                                .titleTextSize(20)
+                                .titleTextColor(android.R.color.white)
+                                .descriptionTextSize(10)
+                                .targetCircleColor(R.color.colorSplash)
+                                .descriptionTextColor(R.color.colorRed)
+                                .textTypeface(Typeface.SANS_SERIF)
+                                .dimColor(R.color.blackCard)
+                                .drawShadow(true)
+                                .transparentTarget(true)
+                                .targetRadius(120),
+                        TapTarget.forView(greenSide, "Swipe up/down or use buttons to change the score, or click to change player name!")
+                                .outerCircleColor(android.R.color.holo_blue_bright)
+                                .outerCircleAlpha(0.5f)
+                                .titleTextSize(20)
+                                .titleTextColor(android.R.color.white)
+                                .targetCircleColor(R.color.colorSplash)
+                                .descriptionTextSize(10)
+                                .descriptionTextColor(R.color.colorRed)
+                                .textTypeface(Typeface.SANS_SERIF)
+                                .dimColor(R.color.blackCard)
+                                .drawShadow(true)
+                                .tintTarget(false)
+                                .transparentTarget(true)
+                                .targetRadius(70),
+                        TapTarget.forView(assign_card_button, "Give red/yellow/black cards to players!")
+                                .outerCircleColor(android.R.color.holo_blue_bright)
+                                .outerCircleAlpha(0.5f)
+                                .titleTextSize(20)
+                                .titleTextColor(android.R.color.white)
+                                .targetCircleColor(R.color.colorSplash)
+                                .descriptionTextSize(10)
+                                .descriptionTextColor(R.color.colorRed)
+                                .textTypeface(Typeface.SANS_SERIF)
+                                .dimColor(R.color.blackCard)
+                                .drawShadow(true)
+                                .tintTarget(false)
+                                .transparentTarget(true)
+                                .targetRadius(50)
+                ).start()
     }
 
     private fun firstRun(): Boolean {
@@ -212,6 +237,11 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, DrawerAdapter.O
 
 
     internal fun setupSwipeDetectors() {
+        /* Detector:
+         * On down, pause timer.
+         * If the finger landed above the original position, increment
+         * Else, decrement
+         */
         val greenOnTouchListener = View.OnTouchListener { _, event: MotionEvent ->
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
@@ -276,10 +306,11 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, DrawerAdapter.O
     override fun onSaveInstanceState(outState: Bundle) {
         // save current time and whether the timer is running
         outState.putInt(Constants.CURRENT_TIME, presenter.currentSeconds)
-        outState.putBoolean(Constants.TIMER_RUNNING, presenter.timerRunning())
+        outState.putBoolean(Constants.TIMER_RUNNING, presenter.timerRunning)
         super.onSaveInstanceState(outState)
     }
 
+    // for slidingrootnav
     private fun createItemFor(position: Int): DrawerItem<*> {
         return SimpleItem(screenTitles[position])
                 .withSelectedTextTint(R.color.colorAccent)
@@ -287,7 +318,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, DrawerAdapter.O
     }
 
     // check if the app is being first run (since last update)
-    fun checkIfNewVersion(): String? {
+    fun getNewVersionIfFirstLaunch(): String? {
         val versionName = BuildConfig.VERSION_NAME
         val prefs = PreferenceManager.getDefaultSharedPreferences(this)
         val lastVersion = prefs.getString(Constants.LAST_VERSION_NUMBER, null)
@@ -301,7 +332,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, DrawerAdapter.O
         return null
     }
 
-    // display a dialog containing what's new
+    // display a dialog containing what's new, reading from array
     fun displayNewDialog(versionName: String) {
         val changes = resources.getStringArray(R.array.change_log)
         // build change log from string arrays
@@ -350,10 +381,12 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, DrawerAdapter.O
 
     }
 
+    // handle carding info
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (data == null) {
             return
         }
+        // if there is a card that was given, change the scores
         val cardingPlayer = data.getStringExtra(CardPlayerActivity.FENCER_TO_CARD) // string, not a fencer
         val cardToGive = data.getStringExtra(CardPlayerActivity.RETURN_CARD)
         presenter.handleCarding(cardingPlayer, cardToGive)
@@ -370,7 +403,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, DrawerAdapter.O
         super.onPause()
     }
 
-    fun setTimerButtonColor(color: String) {
+    override fun setTimerColor(color: String) {
         // change the timer button color using transitions.
         val anim = ValueAnimator()
         anim.setIntValues(ContextCompat.getColor(this, R.color.colorTimerStop), ContextCompat.getColor(this, R.color.colorTimerStart))
@@ -390,9 +423,10 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, DrawerAdapter.O
         }
     }
 
-    override fun vibrateTimer() {
+    // vibrate the device
+    override fun vibrateTimeUp() {
         if (presenter.vibrateOnTimerToggle()) {
-            if (!presenter.timerRunning()) {
+            if (!presenter.timerRunning) {
                 vibrator.vibrate(50)
             } else {
                 vibrator.vibrate(longArrayOf(0, 50, 70, 50), -1)
@@ -400,24 +434,12 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, DrawerAdapter.O
         }
     }
 
-    override fun updateToggle(colorTo: String, text: Int) {
-        // set text in button to corresponding value.
-        setTimerButtonColor(colorTo)
-    }
-
+    // stop the ringtone if it is playing
     fun stopRingTone() {
         if (alarmTone != null && alarmTone!!.isPlaying) { // stop the alarm if it is currently playing.
             alarmHandler.removeCallbacks(alarms)
             alarmTone!!.stop()
         }
-    }
-
-    override fun enableTimerButton() {
-        //changeTimeButton.setEnabled(true);
-    }
-
-    override fun disableTimerButton() {
-        //changeTimeButton.setEnabled(false);
     }
 
     override fun displayWinnerDialog(winner: Fencer) {
@@ -430,32 +452,26 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, DrawerAdapter.O
                 }
                 .setOnCancelListener { _ ->
                     presenter.stopTimer()
-                    enableChangingScore()
+                    setScoreChangeability(true)
                 }
                 .create()
                 .show()
     }
 
     override fun timerUp() {
-        // vibrate phone in 500 ms increments
-        val alarm = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE)
-        alarmTone = RingtoneManager.getRingtone(applicationContext, alarm)
-
-        disableTimerButton()
-        // play alarm in background thread
 
         // disable keep screen on
         window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
+        // set alarms
         alarmHandler.post(alarms)
 
         // check for victories
 
         var winnerFencer: Fencer? = presenter.higherPoints()
-
         if (winnerFencer != null) {
-            disableChangingScore()
-            val winnerDialogBuilder = AlertDialog.Builder(mContext)
+            setScoreChangeability(false)
+            val winnerDialogBuilder = AlertDialog.Builder(this)
             winnerDialogBuilder.setTitle(winnerFencer.name + " wins!")
                     .setMessage(winnerFencer.name + " has won the bout!")
                     .setPositiveButton("Reset Bout") { _, _ ->
@@ -463,23 +479,23 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, DrawerAdapter.O
                         vibrator.cancel()
                         Toast.makeText(applicationContext, "Bout reset!", Toast.LENGTH_SHORT).show()
                         presenter.resetBout()
-                        enableChangingScore()
+                        setScoreChangeability(true)
                     }
                     .setOnCancelListener {
                         stopRingTone()
                         vibrator.cancel()
                         presenter.stopTimer()
-                        enableChangingScore()
+                        setScoreChangeability(true)
                     }
                     .create()
                     .show()
         } else if (presenter.tiebreaker) {
-            if (presenter.greenFencer.hasPriority()) {
+            if (presenter.greenFencer.priority) {
                 winnerFencer = presenter.greenFencer
             } else {
                 winnerFencer = presenter.redFencer
             }
-            val winnerDialogBuilder = AlertDialog.Builder(mContext)
+            val winnerDialogBuilder = AlertDialog.Builder(this)
             winnerDialogBuilder.setTitle(winnerFencer.name + " wins!")
                     .setMessage(winnerFencer.name + " has won the bout!")
                     .setPositiveButton("Reset Bout") { _, _ ->
@@ -487,60 +503,49 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, DrawerAdapter.O
                         vibrator.cancel()
                         Toast.makeText(applicationContext, "Bout reset!", Toast.LENGTH_SHORT).show()
                         presenter.resetBout()
-                        enableChangingScore()
+                        setScoreChangeability(true)
                     }
                     .setOnCancelListener { _ ->
                         vibrator.cancel()
                         presenter.stopTimer()
-                        enableChangingScore()
+                        setScoreChangeability(true)
                     }
                     .create()
                     .show()
-        } else {
-            val tiebreakerBuilder = AlertDialog.Builder(mContext)
+        } else { // score is tied
+            presenter.stopTimer()
+            val tiebreakerBuilder = AlertDialog.Builder(this)
             tiebreakerBuilder.setTitle("Tie")
                     .setMessage("Score is tied!")
                     .setPositiveButton("Start Tiebreaker") { _, _ ->
                         stopRingTone()
                         vibrator.cancel()
-                        enableChangingScore()
+                        setScoreChangeability(true)
                         makeTieBreaker()
                     }.setOnCancelListener { _ ->
-                stopRingTone()
-                vibrator.cancel()
-                enableChangingScore()
+                        stopRingTone()
+                        vibrator.cancel()
+                        setScoreChangeability(true)
             }
                     .create()
                     .show()
         }
     }
 
-    override fun disableChangingScore() {
-        plus_red.isEnabled = false
-        minus_red.isEnabled = false
-        plus_green.isEnabled = false
-        minus_green.isEnabled = false
-    }
-
-    override fun enableChangingScore() {
-        plus_red.isEnabled = true
-        minus_red.isEnabled = true
-        plus_green.isEnabled = true
-        minus_green.isEnabled = true
+    override fun setScoreChangeability(allowChange: Boolean) {
+        arrayOf(plus_red, minus_red, plus_green, minus_green).forEach { it.isEnabled = allowChange }
     }
 
     override fun onResume() {
         super.onResume()
-        checkAndSetDoubleTouch(this)
+        checkAndSetDoubleTouch()
     }
-
 
     override fun updateTime(time: String) {
         timer.text = time
     }
 
     private fun setViews(savedInstanceState: Bundle?) {
-
         if (!isPro(this)) {
             setupAds(BuildConfig.DEBUG)
         } else {
@@ -548,18 +553,21 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, DrawerAdapter.O
         }
         setSupportActionBar(toolbar)
 
+        assign_card_button.setOnClickListener { displayCardMenu() }
+
         // set values to redScore and greenScore
         // set onclickListeners for buttons
         plus_red.setOnClickListener(createScoreChanger(Utility.TO_ADD, presenter.redFencer))
         minus_red.setOnClickListener(createScoreChanger(Utility.TO_SUBTRACT, presenter.redFencer))
         plus_green.setOnClickListener(createScoreChanger(Utility.TO_ADD, presenter.greenFencer))
         minus_green.setOnClickListener(createScoreChanger(Utility.TO_SUBTRACT, presenter.greenFencer))
+        // on double touch
         double_touch.setOnClickListener { _ ->
+            // stop timer of needed
             if (presenter.pauseOnScoreChange()) {
-                if (presenter.timerRunning()) {
-                    presenter.stopTimer()
-                }
+                presenter.stopTimer()
             }
+            // increment both points, check for victory
             presenter.incrementBothPoints()
             presenter.checkForVictories()
             if (presenter.popupOnScoreChange()) {
@@ -569,9 +577,10 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, DrawerAdapter.O
             }
         }
 
-        // set onClickListener for start and reset
+        // set main start and reset timer function
         coordinator.setOnClickListener {
-            if (presenter.timerRunning()) {
+            // keep device awake if timer is going to be started, clear flags if going to be stopped
+            if (presenter.timerRunning) {
                 window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
             } else if (presenter.stayAwakeDuringTimer()) {
                 window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
@@ -580,7 +589,8 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, DrawerAdapter.O
         }
 
         timer.setOnClickListener {
-            if (presenter.timerRunning()) {
+            // keep device awake if timer is going to be started, clear flags if going to be stopped
+            if (presenter.timerRunning) {
                 window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
             } else if (presenter.stayAwakeDuringTimer()) {
                 window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
@@ -589,7 +599,8 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, DrawerAdapter.O
         }
         reset_timer.setOnClickListener { presenter.resetTimer() }
 
-        checkAndSetDoubleTouch(this)
+        checkAndSetDoubleTouch()
+        presenter.resetCards()
 
         // set action bar
         // set up navigation drawer and reset cards
@@ -608,8 +619,6 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, DrawerAdapter.O
                 createItemFor(RESET_BOUT)
         ))
         adapter.setListener(this)
-        presenter.resetCards()
-
         val list = findViewById(R.id.list) as RecyclerView
         list.isNestedScrollingEnabled = false
         list.layoutManager = LinearLayoutManager(this)
@@ -643,7 +652,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, DrawerAdapter.O
                     //changeTimeButton.setText(getString(R.string.button_start_timer));
                     presenter.resetBout()
                     vibrator.cancel()
-                    Toast.makeText(mContext, "Bout reset!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Bout reset!", Toast.LENGTH_SHORT).show()
                 }
                 .setNegativeButton("Cancel") { dialog, _ -> dialog.dismiss() }
                 .setMessage("Resetting will reset all points, the timer, and all cards awarded.")
@@ -653,8 +662,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, DrawerAdapter.O
 
     // create options menu
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        val inflater = menuInflater
-        inflater.inflate(R.menu.main_menu, menu)
+        menuInflater.inflate(R.menu.main_menu, menu)
         return true
     }
 
@@ -670,53 +678,57 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, DrawerAdapter.O
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         // Activate the navigation drawer toggle
         val id = item.itemId
-        if (id == R.id.about) {
-            startActivity(Intent(this, AboutActivity::class.java))
-            return true
-        } else if (id == R.id.whats_new) {
-            val prefs = PreferenceManager.getDefaultSharedPreferences(this)
-            val lastVersion = prefs.getString(Constants.LAST_VERSION_NUMBER, null)
-            displayNewDialog(lastVersion)
-            return true
-        } else if (id == R.id.rate_this_app) {
-            RateThisApp.showRateDialog(this)
-            return true
-        } else if (id == R.id.go_pro) {
-            val appPackageName = "com.helionlabs.fencemepro" // getPackageName() from Context or Activity object
-            try {
-                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)))
-            } catch (anfe: android.content.ActivityNotFoundException) {
-                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)))
+        presenter.stopTimer()
+        when (id) {
+            R.id.about -> { // about this app
+                startActivity(Intent(this, AboutActivity::class.java))
+                return true
             }
+            R.id.whats_new -> { // what's new
+                val prefs = PreferenceManager.getDefaultSharedPreferences(this)
+                val lastVersion = prefs.getString(Constants.LAST_VERSION_NUMBER, null)
+                displayNewDialog(lastVersion)
+                return true
+            }
+            R.id.rate_this_app -> { // rate this app
+                RateThisApp.showRateDialog(this)
+                return true
+            }
+            R.id.go_pro -> { // get pro
+                val appPackageName = "com.helionlabs.fencemepro" // getPackageName() from Context or Activity object
+                try {
+                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)))
+                } catch (anfe: android.content.ActivityNotFoundException) {
+                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)))
+                }
 
-        } else if (id == R.id.settings) {
-            if (presenter.timerRunning()) {
-                presenter.stopTimer()
-                Toast.makeText(this, "Paused bout", Toast.LENGTH_SHORT).show()
             }
-            startActivity(Intent(this, SettingsActivity::class.java))
-            return true
+            R.id.settings -> { // launch settings and pause bout
+                startActivity(Intent(this, SettingsActivity::class.java))
+                return true
+            }
+            R.id.help -> {
+                showFirstInstructions()
+                return true
+            }
         }
         return super.onOptionsItemSelected(item)
     }
 
 
     fun setTimer(v: View) {
-        if (presenter.timerRunning()) {
-            /* Toast.makeText(getApplicationContext(), "Pause timer before changing time", Toast.LENGTH_SHORT).show();*/
-            val snackbar = Snackbar.make(coordinator, "Pause before changing time", Snackbar.LENGTH_SHORT)
-            snackbar.setAction("Pause Timer") { _ ->
-                if (presenter.timerRunning()) {
-                    presenter.stopTimer()
-                }
-            }.show()
-            return
+        if (presenter.timerRunning) {
+            Toast.makeText(this, "Paused timer", Toast.LENGTH_SHORT).show()
         }
+        presenter.stopTimer()
         val newFragment = TimePickerFragment.newInstance(R.string.button_set_timer, presenter)
         newFragment.show(supportFragmentManager, "dialog")
     }
 
     internal fun changeScoreAndCheckForVictories(fencer: Fencer, toAdd: Int) {
+        /* check if supposed to add. If points less than needed points, or points are equal, increment.
+         * If supposed to subtract and points are greater than zero, decrement
+         */
         if (toAdd == Utility.TO_ADD && (fencer.getPoints() < presenter.pointsToWin || presenter.equalPoints())) {
             fencer.incrementNumPoints()
         } else if (toAdd == Utility.TO_SUBTRACT && fencer.getPoints() > 0) {
@@ -724,9 +736,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, DrawerAdapter.O
         }
 
         if (presenter.pauseOnScoreChange()) {
-            if (presenter.timerRunning()) {
-                presenter.toggleTimer()
-            }
+            presenter.stopTimer()
         }
         if (!presenter.checkForVictories(fencer) && toAdd == Utility.TO_ADD && presenter.popupOnScoreChange()) {
             Snackbar.make(coordinator, "Gave touch to " + fencer.name, Snackbar.LENGTH_SHORT)
@@ -783,33 +793,9 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, DrawerAdapter.O
     override fun onItemSelected(position: Int) {
         //Toast.makeText(activity, "selected: " + menuItem.getTitle(), Toast.LENGTH_SHORT).show();
 
-        val context = this
         when (position) {
             MainActivity.CARD_A_PLAYER -> {
-                val builder = android.app.AlertDialog.Builder(this)
-                val playerArray = arrayOf(presenter.redFencer.name, presenter.greenFencer.name, "Reset Cards")
-                builder.setTitle("Card a player")
-                        .setItems(playerArray) { _, which ->
-                            val player = playerArray[which]
-                            if (player == "Reset Cards") {
-                                presenter.resetCards()
-                                Toast.makeText(context, "Cards have been reset!", Toast.LENGTH_SHORT).show()
-                            } else {
-                                // create intent to card player and pause timer
-                                if (presenter.timerRunning()) {
-                                    presenter.stopTimer()
-                                }
-                                val cardPlayer = Intent(context, CardPlayerActivity::class.java)
-                                val b = Bundle()
-                                b.putSerializable(CardPlayerActivity.RED_FENCER, presenter.redFencer)
-                                b.putSerializable(CardPlayerActivity.GREEN_FENCER, presenter.greenFencer)
-                                b.putString(CardPlayerActivity.Companion.FENCER_TO_CARD, player)
-                                cardPlayer.putExtras(b)
-                                startActivityForResult(cardPlayer, Constants.OPEN_CARD_ACTIVITY)
-                            }
-                        }
-                        .create()
-                        .show()
+                displayCardMenu()
                 navigationMenu.closeMenu(true)
             }
             MainActivity.TIEBREAKER -> {
@@ -823,8 +809,32 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, DrawerAdapter.O
         }
     }
 
-    companion object {
+    fun displayCardMenu() {
+        val builder = android.app.AlertDialog.Builder(this)
+        val playerArray = arrayOf(presenter.redFencer.name, presenter.greenFencer.name, "Reset Cards")
+        builder.setTitle("Card a player")
+                .setItems(playerArray) { _, which ->
+                    val player = playerArray[which]
+                    if (player == "Reset Cards") {
+                        presenter.resetCards()
+                        Toast.makeText(this, "Cards have been reset!", Toast.LENGTH_SHORT).show()
+                    } else {
+                        // create intent to card player and pause timer
+                        presenter.stopTimer()
+                        val cardPlayer = Intent(this, CardPlayerActivity::class.java)
+                        val b = Bundle()
+                        b.putSerializable(CardPlayerActivity.RED_FENCER, presenter.redFencer)
+                        b.putSerializable(CardPlayerActivity.GREEN_FENCER, presenter.greenFencer)
+                        b.putString(CardPlayerActivity.Companion.FENCER_TO_CARD, player)
+                        cardPlayer.putExtras(b)
+                        startActivityForResult(cardPlayer, Constants.OPEN_CARD_ACTIVITY)
+                    }
+                }
+                .create()
+                .show()
+    }
 
+    companion object {
         val CARD_A_PLAYER = 0
         val TIEBREAKER = 1
         val RESET_BOUT = 2

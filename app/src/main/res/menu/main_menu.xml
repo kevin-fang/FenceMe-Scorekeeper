@@ -29,5 +29,9 @@
         android:title="@string/go_pro"
         app:showAsAction="never"
         />
+    <item
+        android:id="@+id/help"
+        android:title="@string/help"
+        app:showAsAction="never" />
 
 </menu>

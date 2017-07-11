@@ -45,5 +45,7 @@
     <string name="go_pro">Get FenceMe! Pro</string>
     <string name="default_minutes">5</string>
     <string name="default_points">3</string>
+    <string name="assign_card_desc">Assign a card to a player</string>
+    <string name="help">Help</string>
 
 </resources>

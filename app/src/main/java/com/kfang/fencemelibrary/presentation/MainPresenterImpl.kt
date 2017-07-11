@@ -2,7 +2,6 @@ package com.kfang.fencemelibrary.presentation
 
 import android.content.SharedPreferences
 import android.os.Vibrator
-import com.kfang.fencemelibrary.R
 import com.kfang.fencemelibrary.main.CardPlayerActivity
 import com.kfang.fencemelibrary.misc.Constants
 import com.kfang.fencemelibrary.model.Fencer
@@ -18,17 +17,12 @@ class MainPresenterImpl(private val mainView: MainContract.MainView, sp: SharedP
 
     private val sharedPreferences: SharedPreferencesRepository
     private val fenceTimer: MainContract.FenceTimer
-    private var timerRunning = false
-    private var tieBreakerStatus: Boolean = false
-
+    override var timerRunning = false
+    override var tiebreaker: Boolean = false
+        get() = field //To change initializer of created properties use File | Settings | File Templates.
+        set(value) {field = value}
     override val redFencer: Fencer
     override val greenFencer: Fencer
-
-    override var tiebreaker: Boolean = false
-        get() = tieBreakerStatus
-        set(value) {
-            field = value
-        }
 
     override var currentSeconds: Int
         get() = fenceTimer.seconds
@@ -89,7 +83,7 @@ class MainPresenterImpl(private val mainView: MainContract.MainView, sp: SharedP
     }
 
     override fun toggleTimer() {
-        mainView.vibrateTimer()
+        mainView.vibrateTimeUp()
         if (timerRunning) {
             stopTimer()
             timerRunning = false
@@ -97,19 +91,13 @@ class MainPresenterImpl(private val mainView: MainContract.MainView, sp: SharedP
             startTimer()
             timerRunning = true
         }
-
     }
-
     private fun setStopButton() {
-        mainView.updateToggle(Constants.COLOR_RED, R.string.button_stop_timer)
+        mainView.setTimerColor(Constants.COLOR_RED)
     }
 
     private fun setStartButton() {
-        mainView.updateToggle(Constants.COLOR_GREEN, R.string.button_start_timer)
-    }
-
-    override fun timerRunning(): Boolean {
-        return timerRunning
+        mainView.setTimerColor(Constants.COLOR_GREEN)
     }
 
     override fun startTimer() {
@@ -125,7 +113,7 @@ class MainPresenterImpl(private val mainView: MainContract.MainView, sp: SharedP
     }
 
     override fun stopTimer() {
-        if (timerRunning()) {
+        if (timerRunning) {
             fenceTimer.stopTimer()
             setStartButton()
             timerRunning = false
@@ -139,7 +127,7 @@ class MainPresenterImpl(private val mainView: MainContract.MainView, sp: SharedP
     override fun randomFencer(): Fencer {
         val r = Random()
         val chosenFencer = fencers[r.nextInt(fencers.size)]
-        chosenFencer.assignPriority()
+        chosenFencer.priority = true
         return chosenFencer
     }
 
@@ -152,12 +140,11 @@ class MainPresenterImpl(private val mainView: MainContract.MainView, sp: SharedP
         resetCards()
         resetScores()
         resetTimer()
-        mainView.enableTimerButton()
     }
 
     override fun resetScores() {
-        mainView.enableChangingScore()
-        tieBreakerStatus = false
+        mainView.setScoreChangeability(true)
+        tiebreaker = false
         redFencer.setPoints(0)
         greenFencer.setPoints(0)
     }
@@ -167,7 +154,7 @@ class MainPresenterImpl(private val mainView: MainContract.MainView, sp: SharedP
     }
 
     override fun checkForVictories(): Fencer? {
-        if (redFencer.getPoints() >= pointsToWin || greenFencer.getPoints() >= pointsToWin || tieBreakerStatus) {
+        if (redFencer.getPoints() >= pointsToWin || greenFencer.getPoints() >= pointsToWin || tiebreaker) {
             if (checkForVictories(redFencer)) {
                 return redFencer
             } else if (checkForVictories(greenFencer)) {
@@ -179,11 +166,11 @@ class MainPresenterImpl(private val mainView: MainContract.MainView, sp: SharedP
 
     override fun checkForVictories(fencer: Fencer): Boolean {
         // check if the points are not equal and there is a fencer with enough points to win or there is a tiebreaker and the points aren't equal
-        if (!equalPoints() && fencer.getPoints() >= pointsToWin || tieBreakerStatus && !equalPoints()) {
+        if (!equalPoints() && fencer.getPoints() >= pointsToWin || tiebreaker && !equalPoints()) {
             if (timerRunning) {
                 fenceTimer.stopTimer()
             }
-            mainView.disableChangingScore()
+            mainView.setScoreChangeability(false)
             mainView.displayWinnerDialog(fencer)
             return true
         }
