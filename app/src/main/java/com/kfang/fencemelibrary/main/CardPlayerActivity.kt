@@ -72,7 +72,7 @@ class CardPlayerActivity : AppCompatActivity() {
 
         Toast.makeText(applicationContext, "Gave point to " + oppositeFencer.name, Toast.LENGTH_SHORT).show()
         setContentView(R.layout.card_display)
-        val cardView = findViewById(R.id.card)
+        val cardView = findViewById<View>(R.id.card)
         cardView.background = ContextCompat.getDrawable(this, R.drawable.redcard)
         val returnIntent = Intent()
         returnIntent.putExtra(FENCER_TO_CARD, cardingFencerName)
@@ -86,7 +86,7 @@ class CardPlayerActivity : AppCompatActivity() {
 
     fun displayYellow() {
         setContentView(R.layout.card_display)
-        val cardView = findViewById(R.id.card)
+        val cardView = findViewById<View>(R.id.card)
         cardView.background = ContextCompat.getDrawable(this, R.drawable.yellowcard)
         val returnIntent = Intent()
         returnIntent.putExtra(FENCER_TO_CARD, cardingFencerName)
@@ -96,7 +96,7 @@ class CardPlayerActivity : AppCompatActivity() {
 
     fun displayBlack() {
         setContentView(R.layout.card_display)
-        val cardView = findViewById(R.id.card)
+        val cardView = findViewById<View>(R.id.card)
         cardView.background = ContextCompat.getDrawable(this, R.drawable.blackcard)
     }
 

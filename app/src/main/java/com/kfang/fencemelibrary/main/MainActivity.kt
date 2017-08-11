@@ -182,9 +182,12 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, DrawerAdapter.O
 
         // show first run instructions or new version instructions
         if (firstRun()) {
+            val versionNum = getNewVersionIfFirstLaunch()
+            saveNewVersionNum(versionNum)
             showFirstInstructions()
         } else {
             val versionNum = getNewVersionIfFirstLaunch()
+            saveNewVersionNum(versionNum)
             if (versionNum != null) {
                 displayNewDialog(versionNum)
             }
@@ -357,14 +360,21 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, DrawerAdapter.O
         val versionName = BuildConfig.VERSION_NAME
         val prefs = PreferenceManager.getDefaultSharedPreferences(this)
         val lastVersion = prefs.getString(Constants.LAST_VERSION_NUMBER, null)
+        // if the last version hasn't been set or the app has been updated, save an updated one
         if (lastVersion == null || lastVersion != versionName) {
             // first run of the app
-            val editor = prefs.edit()
-            editor.putString(Constants.LAST_VERSION_NUMBER, versionName)
-            editor.apply()
             return versionName
         }
         return null
+    }
+
+    fun saveNewVersionNum(versionName: String?) {
+        versionName?.let {
+            val prefs = PreferenceManager.getDefaultSharedPreferences(this)
+            val editor = prefs.edit()
+            editor.putString(Constants.LAST_VERSION_NUMBER, versionName)
+            editor.apply()
+        }
     }
 
     // display a dialog containing what's new, reading from array
@@ -654,7 +664,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, DrawerAdapter.O
                 createItemFor(RESET_BOUT)
         ))
         adapter.setListener(this)
-        val list = findViewById(R.id.list) as RecyclerView
+        val list = findViewById<RecyclerView>(R.id.list)
 
         list.apply {
             isNestedScrollingEnabled = false
