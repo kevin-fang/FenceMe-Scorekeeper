@@ -8,12 +8,9 @@
     </string-array>
 
     <string-array name="change_log">
-        <item>Added instructions for first launch</item>
-        <item>The back button now closes the navigation menu if it is open</item>
-        <item>Fixed tiebreakers not working</item>
-        <item>Added card button to intro screen</item>
-        <item>Timer now automatically pauses when change timer button is pressed</item>
-        <item>Fixed bug where timer could start at 0.00</item>
+        <item>Added button to remove timer for sabre</item>
+        <item>Fixed minor bugs with sabre mode not vibrating correctly</item>
+        <item>Fixed landscape mode crashing</item>
         <item>Minor internal optimizations</item>
     </string-array>
 </resources>

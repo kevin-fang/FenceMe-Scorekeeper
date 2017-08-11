@@ -48,6 +48,31 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
+                <ImageView
+                    android:id="@+id/sabre_mode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="56dp"
+                    android:layout_marginBottom="0dp"
+                    android:layout_marginEnd="8dp"
+                    android:contentDescription="@string/sabre_mode"
+                    ads:layout_constraintBottom_toTopOf="@+id/reset_bar"
+                    ads:layout_constraintHorizontal_bias="0.8"
+                    ads:layout_constraintLeft_toLeftOf="parent"
+                    ads:layout_constraintRight_toLeftOf="@+id/change_timer"
+                    ads:srcCompat="@drawable/sabre_mode" />
+
+                <ImageView
+                    android:id="@+id/assign_card_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="56dp"
+                    android:layout_marginBottom="-7dp"
+                    android:layout_marginStart="8dp"
+                    android:contentDescription="@string/assign_card_desc"
+                    ads:layout_constraintBottom_toTopOf="@+id/reset_bar"
+                    ads:layout_constraintHorizontal_bias="0.2"
+                    ads:layout_constraintLeft_toRightOf="@+id/change_timer"
+                    ads:layout_constraintRight_toRightOf="parent"
+                    ads:srcCompat="@drawable/give_card" />
 
                 <com.google.android.gms.ads.AdView
                     android:id="@+id/adView"
@@ -111,7 +136,7 @@
                     ads:layout_constraintRight_toLeftOf="@+id/green_body" />
 
                 <LinearLayout
-                    android:id="@id/reset_bar"
+                    android:id="@+id/reset_bar"
                     style="?android:attr/buttonBarStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

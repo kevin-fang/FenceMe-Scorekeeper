@@ -104,6 +104,14 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, DrawerAdapter.O
 
     }
 
+    override fun hideTimer() {
+        timer.visibility = View.INVISIBLE
+    }
+
+    override fun showTimer() {
+        timer.visibility = View.VISIBLE
+    }
+
     // check and set whether the double touch button is visible
     fun checkAndSetDoubleTouch() {
         val viewState: Int
@@ -148,6 +156,10 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, DrawerAdapter.O
             Utility.updateCurrentMatchPreferences(this, presenter)
         } else { // restore default time
             presenter.setTimer(presenter.boutLengthMinutes * 60 * 1000)
+        }
+
+        sabre_mode.setOnClickListener {
+            presenter.toggleSabreMode() // hide timer
         }
 
         if (savedInstanceState != null) {
@@ -206,6 +218,20 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, DrawerAdapter.O
                                 .transparentTarget(true)
                                 .targetRadius(70),
                         TapTarget.forView(assign_card_button, "Give red/yellow/black cards to players!")
+                                .outerCircleColor(android.R.color.holo_blue_bright)
+                                .outerCircleAlpha(0.5f)
+                                .titleTextSize(20)
+                                .titleTextColor(android.R.color.white)
+                                .targetCircleColor(R.color.colorSplash)
+                                .descriptionTextSize(10)
+                                .descriptionTextColor(R.color.colorRed)
+                                .textTypeface(Typeface.SANS_SERIF)
+                                .dimColor(R.color.blackCard)
+                                .drawShadow(true)
+                                .tintTarget(false)
+                                .transparentTarget(true)
+                                .targetRadius(50),
+                        TapTarget.forView(sabre_mode, "Set Sabre mode to hide timer!")
                                 .outerCircleColor(android.R.color.holo_blue_bright)
                                 .outerCircleAlpha(0.5f)
                                 .titleTextSize(20)
@@ -406,32 +432,27 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, DrawerAdapter.O
     override fun setTimerColor(color: String) {
         // change the timer button color using transitions.
         val anim = ValueAnimator()
-        anim.setIntValues(ContextCompat.getColor(this, R.color.colorTimerStop), ContextCompat.getColor(this, R.color.colorTimerStart))
-        anim.setEvaluator(ArgbEvaluator())
-        anim.addUpdateListener { valueAnimator -> coordinator.setBackgroundColor(valueAnimator.animatedValue as Int) }
-        anim.duration = 150
 
         when (color) {
             Constants.COLOR_GREEN -> {
                 anim.setIntValues(ContextCompat.getColor(this, R.color.colorTimerStop), ContextCompat.getColor(this, R.color.colorTimerStart))
-                anim.start()
             }
             Constants.COLOR_RED -> {
                 anim.setIntValues(ContextCompat.getColor(this, R.color.colorTimerStart), ContextCompat.getColor(this, R.color.colorTimerStop))
-                anim.start()
             }
         }
+        anim.setEvaluator(ArgbEvaluator())
+        anim.addUpdateListener { valueAnimator -> coordinator.setBackgroundColor(valueAnimator.animatedValue as Int) }
+        anim.duration = 150
+        anim.start()
     }
 
-    // vibrate the device
-    override fun vibrateTimeUp() {
-        if (presenter.vibrateOnTimerToggle()) {
-            if (!presenter.timerRunning) {
-                vibrator.vibrate(50)
-            } else {
-                vibrator.vibrate(longArrayOf(0, 50, 70, 50), -1)
-            }
-        }
+    override fun vibrateStart() {
+        vibrator.vibrate(50)
+    }
+
+    override fun vibrateStop() {
+        vibrator.vibrate(longArrayOf(0, 50, 70, 50), -1)
     }
 
     // stop the ringtone if it is playing

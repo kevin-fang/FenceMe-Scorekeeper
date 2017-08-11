@@ -49,6 +49,28 @@ class MainPresenterImpl(private val mainView: MainContract.MainView, sp: SharedP
         fencers.add(greenFencer)
     }
 
+    override var sabreMode: Boolean = false
+        get() = field //To change initializer of created properties use File | Settings | File Templates.
+        set(value) {
+            if (value) {
+                stopTimer()
+                mainView.hideTimer()
+            } else {
+                mainView.showTimer()
+            }
+            field = value
+        }
+
+    override fun toggleSabreMode() {
+        if (sabreMode) {
+            sabreMode = false
+            mainView.showTimer()
+        } else {
+            sabreMode = true
+            mainView.hideTimer()
+        }
+    }
+
     override fun handleCarding(cardingPlayer: String, cardToGive: String) {
         if (cardingPlayer == redFencer.name) {
             if (cardToGive == CardPlayerActivity.RED_CARD) {
@@ -83,11 +105,10 @@ class MainPresenterImpl(private val mainView: MainContract.MainView, sp: SharedP
     }
 
     override fun toggleTimer() {
-        mainView.vibrateTimeUp()
-        if (timerRunning) {
+        if (timerRunning && !sabreMode) {
             stopTimer()
             timerRunning = false
-        } else {
+        } else if (!sabreMode) {
             startTimer()
             timerRunning = true
         }
@@ -101,9 +122,12 @@ class MainPresenterImpl(private val mainView: MainContract.MainView, sp: SharedP
     }
 
     override fun startTimer() {
-        fenceTimer.startTimer()
-        setStopButton()
-        timerRunning = true
+        if (!sabreMode) {
+            fenceTimer.startTimer()
+            setStopButton()
+            timerRunning = true
+            mainView.vibrateStart()
+        }
     }
 
     override fun resetTimer() {
@@ -113,10 +137,11 @@ class MainPresenterImpl(private val mainView: MainContract.MainView, sp: SharedP
     }
 
     override fun stopTimer() {
-        if (timerRunning) {
+        if (!sabreMode && timerRunning) {
             fenceTimer.stopTimer()
             setStartButton()
             timerRunning = false
+            mainView.vibrateStop()
         }
     }
 
@@ -167,9 +192,7 @@ class MainPresenterImpl(private val mainView: MainContract.MainView, sp: SharedP
     override fun checkForVictories(fencer: Fencer): Boolean {
         // check if the points are not equal and there is a fencer with enough points to win or there is a tiebreaker and the points aren't equal
         if (!equalPoints() && fencer.getPoints() >= pointsToWin || tiebreaker && !equalPoints()) {
-            if (timerRunning) {
-                fenceTimer.stopTimer()
-            }
+            stopTimer()
             mainView.setScoreChangeability(false)
             mainView.displayWinnerDialog(fencer)
             return true

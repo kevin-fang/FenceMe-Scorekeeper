@@ -7,10 +7,8 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
 import android.view.View
-
 import com.kfang.fencemelibrary.BuildConfig
 import com.kfang.fencemelibrary.R
-
 import mehdi.sakout.aboutpage.AboutPage
 import mehdi.sakout.aboutpage.Element
 
@@ -21,8 +19,11 @@ import mehdi.sakout.aboutpage.Element
 class AboutActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setTitle(R.string.about)
+
+        supportActionBar?.apply {
+            setDisplayHomeAsUpEnabled(true)
+            setTitle(R.string.about)
+        }
 
         val versionElement = Element()
         val versionName = BuildConfig.VERSION_NAME
@@ -34,7 +35,8 @@ class AboutActivity : AppCompatActivity() {
                 .setImage(R.drawable.about_app_feature)
                 .addItem(versionElement)
                 .addGroup("Connect with us:")
-                .addEmail("helionapps@gmail.com")
+                .addEmail("fenceme@helionlabs.com")
+
         if (!MainActivity.isPro(this)) {
             page.addPlayStore("com.kfang.fenceme")
         } else {

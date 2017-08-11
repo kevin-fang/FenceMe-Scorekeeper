@@ -50,6 +50,8 @@ class MainContract {
 
         var boutLengthMinutes: Int
 
+        var sabreMode: Boolean
+
         fun vibrateOnTimerFinish(): Boolean
 
         fun stayAwakeDuringTimer(): Boolean
@@ -65,9 +67,16 @@ class MainContract {
         fun vibrateOnTimerToggle(): Boolean
 
         fun pauseOnScoreChange(): Boolean
+
+        fun toggleSabreMode()
     }
 
     interface MainView {
+
+        fun hideTimer()
+
+        fun showTimer()
+
         fun updateTime(time: String)
 
         fun setScoreChangeability(allowChange: Boolean)
@@ -76,7 +85,9 @@ class MainContract {
 
         fun displayWinnerDialog(winner: Fencer)
 
-        fun vibrateTimeUp()
+        fun vibrateStart()
+
+        fun vibrateStop()
 
         fun setTimerColor(color: String)
     }

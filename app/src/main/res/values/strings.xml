@@ -47,5 +47,6 @@
     <string name="default_points">3</string>
     <string name="assign_card_desc">Assign a card to a player</string>
     <string name="help">Help</string>
+    <string name="sabre_mode">Sabre Mode</string>
 
 </resources>
