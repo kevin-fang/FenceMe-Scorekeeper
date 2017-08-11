@@ -98,7 +98,7 @@
                     android:layout_gravity="center"
                     android:layout_weight=".35"
                     android:text="@string/button_reset_timer"
-                    android:textColor="@color/primary_text"
+                    android:textColor="@color/primaryText"
                     android:textSize="@dimen/button_bar_size" />
 
                 <View
@@ -118,7 +118,7 @@
                     android:layout_gravity="center"
                     android:layout_weight=".35"
                     android:text="@string/double_touch"
-                    android:textColor="@color/primary_text"
+                    android:textColor="@color/primaryText"
                     android:textSize="@dimen/button_bar_size" />
 
                 <View
@@ -137,7 +137,7 @@
                     android:layout_weight=".35"
                     android:onClick="resetBout"
                     android:text="@string/button_reset_bout"
-                    android:textColor="@color/primary_text"
+                    android:textColor="@color/primaryText"
                     android:textSize="@dimen/button_bar_size" />
 
 
@@ -175,7 +175,7 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <TextView
-                    android:id="@+id/redSide"
+                    android:id="@+id/red_fencer_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
@@ -205,7 +205,7 @@
                         android:layout_weight=".35"
                         android:fontFamily="sans-serif-light"
                         android:text="@string/subtract_point"
-                        android:textColor="@color/primary_text"
+                        android:textColor="@color/primaryText"
                         android:textSize="@dimen/card_button_text_size" />
 
                     <TextView
@@ -225,7 +225,7 @@
                         android:layout_weight=".35"
                         android:fontFamily="sans-serif-light"
                         android:text="@string/add_point"
-                        android:textColor="@color/primary_text"
+                        android:textColor="@color/primaryText"
                         android:textSize="@dimen/card_button_text_size" />
                 </LinearLayout>
             </RelativeLayout>
@@ -245,7 +245,7 @@
                 app:layout_constraintRight_toRightOf="parent">
 
                 <TextView
-                    android:id="@+id/greenSide"
+                    android:id="@+id/green_fencer_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
@@ -274,7 +274,7 @@
                         android:layout_weight=".35"
                         android:fontFamily="sans-serif-light"
                         android:text="@string/subtract_point"
-                        android:textColor="@color/primary_text"
+                        android:textColor="@color/primaryText"
                         android:textSize="@dimen/card_button_text_size" />
 
                     <TextView
@@ -295,7 +295,7 @@
                         android:layout_weight=".35"
                         android:fontFamily="sans-serif-light"
                         android:text="@string/add_point"
-                        android:textColor="@color/primary_text"
+                        android:textColor="@color/primaryText"
                         android:textSize="@dimen/card_button_text_size" />
                 </LinearLayout>
             </RelativeLayout>

@@ -18,10 +18,10 @@ import android.widget.NumberPicker
 class NumberPickerPreference(context: Context, attrs: AttributeSet) : DialogPreference(context, attrs) {
 
     lateinit var picker: NumberPicker
-    var value: Int = 0
+    var defaultValue: Int = 0
         set(value) {
             field = value
-            persistInt(this.value)
+            persistInt(this.defaultValue)
         }
 
     override fun onCreateDialogView(): View {
@@ -39,10 +39,12 @@ class NumberPickerPreference(context: Context, attrs: AttributeSet) : DialogPref
 
     override fun onBindDialogView(view: View) {
         super.onBindDialogView(view)
-        picker.minValue = MIN_VALUE
-        picker.maxValue = MAX_VALUE
-        picker.wrapSelectorWheel = WRAP_SELECTOR_WHEEL
-        picker.value = value
+        picker.apply {
+            minValue = MIN_VALUE
+            maxValue = MAX_VALUE
+            wrapSelectorWheel = WRAP_SELECTOR_WHEEL
+            value = defaultValue
+        }
     }
 
     override fun onDialogClosed(positiveResult: Boolean) {
@@ -50,7 +52,7 @@ class NumberPickerPreference(context: Context, attrs: AttributeSet) : DialogPref
             picker.clearFocus()
             val newValue = picker.value
             if (callChangeListener(newValue)) {
-                value = newValue
+                defaultValue = newValue
             }
         }
     }
@@ -62,8 +64,8 @@ class NumberPickerPreference(context: Context, attrs: AttributeSet) : DialogPref
 
     override fun onSetInitialValue(restorePersistedValue: Boolean, defaultValue: Any?) {
         Log.d("NumberPickerPreference", "in onsetinitialvalue, a[index] $defaultValue")
-        value = if (restorePersistedValue) getPersistedInt(MIN_VALUE) else defaultValue as Int
-        persistInt(value)
+        this.defaultValue = if (restorePersistedValue) getPersistedInt(MIN_VALUE) else defaultValue as Int
+        persistInt(this.defaultValue)
     }
 
     companion object {

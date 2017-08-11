@@ -22,7 +22,10 @@ object Constants {
     val CURRENT_GAME_PREFERENCES = "current_game_preferences"
     val CURRENT_RED_POINTS = "current_red_points"
     val CURRENT_GREEN_POINTS = "current_green_points"
+
     val CURRENT_TIME = "current_time"
+    val TIMER_RUNNING = "timer_running"
+    val SABRE_MODE = "sabre_mode"
 
     val VIBRATE_AT_END = "vibrate_on_finish"
     val PAUSE_ON_SCORE_CHANGE = "pause_on_score_change"
@@ -36,7 +39,6 @@ object Constants {
     val TOGGLE_DOUBLE_TOUCH = "toggle_double_touch"
 
     val TO_CARD_PLAYER = "card_player"
-    val TIMER_RUNNING = "timer_running"
     val COLOR_GREEN = "green"
     val COLOR_RED = "red"
 }

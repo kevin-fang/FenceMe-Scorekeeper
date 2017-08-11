@@ -90,17 +90,18 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, DrawerAdapter.O
         // choose a random fencer and assign priority to that fencer
         val chosenFencer = presenter.randomFencer()
         // create tiebreaker dialog that sets time to 1 minute
-        AlertDialog.Builder(this)
-                .setTitle("Tiebreaker")
-                .setMessage(chosenFencer.name + " has priority!")
-                .setPositiveButton("Start Tiebreaker") { _, _ ->
-                    presenter.resetScores()
-                    presenter.setTimer(60 * 1000)
-                    presenter.startTimer()
-                    presenter.tiebreaker = true
-                }
-                .create()
-                .show()
+        AlertDialog.Builder(this).apply {
+            setTitle("Tiebreaker")
+            setMessage(chosenFencer.name + " has priority!")
+            setPositiveButton("Start Tiebreaker") { _, _ ->
+                presenter.resetScores()
+                presenter.setTimer(60 * 1000)
+                presenter.startTimer()
+                presenter.tiebreaker = true
+            }
+            create()
+            show()
+        }
 
     }
 
@@ -144,9 +145,11 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, DrawerAdapter.O
         presenter = MainPresenterImpl(this, PreferenceManager.getDefaultSharedPreferences(this), vibrator)
 
         // set up data binding for scores and names
-        val binding = DataBindingUtil.setContentView<ActivityMainBinding>(this, R.layout.activity_main)
-        binding.greenFencer = presenter.greenFencer
-        binding.redFencer = presenter.redFencer
+        DataBindingUtil.setContentView<ActivityMainBinding>(this, R.layout.activity_main)
+                .apply {
+                    greenFencer = presenter.greenFencer
+                    redFencer = presenter.redFencer
+                }
 
         // set up ads, views, vibrations and action bars.
         setViews(savedInstanceState)
@@ -168,6 +171,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, DrawerAdapter.O
                 setTimerColor(Constants.COLOR_RED)
                 presenter.startTimer()
             }
+            presenter.sabreMode = savedInstanceState.getBoolean(Constants.SABRE_MODE)
         } else {
             RateThisApp.showRateDialogIfNeeded(this)
         }
@@ -190,61 +194,65 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, DrawerAdapter.O
     private fun showFirstInstructions() {
         TapTargetSequence(this)
                 .targets(
-                        TapTarget.forView(timer, "Tap the clock to toggle timer!")
-                                .outerCircleColor(android.R.color.holo_blue_bright)
-                                .outerCircleAlpha(0.5f)
-                                .titleTextSize(20)
-                                .titleTextColor(android.R.color.white)
-                                .descriptionTextSize(10)
-                                .targetCircleColor(R.color.colorSplash)
-                                .descriptionTextColor(R.color.colorRed)
-                                .textTypeface(Typeface.SANS_SERIF)
-                                .dimColor(R.color.blackCard)
-                                .drawShadow(true)
-                                .transparentTarget(true)
-                                .targetRadius(120),
-                        TapTarget.forView(greenSide, "Swipe up/down or use buttons to change the score, or click to change player name!")
-                                .outerCircleColor(android.R.color.holo_blue_bright)
-                                .outerCircleAlpha(0.5f)
-                                .titleTextSize(20)
-                                .titleTextColor(android.R.color.white)
-                                .targetCircleColor(R.color.colorSplash)
-                                .descriptionTextSize(10)
-                                .descriptionTextColor(R.color.colorRed)
-                                .textTypeface(Typeface.SANS_SERIF)
-                                .dimColor(R.color.blackCard)
-                                .drawShadow(true)
-                                .tintTarget(false)
-                                .transparentTarget(true)
-                                .targetRadius(70),
-                        TapTarget.forView(assign_card_button, "Give red/yellow/black cards to players!")
-                                .outerCircleColor(android.R.color.holo_blue_bright)
-                                .outerCircleAlpha(0.5f)
-                                .titleTextSize(20)
-                                .titleTextColor(android.R.color.white)
-                                .targetCircleColor(R.color.colorSplash)
-                                .descriptionTextSize(10)
-                                .descriptionTextColor(R.color.colorRed)
-                                .textTypeface(Typeface.SANS_SERIF)
-                                .dimColor(R.color.blackCard)
-                                .drawShadow(true)
-                                .tintTarget(false)
-                                .transparentTarget(true)
-                                .targetRadius(50),
-                        TapTarget.forView(sabre_mode, "Set Sabre mode to hide timer!")
-                                .outerCircleColor(android.R.color.holo_blue_bright)
-                                .outerCircleAlpha(0.5f)
-                                .titleTextSize(20)
-                                .titleTextColor(android.R.color.white)
-                                .targetCircleColor(R.color.colorSplash)
-                                .descriptionTextSize(10)
-                                .descriptionTextColor(R.color.colorRed)
-                                .textTypeface(Typeface.SANS_SERIF)
-                                .dimColor(R.color.blackCard)
-                                .drawShadow(true)
-                                .tintTarget(false)
-                                .transparentTarget(true)
-                                .targetRadius(50)
+                        TapTarget.forView(timer, "Tap the clock to toggle timer!").apply {
+                            outerCircleColor(android.R.color.holo_blue_bright)
+                            outerCircleAlpha(0.5f)
+                            titleTextSize(20)
+                            titleTextColor(android.R.color.white)
+                            descriptionTextSize(10)
+                            targetCircleColor(R.color.colorSplash)
+                            descriptionTextColor(R.color.colorRed)
+                            textTypeface(Typeface.SANS_SERIF)
+                            dimColor(R.color.blackCard)
+                            drawShadow(true)
+                            transparentTarget(true)
+                            targetRadius(120)
+                        },
+                        TapTarget.forView(green_fencer_name, "Swipe up/down or use buttons to change the score, or click to change player name!").apply {
+                            outerCircleColor(android.R.color.holo_blue_bright)
+                            outerCircleAlpha(0.5f)
+                            titleTextSize(20)
+                            titleTextColor(android.R.color.white)
+                            targetCircleColor(R.color.colorSplash)
+                            descriptionTextSize(10)
+                            descriptionTextColor(R.color.colorRed)
+                            textTypeface(Typeface.SANS_SERIF)
+                            dimColor(R.color.blackCard)
+                            drawShadow(true)
+                            tintTarget(false)
+                            transparentTarget(true)
+                            targetRadius(70)
+                        },
+                        TapTarget.forView(assign_card_button, "Give red/yellow/black cards to players!").apply {
+                            outerCircleColor(android.R.color.holo_blue_bright)
+                            outerCircleAlpha(0.5f)
+                            titleTextSize(20)
+                            titleTextColor(android.R.color.white)
+                            targetCircleColor(R.color.colorSplash)
+                            descriptionTextSize(10)
+                            descriptionTextColor(R.color.colorRed)
+                            textTypeface(Typeface.SANS_SERIF)
+                            dimColor(R.color.blackCard)
+                            drawShadow(true)
+                            tintTarget(false)
+                            transparentTarget(true)
+                            targetRadius(50)
+                        },
+                        TapTarget.forView(sabre_mode, "Set Sabre mode to hide timer!").apply {
+                            outerCircleColor(android.R.color.holo_blue_bright)
+                            outerCircleAlpha(0.5f)
+                            titleTextSize(20)
+                            titleTextColor(android.R.color.white)
+                            targetCircleColor(R.color.colorSplash)
+                            descriptionTextSize(10)
+                            descriptionTextColor(R.color.colorRed)
+                            textTypeface(Typeface.SANS_SERIF)
+                            dimColor(R.color.blackCard)
+                            drawShadow(true)
+                            tintTarget(false)
+                            transparentTarget(true)
+                            targetRadius(50)
+                        }
                 ).start()
     }
 
@@ -287,7 +295,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, DrawerAdapter.O
                         changeScoreAndCheckForVictories(presenter.greenFencer, Utility.TO_SUBTRACT)
                     } else {
                         presenter.stopTimer()
-                        getNewName(greenSide, presenter.greenFencer)
+                        getNewName(green_fencer_name, presenter.greenFencer)
                     }
                     true
                 }
@@ -297,7 +305,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, DrawerAdapter.O
 
         // set up gestures
         green_body.setOnTouchListener(greenOnTouchListener)
-        greenSide.setOnTouchListener(greenOnTouchListener)
+        green_fencer_name.setOnTouchListener(greenOnTouchListener)
 
         val redOnTouchListener = View.OnTouchListener { _, event: MotionEvent ->
             when (event.action) {
@@ -318,7 +326,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, DrawerAdapter.O
                         changeScoreAndCheckForVictories(presenter.redFencer, Utility.TO_SUBTRACT)
                     } else {
                         presenter.stopTimer()
-                        getNewName(redSide, presenter.redFencer)
+                        getNewName(red_fencer_name, presenter.redFencer)
                     }
                     true
                 }
@@ -326,17 +334,18 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, DrawerAdapter.O
             }
         }
         red_body.setOnTouchListener(redOnTouchListener)
-        redSide.setOnTouchListener(redOnTouchListener)
+        red_fencer_name.setOnTouchListener(redOnTouchListener)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         // save current time and whether the timer is running
         outState.putInt(Constants.CURRENT_TIME, presenter.currentSeconds)
         outState.putBoolean(Constants.TIMER_RUNNING, presenter.timerRunning)
+        outState.putBoolean(Constants.SABRE_MODE, presenter.sabreMode)
         super.onSaveInstanceState(outState)
     }
 
-    // for slidingrootnav
+    // for slidingrootnav, create each item
     private fun createItemFor(position: Int): DrawerItem<*> {
         return SimpleItem(screenTitles[position])
                 .withSelectedTextTint(R.color.colorAccent)
@@ -376,15 +385,17 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, DrawerAdapter.O
         }
         // build alert dialog with changelog
         val whatsNew = AlertDialog.Builder(this)
-        whatsNew.setTitle("What's new in FenceMe! $proVersion$versionName:")
-                .setMessage(changeLog)
-                .setPositiveButton("Dismiss") { dialog, _ -> dialog.dismiss() }
-                .setNegativeButton("Rate app") { dialog, _ ->
-                    launchRateApp()
-                    dialog.dismiss()
-                }
-                .create()
-                .show()
+        whatsNew.apply {
+            setTitle("What's new in FenceMe! $proVersion$versionName:")
+            setMessage(changeLog)
+            setPositiveButton("Dismiss") { dialog, _ -> dialog.dismiss() }
+            setNegativeButton("Rate app") { dialog, _ ->
+                launchRateApp()
+                dialog.dismiss()
+            }
+            create()
+            show()
+        }
     }
 
     // set up navigation drawers
@@ -465,18 +476,19 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, DrawerAdapter.O
 
     override fun displayWinnerDialog(winner: Fencer) {
         val winnerDialogBuilder = AlertDialog.Builder(this)
-        winnerDialogBuilder.setTitle(winner.name + " wins!")
-                .setMessage(winner.name + " has won the bout!")
-                .setPositiveButton("Reset Bout") { _, _ ->
-                    presenter.resetBout()
-                    stopRingTone()
-                }
-                .setOnCancelListener { _ ->
-                    presenter.stopTimer()
-                    setScoreChangeability(true)
-                }
-                .create()
-                .show()
+        winnerDialogBuilder.setTitle(winner.name + " wins!").apply {
+            setMessage(winner.name + " has won the bout!")
+            setPositiveButton("Reset Bout") { _, _ ->
+                presenter.resetBout()
+                stopRingTone()
+            }
+            setOnCancelListener { _ ->
+                presenter.stopTimer()
+                setScoreChangeability(true)
+            }
+            create()
+            show()
+        }
     }
 
     override fun timerUp() {
@@ -493,23 +505,25 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, DrawerAdapter.O
         if (winnerFencer != null) {
             setScoreChangeability(false)
             val winnerDialogBuilder = AlertDialog.Builder(this)
-            winnerDialogBuilder.setTitle(winnerFencer.name + " wins!")
-                    .setMessage(winnerFencer.name + " has won the bout!")
-                    .setPositiveButton("Reset Bout") { _, _ ->
-                        stopRingTone()
-                        vibrator.cancel()
-                        Toast.makeText(applicationContext, "Bout reset!", Toast.LENGTH_SHORT).show()
-                        presenter.resetBout()
-                        setScoreChangeability(true)
-                    }
-                    .setOnCancelListener {
-                        stopRingTone()
-                        vibrator.cancel()
-                        presenter.stopTimer()
-                        setScoreChangeability(true)
-                    }
-                    .create()
-                    .show()
+            winnerDialogBuilder.apply {
+                setTitle(winnerFencer!!.name + " wins!")
+                setMessage(winnerFencer!!.name + " has won the bout!")
+                setPositiveButton("Reset Bout") { _, _ ->
+                    stopRingTone()
+                    vibrator.cancel()
+                    Toast.makeText(applicationContext, "Bout reset!", Toast.LENGTH_SHORT).show()
+                    presenter.resetBout()
+                    setScoreChangeability(true)
+                }
+                setOnCancelListener {
+                    stopRingTone()
+                    vibrator.cancel()
+                    presenter.stopTimer()
+                    setScoreChangeability(true)
+                }
+                create()
+                show()
+            }
         } else if (presenter.tiebreaker) {
             if (presenter.greenFencer.priority) {
                 winnerFencer = presenter.greenFencer
@@ -517,39 +531,44 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, DrawerAdapter.O
                 winnerFencer = presenter.redFencer
             }
             val winnerDialogBuilder = AlertDialog.Builder(this)
-            winnerDialogBuilder.setTitle(winnerFencer.name + " wins!")
-                    .setMessage(winnerFencer.name + " has won the bout!")
-                    .setPositiveButton("Reset Bout") { _, _ ->
-                        stopRingTone()
-                        vibrator.cancel()
-                        Toast.makeText(applicationContext, "Bout reset!", Toast.LENGTH_SHORT).show()
-                        presenter.resetBout()
-                        setScoreChangeability(true)
-                    }
-                    .setOnCancelListener { _ ->
-                        vibrator.cancel()
-                        presenter.stopTimer()
-                        setScoreChangeability(true)
-                    }
-                    .create()
-                    .show()
+            winnerDialogBuilder.apply {
+                setTitle(winnerFencer!!.name + " wins!")
+                setMessage(winnerFencer!!.name + " has won the bout!")
+                setPositiveButton("Reset Bout") { _, _ ->
+                    stopRingTone()
+                    vibrator.cancel()
+                    Toast.makeText(applicationContext, "Bout reset!", Toast.LENGTH_SHORT).show()
+                    presenter.resetBout()
+                    setScoreChangeability(true)
+                }
+                setOnCancelListener { _ ->
+                    vibrator.cancel()
+                    presenter.stopTimer()
+                    setScoreChangeability(true)
+                }
+                create()
+                show()
+            }
         } else { // score is tied
             presenter.stopTimer()
             val tiebreakerBuilder = AlertDialog.Builder(this)
-            tiebreakerBuilder.setTitle("Tie")
-                    .setMessage("Score is tied!")
-                    .setPositiveButton("Start Tiebreaker") { _, _ ->
-                        stopRingTone()
-                        vibrator.cancel()
-                        setScoreChangeability(true)
-                        makeTieBreaker()
-                    }.setOnCancelListener { _ ->
-                        stopRingTone()
-                        vibrator.cancel()
-                        setScoreChangeability(true)
+            tiebreakerBuilder.apply {
+                setTitle("Tie")
+                setMessage("Score is tied!")
+                setPositiveButton("Start Tiebreaker") { _, _ ->
+                    stopRingTone()
+                    vibrator.cancel()
+                    setScoreChangeability(true)
+                    makeTieBreaker()
+                }
+                setOnCancelListener { _ ->
+                    stopRingTone()
+                    vibrator.cancel()
+                    setScoreChangeability(true)
+                }
+                create()
+                show()
             }
-                    .create()
-                    .show()
         }
     }
 
@@ -598,26 +617,20 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, DrawerAdapter.O
             }
         }
 
-        // set main start and reset timer function
-        coordinator.setOnClickListener {
-            // keep device awake if timer is going to be started, clear flags if going to be stopped
+        val toggleTimer = View.OnClickListener {
             if (presenter.timerRunning) {
+                // remove stay awake if it's on
                 window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-            } else if (presenter.stayAwakeDuringTimer()) {
+            } else if (presenter.stayAwakeDuringTimer() && !presenter.sabreMode) {
+                // add stay awake if setting is enabled and not in sabre
                 window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
             }
             presenter.toggleTimer()
         }
 
-        timer.setOnClickListener {
-            // keep device awake if timer is going to be started, clear flags if going to be stopped
-            if (presenter.timerRunning) {
-                window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-            } else if (presenter.stayAwakeDuringTimer()) {
-                window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-            }
-            presenter.toggleTimer()
-        }
+        coordinator.setOnClickListener(toggleTimer)
+        timer.setOnClickListener(toggleTimer)
+
         reset_timer.setOnClickListener { presenter.resetTimer() }
 
         checkAndSetDoubleTouch()
@@ -626,11 +639,12 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, DrawerAdapter.O
         // set action bar
         // set up navigation drawer and reset cards
 
-        val builder = SlidingRootNavBuilder(this)
-                .withMenuLayout(R.layout.menu_left_drawer)
-                .withToolbarMenuToggle(toolbar)
-                .withSavedState(savedInstanceState)
-                .withGravity(SlideGravity.LEFT)
+        val builder = SlidingRootNavBuilder(this).apply {
+            withMenuLayout(R.layout.menu_left_drawer)
+            withToolbarMenuToggle(toolbar)
+            withSavedState(savedInstanceState)
+            withGravity(SlideGravity.LEFT)
+        }
 
         navigationMenu = builder.inject()
 
@@ -641,9 +655,11 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, DrawerAdapter.O
         ))
         adapter.setListener(this)
         val list = findViewById(R.id.list) as RecyclerView
-        list.isNestedScrollingEnabled = false
-        list.layoutManager = LinearLayoutManager(this)
-        list.adapter = adapter
+
+        list.apply {
+            isNestedScrollingEnabled = false
+            layoutManager = LinearLayoutManager(this@MainActivity)
+        }.adapter = adapter
     }
 
     // set up ads with automatic debug detection

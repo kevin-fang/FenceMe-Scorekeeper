@@ -49,11 +49,14 @@ class SettingsActivity : AppCompatActivity() {
             addPreferencesFromResource(R.xml.preferences)
             prefs = PreferenceManager.getDefaultSharedPreferences(activity)
             val settingsEditor = prefs.edit()
-            //final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+
+            // set up preferences
             val boutMinutesPreference = findPreference(Constants.BOUT_LENGTH_MINUTES) as NumberPickerPreference
             boutMinutesPreference.setDefaultValue(3)
+
             val boutPointsPreference = findPreference(Constants.BOUT_LENGTH_POINTS) as NumberPickerPreference
             boutPointsPreference.setDefaultValue(5)
+
             val pausePreference = findPreference(Constants.PAUSE_ON_SCORE_CHANGE) as CheckBoxPreference
             val awakePreference = findPreference(Constants.KEEP_DEVICE_AWAKE) as CheckBoxPreference
             val vibrateTimerPreference = findPreference(Constants.VIBRATE_TIMER) as CheckBoxPreference
@@ -64,37 +67,26 @@ class SettingsActivity : AppCompatActivity() {
             val resetPreferences = findPreference(Constants.RESET_BOUT_PREFERENCES)
 
             resetPreferences.setOnPreferenceClickListener { _ ->
-                boutMinutesPreference.value = Constants.DEFAULT_MINUTES
-                boutPointsPreference.value = Constants.DEFAULT_POINTS
+                boutMinutesPreference.defaultValue = Constants.DEFAULT_MINUTES
+                boutPointsPreference.defaultValue = Constants.DEFAULT_POINTS
                 settingsEditor.putInt(Constants.BOUT_LENGTH_POINTS, Constants.DEFAULT_POINTS)
                 settingsEditor.putInt(Constants.BOUT_LENGTH_MINUTES, Constants.DEFAULT_MINUTES)
 
-                /* Intent stopTimer = new Intent(getActivity(), TimerService.class);
-                stopTimer.putExtra(Constants.CHANGE_TIMER, TimerService.RESET_TIMER);
-                getActivity().startService(stopTimer); */
-
                 true
             }
-
-            val spChanged = SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
+            prefs.registerOnSharedPreferenceChangeListener { _, key ->
                 when (key) {
-                    Constants.BOUT_LENGTH_MINUTES -> settingsEditor.putInt(Constants.BOUT_LENGTH_MINUTES, boutMinutesPreference.value)
-                    Constants.BOUT_LENGTH_POINTS -> settingsEditor.putInt(Constants.BOUT_LENGTH_POINTS, boutPointsPreference.value)
+                    Constants.BOUT_LENGTH_MINUTES -> settingsEditor.putInt(Constants.BOUT_LENGTH_MINUTES, boutMinutesPreference.defaultValue)
+                    Constants.BOUT_LENGTH_POINTS -> settingsEditor.putInt(Constants.BOUT_LENGTH_POINTS, boutPointsPreference.defaultValue)
                     Constants.RESTORE_ON_EXIT -> settingsEditor.putBoolean(Constants.RESTORE_ON_EXIT, restorePreference.isChecked)
                     Constants.VIBRATE_AT_END -> settingsEditor.putBoolean(Constants.VIBRATE_AT_END, vibratePreference.isChecked)
                     Constants.PAUSE_ON_SCORE_CHANGE -> settingsEditor.putBoolean(Constants.PAUSE_ON_SCORE_CHANGE, pausePreference.isChecked)
-                    Constants.KEEP_DEVICE_AWAKE ->
-                        /*if (presenter.timerRunning()) { // if timer is already running, don't let screen turn off
-                            getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-                        } */
-                        settingsEditor.putBoolean(Constants.KEEP_DEVICE_AWAKE, awakePreference.isChecked)
+                    Constants.KEEP_DEVICE_AWAKE -> settingsEditor.putBoolean(Constants.KEEP_DEVICE_AWAKE, awakePreference.isChecked)
                     Constants.POPUP_ON_SCORE -> settingsEditor.putBoolean(Constants.POPUP_ON_SCORE, popupPreference.isChecked)
                     Constants.VIBRATE_TIMER -> settingsEditor.putBoolean(Constants.VIBRATE_TIMER, vibrateTimerPreference.isChecked)
                     Constants.TOGGLE_DOUBLE_TOUCH -> settingsEditor.putBoolean(Constants.TOGGLE_DOUBLE_TOUCH, doubleTouchPreference.isChecked)
                 }
-
             }
-            prefs.registerOnSharedPreferenceChangeListener(spChanged)
             settingsEditor.apply()
         }
 
