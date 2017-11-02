@@ -18,7 +18,7 @@ import com.kfang.fencemelibrary.misc.NumberPickerPreference
  */
 
 class SettingsActivity : AppCompatActivity() {
-    lateinit var prefs: SharedPreferences
+    private lateinit var prefs: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         prefs = PreferenceManager.getDefaultSharedPreferences(this)
@@ -41,7 +41,7 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     class MyPreferenceFragment : PreferenceFragment() {
-        lateinit var prefs: SharedPreferences
+        private lateinit var prefs: SharedPreferences
 
         override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)

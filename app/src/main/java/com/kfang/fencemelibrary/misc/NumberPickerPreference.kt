@@ -17,7 +17,7 @@ import android.widget.NumberPicker
 
 class NumberPickerPreference(context: Context, attrs: AttributeSet) : DialogPreference(context, attrs) {
 
-    lateinit var picker: NumberPicker
+    private lateinit var picker: NumberPicker
     var defaultValue: Int = 0
         set(value) {
             field = value

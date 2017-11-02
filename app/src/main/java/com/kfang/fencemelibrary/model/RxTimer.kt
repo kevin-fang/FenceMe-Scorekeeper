@@ -42,7 +42,9 @@ class RxTimer(private val initialMinutes: Int, private val timerView: MainContra
         } else {
             initialMinutes * 60000
         }
-        set(value) {}
+        set(value) {
+
+        }
 
     override fun startTimer() {
         totalMilliSeconds = seconds.toLong()

@@ -52,24 +52,24 @@ import java.util.*
 
 class MainActivity : AppCompatActivity(), MainContract.MainView, DrawerAdapter.OnItemSelectedListener {
     // alarm handling
-    val alarmHandler: Handler = Handler()
-    var alarmTone: Ringtone? = null
-    lateinit var presenter: MainContract.MainPresenter
+    private val alarmHandler: Handler = Handler()
+    private var alarmTone: Ringtone? = null
+    private lateinit var presenter: MainContract.MainPresenter
 
     // set menu items
-    var screenTitles: Array<String> = kotlin.arrayOf("Card a Player", "Tiebreaker", "Reset Bout")
+    private var screenTitles: Array<String> = kotlin.arrayOf("Card a Player", "Tiebreaker", "Reset Bout")
 
     // set values used for gesture tracking
-    var greenY1: Float = 0F
-    var redY1: Float = 0F
-    var greenY2: Float = 0F
-    var redY2: Float = 0F
+    private var greenY1: Float = 0F
+    private var redY1: Float = 0F
+    private var greenY2: Float = 0F
+    private var redY2: Float = 0F
 
     // set vibrator
-    lateinit var vibrator: Vibrator
+    private lateinit var vibrator: Vibrator
 
     // set up alarm thread
-    val alarms: Thread
+    private val alarms: Thread
     init {
         alarms = Thread {
             // create alarm
@@ -83,10 +83,10 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, DrawerAdapter.O
 
     }
 
-    lateinit var navigationMenu: SlidingRootNav
+    private lateinit var navigationMenu: SlidingRootNav
 
     // create a tiebreaker
-    fun makeTieBreaker() {
+    private fun makeTieBreaker() {
         // choose a random fencer and assign priority to that fencer
         val chosenFencer = presenter.randomFencer()
         // create tiebreaker dialog that sets time to 1 minute
@@ -114,12 +114,11 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, DrawerAdapter.O
     }
 
     // check and set whether the double touch button is visible
-    fun checkAndSetDoubleTouch() {
-        val viewState: Int
-        if (presenter.enableDoubleTouch()) {
-            viewState = View.VISIBLE
+    private fun checkAndSetDoubleTouch() {
+        val viewState: Int = if (presenter.enableDoubleTouch()) {
+            View.VISIBLE
         } else {
-            viewState = View.GONE
+            View.GONE
         }
         double_touch.visibility = viewState
         double_touch_divider.visibility = viewState
@@ -273,7 +272,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, DrawerAdapter.O
     }
 
 
-    internal fun setupSwipeDetectors() {
+    private fun setupSwipeDetectors() {
         /* Detector:
          * On down, pause timer.
          * If the finger landed above the original position, increment
@@ -290,15 +289,15 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, DrawerAdapter.O
                 }
                 MotionEvent.ACTION_UP -> {
                     greenY2 = event.y
-                    if (greenY1 > greenY2) {
-                        // swipe up
-                        changeScoreAndCheckForVictories(presenter.greenFencer, Utility.TO_ADD)
-                    } else if (greenY2 > greenY1) {
-                        // swipe down
-                        changeScoreAndCheckForVictories(presenter.greenFencer, Utility.TO_SUBTRACT)
-                    } else {
-                        presenter.stopTimer()
-                        getNewName(green_fencer_name, presenter.greenFencer)
+                    when {
+                        greenY1 > greenY2 -> // swipe up
+                            changeScoreAndCheckForVictories(presenter.greenFencer, Utility.TO_ADD)
+                        greenY2 > greenY1 -> // swipe down
+                            changeScoreAndCheckForVictories(presenter.greenFencer, Utility.TO_SUBTRACT)
+                        else -> {
+                            presenter.stopTimer()
+                            getNewName(green_fencer_name, presenter.greenFencer)
+                        }
                     }
                     true
                 }
@@ -321,15 +320,15 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, DrawerAdapter.O
                 }
                 MotionEvent.ACTION_UP -> {
                     redY2 = event.y
-                    if (redY1 > redY2) {
-                        // swipe up
-                        changeScoreAndCheckForVictories(presenter.redFencer, Utility.TO_ADD)
-                    } else if (redY2 > redY1) {
-                        // swipe down
-                        changeScoreAndCheckForVictories(presenter.redFencer, Utility.TO_SUBTRACT)
-                    } else {
-                        presenter.stopTimer()
-                        getNewName(red_fencer_name, presenter.redFencer)
+                    when {
+                        redY1 > redY2 -> // swipe up
+                            changeScoreAndCheckForVictories(presenter.redFencer, Utility.TO_ADD)
+                        redY2 > redY1 -> // swipe down
+                            changeScoreAndCheckForVictories(presenter.redFencer, Utility.TO_SUBTRACT)
+                        else -> {
+                            presenter.stopTimer()
+                            getNewName(red_fencer_name, presenter.redFencer)
+                        }
                     }
                     true
                 }
@@ -356,7 +355,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, DrawerAdapter.O
     }
 
     // check if the app is being first run (since last update)
-    fun getNewVersionIfFirstLaunch(): String? {
+    private fun getNewVersionIfFirstLaunch(): String? {
         val versionName = BuildConfig.VERSION_NAME
         val prefs = PreferenceManager.getDefaultSharedPreferences(this)
         val lastVersion = prefs.getString(Constants.LAST_VERSION_NUMBER, null)
@@ -368,7 +367,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, DrawerAdapter.O
         return null
     }
 
-    fun saveNewVersionNum(versionName: String?) {
+    private fun saveNewVersionNum(versionName: String?) {
         versionName?.let {
             val prefs = PreferenceManager.getDefaultSharedPreferences(this)
             val editor = prefs.edit()
@@ -378,7 +377,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, DrawerAdapter.O
     }
 
     // display a dialog containing what's new, reading from array
-    fun displayNewDialog(versionName: String) {
+    private fun displayNewDialog(versionName: String) {
         val changes = resources.getStringArray(R.array.change_log)
         // build change log from string arrays
         val changelogBuilder = StringBuilder()
@@ -411,7 +410,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, DrawerAdapter.O
     // set up navigation drawers
 
     // launch intent to rate app
-    fun launchRateApp() {
+    private fun launchRateApp() {
         val uri = Uri.parse("market://details?id=" + applicationContext.packageName)
         val goToMarket = Intent(Intent.ACTION_VIEW, uri)
         // To count with Play market backstack, After pressing back button,
@@ -445,11 +444,6 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, DrawerAdapter.O
         super.onActivityResult(requestCode, resultCode, data)
     }
 
-    override fun onPause() {
-        //presenter.stopTimer();
-        super.onPause()
-    }
-
     override fun setTimerColor(color: String) {
         // change the timer button color using transitions.
         val anim = ValueAnimator()
@@ -477,7 +471,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, DrawerAdapter.O
     }
 
     // stop the ringtone if it is playing
-    fun stopRingTone() {
+    private fun stopRingTone() {
         if (alarmTone != null && alarmTone!!.isPlaying) { // stop the alarm if it is currently playing.
             alarmHandler.removeCallbacks(alarms)
             alarmTone!!.stop()
@@ -512,72 +506,76 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, DrawerAdapter.O
         // check for victories
 
         var winnerFencer: Fencer? = presenter.higherPoints()
-        if (winnerFencer != null) {
-            setScoreChangeability(false)
-            val winnerDialogBuilder = AlertDialog.Builder(this)
-            winnerDialogBuilder.apply {
-                setTitle(winnerFencer!!.name + " wins!")
-                setMessage(winnerFencer!!.name + " has won the bout!")
-                setPositiveButton("Reset Bout") { _, _ ->
-                    stopRingTone()
-                    vibrator.cancel()
-                    Toast.makeText(applicationContext, "Bout reset!", Toast.LENGTH_SHORT).show()
-                    presenter.resetBout()
-                    setScoreChangeability(true)
+        when {
+            winnerFencer != null -> {
+                setScoreChangeability(false)
+                val winnerDialogBuilder = AlertDialog.Builder(this)
+                winnerDialogBuilder.apply {
+                    setTitle(winnerFencer!!.name + " wins!")
+                    setMessage(winnerFencer!!.name + " has won the bout!")
+                    setPositiveButton("Reset Bout") { _, _ ->
+                        stopRingTone()
+                        vibrator.cancel()
+                        Toast.makeText(applicationContext, "Bout reset!", Toast.LENGTH_SHORT).show()
+                        presenter.resetBout()
+                        setScoreChangeability(true)
+                    }
+                    setOnCancelListener {
+                        stopRingTone()
+                        vibrator.cancel()
+                        presenter.stopTimer()
+                        setScoreChangeability(true)
+                    }
+                    create()
+                    show()
                 }
-                setOnCancelListener {
-                    stopRingTone()
-                    vibrator.cancel()
-                    presenter.stopTimer()
-                    setScoreChangeability(true)
-                }
-                create()
-                show()
             }
-        } else if (presenter.tiebreaker) {
-            if (presenter.greenFencer.priority) {
-                winnerFencer = presenter.greenFencer
-            } else {
-                winnerFencer = presenter.redFencer
+            presenter.tiebreaker -> {
+                winnerFencer = if (presenter.greenFencer.priority) {
+                    presenter.greenFencer
+                } else {
+                    presenter.redFencer
+                }
+                val winnerDialogBuilder = AlertDialog.Builder(this)
+                winnerDialogBuilder.apply {
+                    setTitle(winnerFencer!!.name + " wins!")
+                    setMessage(winnerFencer!!.name + " has won the bout!")
+                    setPositiveButton("Reset Bout") { _, _ ->
+                        stopRingTone()
+                        vibrator.cancel()
+                        Toast.makeText(applicationContext, "Bout reset!", Toast.LENGTH_SHORT).show()
+                        presenter.resetBout()
+                        setScoreChangeability(true)
+                    }
+                    setOnCancelListener { _ ->
+                        vibrator.cancel()
+                        presenter.stopTimer()
+                        setScoreChangeability(true)
+                    }
+                    create()
+                    show()
+                }
             }
-            val winnerDialogBuilder = AlertDialog.Builder(this)
-            winnerDialogBuilder.apply {
-                setTitle(winnerFencer!!.name + " wins!")
-                setMessage(winnerFencer!!.name + " has won the bout!")
-                setPositiveButton("Reset Bout") { _, _ ->
-                    stopRingTone()
-                    vibrator.cancel()
-                    Toast.makeText(applicationContext, "Bout reset!", Toast.LENGTH_SHORT).show()
-                    presenter.resetBout()
-                    setScoreChangeability(true)
+            else -> { // score is tied
+                presenter.stopTimer()
+                val tiebreakerBuilder = AlertDialog.Builder(this)
+                tiebreakerBuilder.apply {
+                    setTitle("Tie")
+                    setMessage("Score is tied!")
+                    setPositiveButton("Start Tiebreaker") { _, _ ->
+                        stopRingTone()
+                        vibrator.cancel()
+                        setScoreChangeability(true)
+                        makeTieBreaker()
+                    }
+                    setOnCancelListener { _ ->
+                        stopRingTone()
+                        vibrator.cancel()
+                        setScoreChangeability(true)
+                    }
+                    create()
+                    show()
                 }
-                setOnCancelListener { _ ->
-                    vibrator.cancel()
-                    presenter.stopTimer()
-                    setScoreChangeability(true)
-                }
-                create()
-                show()
-            }
-        } else { // score is tied
-            presenter.stopTimer()
-            val tiebreakerBuilder = AlertDialog.Builder(this)
-            tiebreakerBuilder.apply {
-                setTitle("Tie")
-                setMessage("Score is tied!")
-                setPositiveButton("Start Tiebreaker") { _, _ ->
-                    stopRingTone()
-                    vibrator.cancel()
-                    setScoreChangeability(true)
-                    makeTieBreaker()
-                }
-                setOnCancelListener { _ ->
-                    stopRingTone()
-                    vibrator.cancel()
-                    setScoreChangeability(true)
-                }
-                create()
-                show()
             }
         }
     }
@@ -677,11 +675,10 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, DrawerAdapter.O
         // set up ads and in app purchases
         MobileAds.initialize(applicationContext, "ca-app-pub-6647745358935231~7845605907")
 
-        val adRequest: AdRequest
-        if (test) {
-            adRequest = AdRequest.Builder().addTestDevice("1E4125EDAE1F61B3A38F14662D5C93C7").build()
+        val adRequest: AdRequest = if (test) {
+            AdRequest.Builder().addTestDevice("1E4125EDAE1F61B3A38F14662D5C93C7").build()
         } else {
-            adRequest = AdRequest.Builder().build()
+            AdRequest.Builder().build()
         }
         adView.loadAd(adRequest)
     }
@@ -772,7 +769,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, DrawerAdapter.O
         newFragment.show(supportFragmentManager, "dialog")
     }
 
-    internal fun changeScoreAndCheckForVictories(fencer: Fencer, toAdd: Int) {
+    private fun changeScoreAndCheckForVictories(fencer: Fencer, toAdd: Int) {
         /* check if supposed to add. If points less than needed points, or points are equal, increment.
          * If supposed to subtract and points are greater than zero, decrement
          */
@@ -856,7 +853,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, DrawerAdapter.O
         }
     }
 
-    fun displayCardMenu() {
+    private fun displayCardMenu() {
         val builder = android.app.AlertDialog.Builder(this)
         val playerArray = arrayOf(presenter.redFencer.name, presenter.greenFencer.name, "Reset Cards")
         builder.setTitle("Card a player")

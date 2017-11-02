@@ -20,12 +20,12 @@ class TimePickerFragment : DialogFragment() {
     lateinit var presenter: MainContract.MainPresenter
     lateinit var mainDialog: Dialog
 
-    fun setOneMin() {
+    private fun setOneMin() {
         setTimer(1, 0)
         mainDialog.dismiss()
     }
 
-    fun setThreeMin() {
+    private fun setThreeMin() {
         setTimer(3, 0)
         mainDialog.dismiss()
     }
@@ -55,7 +55,7 @@ class TimePickerFragment : DialogFragment() {
         return mainDialog
     }
 
-    fun setTimer(minutes: Int, seconds: Int) {
+    private fun setTimer(minutes: Int, seconds: Int) {
         if (seconds == 0 && minutes == 0) {
             presenter.setTimer(presenter.boutLengthMinutes * 60 * 1000)
         } else {

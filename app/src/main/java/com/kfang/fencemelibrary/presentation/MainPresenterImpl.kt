@@ -19,22 +19,17 @@ class MainPresenterImpl(private val mainView: MainContract.MainView, sp: SharedP
     private val fenceTimer: MainContract.FenceTimer
     override var timerRunning = false
     override var tiebreaker: Boolean = false
-        get() = field //To change initializer of created properties use File | Settings | File Templates.
-        set(value) {field = value}
     override val redFencer: Fencer
     override val greenFencer: Fencer
 
-    override var currentSeconds: Int
+    override var currentSeconds: Int = -1
         get() = fenceTimer.seconds
-        set(value) {}
 
-    override var boutLengthMinutes: Int
+    override var boutLengthMinutes: Int = -1
         get() = sharedPreferences.getBoutLengthMinutes()
-        set(value) {}
 
-    override var pointsToWin: Int
+    override var pointsToWin: Int = -1
         get() = sharedPreferences.pointsToWin()
-        set(value) {}
 
     private val fencers: MutableList<Fencer>
 
@@ -44,13 +39,12 @@ class MainPresenterImpl(private val mainView: MainContract.MainView, sp: SharedP
 
         redFencer = Fencer("Red")
         greenFencer = Fencer("Green")
-        fencers = ArrayList<Fencer>()
+        fencers = ArrayList()
         fencers.add(redFencer)
         fencers.add(greenFencer)
     }
 
     override var sabreMode: Boolean = false
-        get() = field //To change initializer of created properties use File | Settings | File Templates.
         set(value) {
             if (value) {
                 stopTimer()
@@ -90,12 +84,10 @@ class MainPresenterImpl(private val mainView: MainContract.MainView, sp: SharedP
     }
 
     override fun higherPoints(): Fencer? {
-        if (redFencer.getPoints() > greenFencer.getPoints()) {
-            return redFencer
-        } else if (greenFencer.getPoints() > redFencer.getPoints()) {
-            return greenFencer
-        } else {
-            return null
+        return when {
+            redFencer.getPoints() > greenFencer.getPoints() -> redFencer
+            greenFencer.getPoints() > redFencer.getPoints() -> greenFencer
+            else -> null
         }
     }
 

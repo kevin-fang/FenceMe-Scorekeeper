@@ -18,8 +18,8 @@ class CardPlayerActivity : AppCompatActivity() {
 
     lateinit var redFencer: Fencer
     lateinit var greenFencer: Fencer
-    lateinit var cardingFencerName: String
-    lateinit var cardingFencer: Fencer
+    private lateinit var cardingFencerName: String
+    private lateinit var cardingFencer: Fencer
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,10 +33,10 @@ class CardPlayerActivity : AppCompatActivity() {
         greenFencer = b.getSerializable(GREEN_FENCER) as Fencer
         cardingFencerName = b.getString(FENCER_TO_CARD)
         //currentlyCarding = (TextView) findViewById(R.id.currently_carding);
-        if (cardingFencerName == redFencer.name) {
-            cardingFencer = redFencer
+        cardingFencer = if (cardingFencerName == redFencer.name) {
+            redFencer
         } else {
-            cardingFencer = greenFencer
+            greenFencer
         }
         currently_carding.text = String.format(getString(R.string.currently_carding), cardingFencer.name)
 
@@ -49,25 +49,24 @@ class CardPlayerActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
+        return when (item.itemId) {
             android.R.id.home -> {
                 // app icon in action bar clicked; goto parent activity.
                 this.finish()
-                return true
+                true
             }
-            else -> return super.onOptionsItemSelected(item)
+            else -> super.onOptionsItemSelected(item)
         }
     }
 
-    fun displayRed() {
+    private fun displayRed() {
         // Toast.makeText(this, "Clicked Red", Toast.LENGTH_SHORT).show();
-        val oppositeFencer: Fencer
-        if (cardingFencer === redFencer) {
+        val oppositeFencer: Fencer = if (cardingFencer === redFencer) {
             Log.d(MainActivity.LOG_TAG, "Incremented red for: " + redFencer.name)
-            oppositeFencer = greenFencer
+            greenFencer
         } else {
             Log.d(MainActivity.LOG_TAG, "Incremented red for: " + greenFencer.name)
-            oppositeFencer = redFencer
+            redFencer
         }
 
         Toast.makeText(applicationContext, "Gave point to " + oppositeFencer.name, Toast.LENGTH_SHORT).show()
@@ -80,11 +79,7 @@ class CardPlayerActivity : AppCompatActivity() {
         setResult(Activity.RESULT_OK, returnIntent)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-    }
-
-    fun displayYellow() {
+    private fun displayYellow() {
         setContentView(R.layout.card_display)
         val cardView = findViewById<View>(R.id.card)
         cardView.background = ContextCompat.getDrawable(this, R.drawable.yellowcard)
@@ -94,7 +89,7 @@ class CardPlayerActivity : AppCompatActivity() {
         setResult(Activity.RESULT_OK, returnIntent)
     }
 
-    fun displayBlack() {
+    private fun displayBlack() {
         setContentView(R.layout.card_display)
         val cardView = findViewById<View>(R.id.card)
         cardView.background = ContextCompat.getDrawable(this, R.drawable.blackcard)
