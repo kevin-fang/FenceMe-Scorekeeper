@@ -704,6 +704,13 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, DrawerAdapter.O
                 .show()
     }
 
+    override fun onStop() {
+        if (!isChangingConfigurations) { // stop the timer if the app is being killed
+            presenter.stopTimer()
+        }
+        super.onStop()
+    }
+
     // create options menu
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.main_menu, menu)
