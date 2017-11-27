@@ -8,9 +8,6 @@
     </string-array>
 
     <string-array name="change_log">
-        <item>Added button to remove timer for sabre</item>
-        <item>Fixed minor bugs with sabre mode not vibrating correctly</item>
-        <item>Fixed landscape mode crashing</item>
-        <item>Minor internal optimizations</item>
+        <item>Increased efficiency of application, no longer lags when time &lt; 10 seconds</item>
     </string-array>
 </resources>
