@@ -57,9 +57,9 @@ class TimePickerFragment : DialogFragment() {
 
     private fun setTimer(minutes: Int, seconds: Int) {
         if (seconds == 0 && minutes == 0) {
-            presenter.setTimer(presenter.boutLengthMinutes * 60 * 1000)
+            presenter.setTimerSeconds(presenter.boutLengthMinutes * 60)
         } else {
-            presenter.setTimer((seconds + minutes * 60) * 1000)
+            presenter.setTimerSeconds((seconds + minutes * 60))
         }
     }
 

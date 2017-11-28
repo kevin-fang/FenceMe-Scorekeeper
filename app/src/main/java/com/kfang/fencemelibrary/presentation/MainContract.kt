@@ -24,7 +24,7 @@ class MainContract {
 
         fun resetScores()
 
-        fun setTimer(seconds: Int)
+        fun setTimerSeconds(seconds: Int)
 
         fun resetTimer()
 
@@ -97,7 +97,7 @@ class MainContract {
 
         fun stopTimer()
 
-        fun setTimer(milliseconds: Int)
+        fun setTimer(deciSeconds: Int)
 
         var seconds: Int
     }

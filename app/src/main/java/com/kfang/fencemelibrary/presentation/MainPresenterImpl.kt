@@ -35,7 +35,7 @@ class MainPresenterImpl(private val mainView: MainContract.MainView, sp: SharedP
 
     init {
         sharedPreferences = SharedPreferencesRepositoryImpl(sp, v)
-        fenceTimer = RxTimer(boutLengthMinutes * 1000 * 60, mainView)
+        fenceTimer = RxTimer(boutLengthMinutes, mainView)
 
         redFencer = Fencer("Red")
         greenFencer = Fencer("Green")
@@ -123,7 +123,7 @@ class MainPresenterImpl(private val mainView: MainContract.MainView, sp: SharedP
     }
 
     override fun resetTimer() {
-        fenceTimer.setTimer(boutLengthMinutes * 60 * 1000)
+        fenceTimer.setTimer(boutLengthMinutes * 60 * 100)
         setStartButton()
         timerRunning = false
     }
@@ -137,8 +137,8 @@ class MainPresenterImpl(private val mainView: MainContract.MainView, sp: SharedP
         }
     }
 
-    override fun setTimer(seconds: Int) {
-        fenceTimer.setTimer(seconds)
+    override fun setTimerSeconds(seconds: Int) {
+        fenceTimer.setTimer(seconds * 100)
     }
 
     override fun randomFencer(): Fencer {

@@ -37,7 +37,7 @@ object Utility {
         redFencer.setPoints(gamePrefs.getInt(Constants.CURRENT_RED_POINTS, 0))
         greenFencer.setPoints(gamePrefs.getInt(Constants.CURRENT_GREEN_POINTS, 0))
         try {
-            presenter.setTimer(gamePrefs.getInt(Constants.CURRENT_TIME, Constants.DEFAULT_MINUTES * 60 * 1000))
+            presenter.setTimerSeconds(gamePrefs.getInt(Constants.CURRENT_TIME, Constants.DEFAULT_MINUTES * 60))
         } catch (e: Exception) {
             e.printStackTrace()
         }

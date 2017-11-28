@@ -95,7 +95,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, DrawerAdapter.O
             setMessage(chosenFencer.name + " has priority!")
             setPositiveButton("Start Tiebreaker") { _, _ ->
                 presenter.resetScores()
-                presenter.setTimer(60 * 1000)
+                presenter.setTimerSeconds(60)
                 presenter.startTimer()
                 presenter.tiebreaker = true
             }
@@ -157,7 +157,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, DrawerAdapter.O
         if (presenter.restoreOnAppReset()) {
             Utility.updateCurrentMatchPreferences(this, presenter)
         } else { // restore default time
-            presenter.setTimer(presenter.boutLengthMinutes * 60 * 1000)
+            presenter.setTimerSeconds(presenter.boutLengthMinutes * 60)
         }
 
         sabre_mode.setOnClickListener {
@@ -165,7 +165,6 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, DrawerAdapter.O
         }
 
         if (savedInstanceState != null) {
-            presenter.setTimer(savedInstanceState.getInt(Constants.CURRENT_TIME))
             if (savedInstanceState.getBoolean(Constants.TIMER_RUNNING)) {
                 setTimerColor(Constants.COLOR_RED)
                 presenter.startTimer()

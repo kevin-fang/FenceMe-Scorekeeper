@@ -9,8 +9,8 @@ android {
         targetSdkVersion 26
         applicationId "com.kfang.fenceme"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        versionCode 42
-        versionName "3.2.4"
+        versionCode 44
+        versionName "3.2.5.1"
     }
     buildTypes {
         release {
@@ -29,6 +29,6 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     compile project(":app")
-    compile 'com.android.support:appcompat-v7:26.0.1'
+    compile 'com.android.support:appcompat-v7:26.1.0'
     testCompile 'junit:junit:4.12'
 }

@@ -9,5 +9,7 @@
 
     <string-array name="change_log">
         <item>Increased efficiency of application, no longer lags when time &lt; 10 seconds</item>
+        <item>Removed "lite" banner for non-pro users</item>
+        <item>Internal improvements</item>
     </string-array>
 </resources>

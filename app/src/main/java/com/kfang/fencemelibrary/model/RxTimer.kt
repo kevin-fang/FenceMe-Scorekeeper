@@ -1,6 +1,7 @@
 package com.kfang.fencemelibrary.model
 
 
+import android.util.Log
 import com.kfang.fencemelibrary.presentation.MainContract
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -18,6 +19,7 @@ import java.util.concurrent.TimeUnit
 class RxTimer(private val initialMinutes: Int, private val timerView: MainContract.MainView) : MainContract.FenceTimer {
     private val disposable = CompositeDisposable()
     private var currentTime: Long = -1
+    // decisecond = 1/100th of a second
     private var totalDeciseconds: Long = 0
 
     private fun formatTime(deciSeconds: Long): String {
@@ -34,18 +36,18 @@ class RxTimer(private val initialMinutes: Int, private val timerView: MainContra
     }
 
     override var seconds: Int = 0
-        get() =
-        if (currentTime != -1L) {
+            // handle if the time was never set, return the initial minutes
+        get() = if (currentTime != -1L) {
             currentTime.toInt()
         } else {
-            initialMinutes * 60000
+            initialMinutes * 60
         }
 
     override fun startTimer() {
         totalDeciseconds = seconds.toLong()
         timerView.updateTime(formatTime(totalDeciseconds))
         disposable.add(Observable.interval(10, TimeUnit.MILLISECONDS)
-                .take(totalDeciseconds.toInt().toLong())
+                .take(totalDeciseconds)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .map { aLong ->
@@ -72,9 +74,10 @@ class RxTimer(private val initialMinutes: Int, private val timerView: MainContra
         disposable.clear()
     }
 
-    override fun setTimer(milliseconds: Int) {
+    override fun setTimer(deciSeconds: Int) {
+        Log.d("RXTIMER", "Time set: " + deciSeconds)
         disposable.clear()
-        totalDeciseconds = (milliseconds / 10).toLong()
+        totalDeciseconds = (deciSeconds).toLong()
         currentTime = totalDeciseconds
         timerView.updateTime(formatTime(totalDeciseconds))
     }
