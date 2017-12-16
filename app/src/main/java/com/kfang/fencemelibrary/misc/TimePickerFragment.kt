@@ -37,10 +37,10 @@ class TimePickerFragment : DialogFragment() {
         // set initial values
         pickerView.minutes_picker.minValue = 0
         pickerView.minutes_picker.maxValue = 59
-        pickerView.minutes_picker.value = presenter.currentSeconds / 100 / 60
+        pickerView.minutes_picker.value = presenter.currentDeciSeconds / 100 / 60
         pickerView.seconds_picker.maxValue = 59
         pickerView.seconds_picker.minValue = 0
-        pickerView.seconds_picker.value = presenter.currentSeconds / 100 % 60
+        pickerView.seconds_picker.value = presenter.currentDeciSeconds / 100 % 60
         pickerView.seconds_picker.setFormatter { value -> String.format(Locale.getDefault(), "%02d", value) }
 
         // set shortcuts

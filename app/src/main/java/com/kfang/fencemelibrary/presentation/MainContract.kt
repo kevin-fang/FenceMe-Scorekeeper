@@ -46,7 +46,7 @@ class MainContract {
 
         var tiebreaker: Boolean
 
-        var currentSeconds: Int
+        var currentDeciSeconds: Int
 
         var boutLengthMinutes: Int
 
@@ -97,9 +97,9 @@ class MainContract {
 
         fun stopTimer()
 
-        fun setTimer(deciSeconds: Int)
+        fun setTimerSeconds(deciSeconds: Int)
 
-        var seconds: Int
+        var deciSeconds: Int
     }
 
 }

@@ -214,13 +214,13 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
                         android:clickable="true"
-                        android:focusable="true"
                         android:ellipsize="end"
+                        android:focusable="true"
                         android:fontFamily="sans-serif-light"
                         android:lines="1"
                         android:onClick="changeRedName"
                         android:paddingTop="8dp"
-                        android:text="@string/red_side_default_name"
+                        android:text="@{redFencer.name}"
                         android:textColor="@color/colorNames"
                         android:textSize="@dimen/player_name_size" />
 
@@ -278,13 +278,13 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
                         android:clickable="true"
-                        android:focusable="true"
                         android:ellipsize="end"
+                        android:focusable="true"
                         android:fontFamily="sans-serif-light"
                         android:lines="1"
                         android:onClick="changeGreenName"
                         android:paddingTop="8dp"
-                        android:text="@string/green_side_default_name"
+                        android:text="@{greenFencer.name}"
                         android:textColor="@color/colorNames"
                         android:textSize="@dimen/player_name_size" />
 

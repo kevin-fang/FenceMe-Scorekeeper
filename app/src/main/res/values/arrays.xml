@@ -8,8 +8,8 @@
     </string-array>
 
     <string-array name="change_log">
-        <item>Increased efficiency of application, no longer lags when time &lt; 10 seconds</item>
-        <item>Removed "lite" banner for non-pro users</item>
-        <item>Internal improvements</item>
+        <item>Changed main portrait layout to have scores on the bottom</item>
+        <item>Fixed bug where names wouldn't update in landscape mode</item>
+        <item>Bug fixes</item>
     </string-array>
 </resources>

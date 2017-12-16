@@ -26,7 +26,7 @@ class RxTimer(private val initialMinutes: Int, private val timerView: MainContra
         return if (deciSeconds / 100 < 10) {
             val currentSeconds = deciSeconds / 100
             val currentHundredths = deciSeconds % 100
-            //Log.d(LOG_TAG, "minutes: " + currentMinutes + ", seconds: " + currentSeconds + ", total: " + seconds);
+            //Log.d(LOG_TAG, "minutes: " + currentMinutes + ", deciSeconds: " + currentDeciSeconds + ", total: " + deciSeconds);
             String.format(Locale.getDefault(), "%1d.%02d", currentSeconds, currentHundredths)
         } else {
             val currentMinutes: Long = deciSeconds / 100 / 60
@@ -35,7 +35,7 @@ class RxTimer(private val initialMinutes: Int, private val timerView: MainContra
         }
     }
 
-    override var seconds: Int = 0
+    override var deciSeconds: Int = 0
             // handle if the time was never set, return the initial minutes
         get() = if (currentTime != -1L) {
             currentTime.toInt()
@@ -44,7 +44,7 @@ class RxTimer(private val initialMinutes: Int, private val timerView: MainContra
         }
 
     override fun startTimer() {
-        totalDeciseconds = seconds.toLong()
+        totalDeciseconds = deciSeconds.toLong()
         timerView.updateTime(formatTime(totalDeciseconds))
         disposable.add(Observable.interval(10, TimeUnit.MILLISECONDS)
                 .take(totalDeciseconds)
@@ -74,10 +74,11 @@ class RxTimer(private val initialMinutes: Int, private val timerView: MainContra
         disposable.clear()
     }
 
-    override fun setTimer(deciSeconds: Int) {
-        Log.d("RXTIMER", "Time set: " + deciSeconds)
+    override fun setTimerSeconds(seconds: Int) {
+        val deciSec = seconds * 100
+        Log.d("RXTIMER", "Time set: " + seconds)
         disposable.clear()
-        totalDeciseconds = (deciSeconds).toLong()
+        totalDeciseconds = (deciSec).toLong()
         currentTime = totalDeciseconds
         timerView.updateTime(formatTime(totalDeciseconds))
     }

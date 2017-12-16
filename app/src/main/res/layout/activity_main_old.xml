@@ -57,27 +57,8 @@
                     ads:adSize="BANNER"
                     ads:adUnitId="@string/banner_ad_unit_id"
                     app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent" />
-
-
-                <TextView
-                    android:id="@+id/timer"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_marginTop="0dp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:fontFamily="sans-serif-thin"
-                    android:gravity="center"
-                    android:isScrollContainer="false"
-                    android:text="@string/timer_full_time"
-                    ads:layout_constraintBottom_toTopOf="@+id/change_timer"
-                    ads:layout_constraintHorizontal_bias="0.0"
-                    ads:layout_constraintTop_toBottomOf="@+id/adView"
-                    ads:layout_constraintVertical_bias="0.0"
-                    app:autoSizeTextType="uniform"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent" />
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/red_body" />
 
                 <Button
                     android:id="@+id/change_timer"
@@ -103,11 +84,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginStart="8dp"
-                    ads:layout_constraintBottom_toTopOf="@+id/red_body"
-                    ads:layout_constraintEnd_toEndOf="parent"
-                    ads:layout_constraintStart_toStartOf="parent">
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginStart="16dp"
+                    app:layout_constraintBottom_toTopOf="@+id/green_body"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent">
 
                     <Button
                         android:id="@+id/reset_timer"
@@ -118,9 +99,7 @@
                         android:layout_weight=".35"
                         android:text="@string/button_reset_timer"
                         android:textColor="@color/primaryText"
-                        android:textSize="@dimen/button_bar_size"
-                        tools:layout_editor_absoluteX="352dp"
-                        tools:layout_editor_absoluteY="275dp" />
+                        android:textSize="@dimen/button_bar_size" />
 
                     <View
                         android:id="@+id/double_touch_divider"
@@ -164,109 +143,37 @@
 
                 </LinearLayout>
 
-                <ImageView
-                    android:id="@+id/sabre_mode"
-                    android:layout_width="wrap_content"
-                    android:layout_height="56dp"
-                    android:layout_marginStart="0dp"
-                    android:contentDescription="@string/sabre_mode"
-                    ads:layout_constraintBottom_toTopOf="@+id/linearLayout2"
-                    ads:layout_constraintHorizontal_bias="0.0"
-                    ads:layout_constraintLeft_toLeftOf="parent"
-                    ads:layout_constraintRight_toLeftOf="parent"
-                    ads:srcCompat="@drawable/sabre_mode" />
-
-                <ImageView
-                    android:id="@+id/assign_card_button"
-                    android:layout_width="47dp"
-                    android:layout_height="56dp"
-                    android:layout_marginBottom="0dp"
-                    android:layout_marginEnd="0dp"
-                    android:contentDescription="@string/assign_card_desc"
-                    ads:layout_constraintBottom_toTopOf="@+id/linearLayout2"
-                    ads:layout_constraintRight_toRightOf="parent"
-                    ads:srcCompat="@drawable/give_card" />
-
-                <RelativeLayout
-                    android:id="@+id/green_body"
+                <TextView
+                    android:id="@+id/timer"
                     android:layout_width="0dp"
-                    android:layout_height="@dimen/player_box_size"
-                    android:layout_weight="1"
-                    android:background="@drawable/layout_green"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="0dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:fontFamily="sans-serif-thin"
+                    android:gravity="center"
                     android:isScrollContainer="false"
-                    android:orientation="vertical"
-                    ads:layout_constraintBottom_toBottomOf="parent"
-                    ads:layout_constraintEnd_toEndOf="parent"
-                    ads:layout_constraintStart_toEndOf="@+id/red_body">
-
-                    <TextView
-                        android:id="@+id/green_fencer_name"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:layout_gravity="center_horizontal"
-                        android:clickable="true"
-                        android:ellipsize="end"
-                        android:focusable="true"
-                        android:fontFamily="sans-serif-light"
-                        android:gravity="center_horizontal"
-                        android:lines="1"
-                        android:onClick="changeGreenName"
-                        android:text="@{greenFencer.name}"
-                        android:textColor="@color/colorNames"
-                        android:textSize="@dimen/player_name_size" />
-
-                    <LinearLayout
-                        android:id="@+id/update_score_green"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentBottom="true">
-
-                        <Button
-                            android:id="@+id/minus_green"
-                            style="?android:attr/buttonBarButtonStyle"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight=".35"
-                            android:fontFamily="sans-serif-light"
-                            android:text="@string/subtract_point"
-                            android:textColor="@color/primaryText"
-                            android:textSize="@dimen/card_button_text_size" />
-
-                        <TextView
-                            android:id="@+id/green_score"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:gravity="center"
-                            android:paddingBottom="12dp"
-                            android:text="@{Integer.toString(greenFencer.points)}"
-                            android:textSize="@dimen/score_text_size" />
-
-                        <Button
-                            android:id="@+id/plus_green"
-                            style="?android:attr/buttonBarButtonStyle"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight=".35"
-                            android:fontFamily="sans-serif-light"
-                            android:text="@string/add_point"
-                            android:textColor="@color/primaryText"
-                            android:textSize="@dimen/card_button_text_size" />
-                    </LinearLayout>
-
-                </RelativeLayout>
+                    android:text="@string/timer_full_time"
+                    ads:layout_constraintBottom_toTopOf="@+id/change_timer"
+                    ads:layout_constraintHorizontal_bias="0.0"
+                    ads:layout_constraintTop_toBottomOf="@+id/adView"
+                    ads:layout_constraintVertical_bias="0.0"
+                    app:autoSizeTextType="uniform"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent" />
 
                 <RelativeLayout
                     android:id="@+id/red_body"
                     android:layout_width="0dp"
                     android:layout_height="@dimen/player_box_size"
+                    android:layout_marginTop="0dp"
                     android:layout_weight="1"
                     android:background="@drawable/layout_red"
                     android:orientation="vertical"
-                    ads:layout_constraintBottom_toBottomOf="parent"
-                    ads:layout_constraintEnd_toStartOf="@+id/green_body"
-                    ads:layout_constraintStart_toStartOf="parent">
+                    ads:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
 
                     <TextView
                         android:id="@+id/red_fencer_name"
@@ -324,6 +231,100 @@
                             android:textSize="@dimen/card_button_text_size" />
                     </LinearLayout>
                 </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/green_body"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/player_box_size"
+                    android:layout_marginBottom="-12dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/layout_green"
+                    android:isScrollContainer="false"
+                    android:orientation="vertical"
+                    ads:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent">
+
+                    <TextView
+                        android:id="@+id/green_fencer_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_gravity="center_horizontal"
+                        android:clickable="true"
+                        android:ellipsize="end"
+                        android:focusable="true"
+                        android:fontFamily="sans-serif-light"
+                        android:gravity="center_horizontal"
+                        android:lines="1"
+                        android:onClick="changeGreenName"
+                        android:text="@{greenFencer.name}"
+                        android:textColor="@color/colorNames"
+                        android:textSize="@dimen/player_name_size" />
+
+                    <LinearLayout
+                        android:id="@+id/update_score_green"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true">
+
+                        <Button
+                            android:id="@+id/minus_green"
+                            style="?android:attr/buttonBarButtonStyle"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight=".35"
+                            android:fontFamily="sans-serif-light"
+                            android:text="@string/subtract_point"
+                            android:textColor="@color/primaryText"
+                            android:textSize="@dimen/card_button_text_size" />
+
+                        <TextView
+                            android:id="@+id/green_score"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:paddingBottom="12dp"
+                            android:text="@{Integer.toString(greenFencer.points)}"
+                            android:textSize="@dimen/score_text_size" />
+
+                        <Button
+                            android:id="@+id/plus_green"
+                            style="?android:attr/buttonBarButtonStyle"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight=".35"
+                            android:fontFamily="sans-serif-light"
+                            android:text="@string/add_point"
+                            android:textColor="@color/primaryText"
+                            android:textSize="@dimen/card_button_text_size" />
+                    </LinearLayout>
+                </RelativeLayout>
+
+                <ImageView
+                    android:id="@+id/sabre_mode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="56dp"
+                    android:layout_marginStart="0dp"
+                    android:contentDescription="@string/sabre_mode"
+                    ads:layout_constraintBottom_toTopOf="@+id/linearLayout2"
+                    ads:layout_constraintHorizontal_bias="0.0"
+                    ads:layout_constraintLeft_toLeftOf="parent"
+                    ads:layout_constraintRight_toLeftOf="parent"
+                    ads:srcCompat="@drawable/sabre_mode" />
+
+                <ImageView
+                    android:id="@+id/assign_card_button"
+                    android:layout_width="47dp"
+                    android:layout_height="56dp"
+                    android:layout_marginBottom="0dp"
+                    android:layout_marginEnd="0dp"
+                    android:contentDescription="@string/assign_card_desc"
+                    ads:layout_constraintBottom_toTopOf="@+id/linearLayout2"
+                    ads:layout_constraintRight_toRightOf="parent"
+                    ads:srcCompat="@drawable/give_card" />
 
             </android.support.constraint.ConstraintLayout>
         </android.support.design.widget.CoordinatorLayout>

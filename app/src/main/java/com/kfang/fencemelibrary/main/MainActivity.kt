@@ -340,7 +340,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, DrawerAdapter.O
 
     override fun onSaveInstanceState(outState: Bundle) {
         // save current time and whether the timer is running
-        outState.putInt(Constants.CURRENT_TIME, presenter.currentSeconds)
+        outState.putInt(Constants.CURRENT_TIME, presenter.currentDeciSeconds)
         outState.putBoolean(Constants.TIMER_RUNNING, presenter.timerRunning)
         outState.putBoolean(Constants.SABRE_MODE, presenter.sabreMode)
         super.onSaveInstanceState(outState)
