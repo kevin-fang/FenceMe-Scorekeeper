@@ -55,6 +55,7 @@ class MainPresenterImpl(private val mainView: MainContract.MainView, sp: SharedP
             field = value
         }
 
+
     override fun toggleSabreMode() {
         if (sabreMode) {
             sabreMode = false
@@ -190,6 +191,10 @@ class MainPresenterImpl(private val mainView: MainContract.MainView, sp: SharedP
             return true
         }
         return false
+    }
+
+    override fun volumeButtonTimerToggle(): Boolean {
+        return sharedPreferences.volumeButtonTimerToggle()
     }
 
     override fun vibrateOnTimerFinish(): Boolean {

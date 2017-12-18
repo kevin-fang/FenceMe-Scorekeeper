@@ -434,6 +434,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, DrawerAdapter.O
         // if there is a card that was given, change the scores
         val cardingPlayer = data.getStringExtra(CardPlayerActivity.FENCER_TO_CARD) // string, not a fencer
         val cardToGive = data.getStringExtra(CardPlayerActivity.RETURN_CARD)
+        supportActionBar?.show()
         presenter.handleCarding(cardingPlayer, cardToGive)
         if (requestCode == Constants.OPEN_CARD_ACTIVITY && resultCode == Activity.RESULT_OK) {
             if (!presenter.checkForVictories(presenter.redFencer)) {
@@ -537,8 +538,8 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, DrawerAdapter.O
                 }
                 val winnerDialogBuilder = AlertDialog.Builder(this)
                 winnerDialogBuilder.apply {
-                    setTitle(winnerFencer!!.name + " wins!")
-                    setMessage(winnerFencer!!.name + " has won the bout!")
+                    setTitle(winnerFencer.name + " wins!")
+                    setMessage(winnerFencer.name + " has won the bout!")
                     setPositiveButton("Reset Bout") { _, _ ->
                         stopRingTone()
                         vibrator.cancel()
@@ -637,6 +638,11 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, DrawerAdapter.O
 
         coordinator.setOnClickListener(toggleTimer)
         timer.setOnClickListener(toggleTimer)
+        timer.setOnLongClickListener {
+            setTimer(null)
+            true
+        }
+
 
         reset_timer.setOnClickListener { presenter.resetTimer() }
 
@@ -766,7 +772,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, DrawerAdapter.O
     }
 
 
-    fun setTimer(v: View) {
+    fun setTimer(v: View?) {
         if (presenter.timerRunning) {
             Toast.makeText(this, "Paused timer", Toast.LENGTH_SHORT).show()
         }
@@ -838,6 +844,15 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, DrawerAdapter.O
                     WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE)
         }
         alertToShow.show()
+    }
+
+    override fun dispatchKeyEvent(event: KeyEvent): Boolean {
+        return if (presenter.volumeButtonTimerToggle() && (event.keyCode == KeyEvent.KEYCODE_VOLUME_UP || event.keyCode == KeyEvent.KEYCODE_VOLUME_DOWN)) {
+            if (event.action == KeyEvent.ACTION_DOWN) presenter.toggleTimer()
+            true
+        } else {
+            super.dispatchKeyEvent(event)
+        }
     }
 
     override fun onItemSelected(position: Int) {

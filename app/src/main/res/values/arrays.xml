@@ -8,8 +8,9 @@
     </string-array>
 
     <string-array name="change_log">
-        <item>Changed main portrait layout to have scores on the bottom</item>
-        <item>Fixed bug where names wouldn't update in landscape mode</item>
-        <item>Bug fixes</item>
+        <item>You can now use volume buttons to toggle the timer (can be disabled in settings)</item>
+        <item>Long press on the timer to change the time!</item>
+        <item>Cards are now full screen</item>
+        <item>Scores are now at the bottom for easier access</item>
     </string-array>
 </resources>

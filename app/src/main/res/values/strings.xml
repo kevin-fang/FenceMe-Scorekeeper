@@ -48,5 +48,7 @@
     <string name="assign_card_desc">Assign a card to a player</string>
     <string name="help">Help</string>
     <string name="sabre_mode">Sabre Mode</string>
+    <string name="volume_button_title">Volume button timer toggle</string>
+    <string name="volume_button_summary">Use volume buttons to toggle the timer</string>
 
 </resources>

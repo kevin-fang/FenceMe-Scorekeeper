@@ -69,10 +69,14 @@ class CardPlayerActivity : AppCompatActivity() {
             redFencer
         }
 
+        supportActionBar?.hide()
         Toast.makeText(applicationContext, "Gave point to " + oppositeFencer.name, Toast.LENGTH_SHORT).show()
+
         setContentView(R.layout.card_display)
+        window.statusBarColor = ContextCompat.getColor(this, R.color.redDark)
         val cardView = findViewById<View>(R.id.card)
         cardView.background = ContextCompat.getDrawable(this, R.drawable.redcard)
+
         val returnIntent = Intent()
         returnIntent.putExtra(FENCER_TO_CARD, cardingFencerName)
         returnIntent.putExtra(RETURN_CARD, RED_CARD)
@@ -81,8 +85,11 @@ class CardPlayerActivity : AppCompatActivity() {
 
     private fun displayYellow() {
         setContentView(R.layout.card_display)
+        supportActionBar?.hide()
+        window.statusBarColor = ContextCompat.getColor(this, R.color.yellowDark)
         val cardView = findViewById<View>(R.id.card)
         cardView.background = ContextCompat.getDrawable(this, R.drawable.yellowcard)
+
         val returnIntent = Intent()
         returnIntent.putExtra(FENCER_TO_CARD, cardingFencerName)
         returnIntent.putExtra(RETURN_CARD, YELLOW_CARD)
@@ -91,6 +98,8 @@ class CardPlayerActivity : AppCompatActivity() {
 
     private fun displayBlack() {
         setContentView(R.layout.card_display)
+        window.statusBarColor = ContextCompat.getColor(this, R.color.blackDark)
+        supportActionBar?.hide()
         val cardView = findViewById<View>(R.id.card)
         cardView.background = ContextCompat.getDrawable(this, R.drawable.blackcard)
     }

@@ -2,7 +2,7 @@
 <resources>
     <color name="colorPrimary">#009688</color>
     <color name="colorNames">#F2F2F2</color>
-    <color name="colorPrimaryDark">#00796B</color>
+    <color name="colorPrimaryDark">#00665a</color>
     <color name="colorAccent">#FFC107</color>
     <color name="colorRed">#EF5350</color>
     <color name="colorRedSelected">#f9bfbe</color>
@@ -11,12 +11,15 @@
     <color name="colorTimerStop">#adebad</color>
     <color name="colorTimerStart">#ff9999</color>
     <color name="blackCard">#212121</color>
+    <color name="blackDark">#1a1a1a</color>
     <color name="yellowCard">#FFEB3B</color>
+    <color name="yellowDark">#ffe81a</color>
     <color name="redCard">#FF3D00</color>
+    <color name="redDark">#b32a00</color>
     <color name="primaryText">#212121</color>
     <color name="secondaryText">#757575</color>
     <color name="icons">#FFFFFF</color>
-    <color name="divider">#BDBDBD</color>
+    <color name="divider">#bdbdbd</color>
     <color name="colorSplash">#ffeac2</color>
 
 </resources>

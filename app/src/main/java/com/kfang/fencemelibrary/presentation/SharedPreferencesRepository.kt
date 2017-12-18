@@ -21,6 +21,8 @@ internal interface SharedPreferencesRepository {
 
     fun pauseOnScoreChange(): Boolean
 
+    fun volumeButtonTimerToggle(): Boolean
+
     fun getBoutLengthMinutes(): Int
 
 }

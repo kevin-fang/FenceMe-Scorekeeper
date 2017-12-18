@@ -30,6 +30,10 @@ internal class SharedPreferencesRepositoryImpl(private val prefs: SharedPreferen
         return prefs.getBoolean(Constants.VIBRATE_AT_END, true)
     }
 
+    override fun volumeButtonTimerToggle(): Boolean {
+        return prefs.getBoolean(Constants.VOLUME_BUTTON_TIMER_TOGGLE, true)
+    }
+
     override fun enableDoubleTouch(): Boolean {
         return prefs.getBoolean(Constants.TOGGLE_DOUBLE_TOUCH, true)
     }

@@ -23,6 +23,12 @@
 
         <CheckBoxPreference
             android:defaultValue="true"
+            android:key="volume_button"
+            android:summary="@string/volume_button_summary"
+            android:title="@string/volume_button_title" />
+
+        <CheckBoxPreference
+            android:defaultValue="true"
             android:key="restore_status"
             android:summary="@string/restore_status_summary"
             android:title="@string/restore_status_on_exit" />

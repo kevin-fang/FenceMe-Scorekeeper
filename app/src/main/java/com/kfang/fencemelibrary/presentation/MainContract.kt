@@ -66,6 +66,8 @@ class MainContract {
 
         fun vibrateOnTimerToggle(): Boolean
 
+        fun volumeButtonTimerToggle(): Boolean
+
         fun pauseOnScoreChange(): Boolean
 
         fun toggleSabreMode()
@@ -97,7 +99,7 @@ class MainContract {
 
         fun stopTimer()
 
-        fun setTimerSeconds(deciSeconds: Int)
+        fun setTimerSeconds(seconds: Int)
 
         var deciSeconds: Int
     }
