@@ -2,6 +2,7 @@ package com.kfang.fencemelibrary.main
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
@@ -59,6 +60,17 @@ class CardPlayerActivity : AppCompatActivity() {
         }
     }
 
+    private fun setCardBackground(cardColor: Drawable, statusBarColor: Int) {
+        supportActionBar?.hide()
+        setContentView(R.layout.card_display)
+        window.statusBarColor = statusBarColor
+        val cardView = findViewById<View>(R.id.card)
+        cardView.background = cardColor
+        cardView.systemUiVisibility =
+                View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_FULLSCREEN or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+
+    }
+
     private fun displayRed() {
         // Toast.makeText(this, "Clicked Red", Toast.LENGTH_SHORT).show();
         val oppositeFencer: Fencer = if (cardingFencer === redFencer) {
@@ -69,13 +81,12 @@ class CardPlayerActivity : AppCompatActivity() {
             redFencer
         }
 
-        supportActionBar?.hide()
         Toast.makeText(applicationContext, "Gave point to " + oppositeFencer.name, Toast.LENGTH_SHORT).show()
 
-        setContentView(R.layout.card_display)
-        window.statusBarColor = ContextCompat.getColor(this, R.color.redDark)
-        val cardView = findViewById<View>(R.id.card)
-        cardView.background = ContextCompat.getDrawable(this, R.drawable.redcard)
+        setCardBackground(
+                cardColor = ContextCompat.getDrawable(this, R.drawable.redcard),
+                statusBarColor = ContextCompat.getColor(this, R.color.redDark)
+        )
 
         val returnIntent = Intent()
         returnIntent.putExtra(FENCER_TO_CARD, cardingFencerName)
@@ -84,11 +95,11 @@ class CardPlayerActivity : AppCompatActivity() {
     }
 
     private fun displayYellow() {
-        setContentView(R.layout.card_display)
-        supportActionBar?.hide()
-        window.statusBarColor = ContextCompat.getColor(this, R.color.yellowDark)
-        val cardView = findViewById<View>(R.id.card)
-        cardView.background = ContextCompat.getDrawable(this, R.drawable.yellowcard)
+
+        setCardBackground(
+                cardColor = ContextCompat.getDrawable(this, R.drawable.yellowcard),
+                statusBarColor = ContextCompat.getColor(this, R.color.yellowDark)
+        )
 
         val returnIntent = Intent()
         returnIntent.putExtra(FENCER_TO_CARD, cardingFencerName)
@@ -97,11 +108,10 @@ class CardPlayerActivity : AppCompatActivity() {
     }
 
     private fun displayBlack() {
-        setContentView(R.layout.card_display)
-        window.statusBarColor = ContextCompat.getColor(this, R.color.blackDark)
-        supportActionBar?.hide()
-        val cardView = findViewById<View>(R.id.card)
-        cardView.background = ContextCompat.getDrawable(this, R.drawable.blackcard)
+        setCardBackground(
+                cardColor = ContextCompat.getDrawable(this, R.drawable.blackcard),
+                statusBarColor = ContextCompat.getColor(this, R.color.blackDark)
+        )
     }
 
     fun dismissCard(v: View) {

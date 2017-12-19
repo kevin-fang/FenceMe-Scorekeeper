@@ -12,6 +12,7 @@
     <color name="colorTimerStart">#ff9999</color>
     <color name="blackCard">#212121</color>
     <color name="blackDark">#1a1a1a</color>
+    <color name="amoledBlack">#000000</color>
     <color name="yellowCard">#FFEB3B</color>
     <color name="yellowDark">#ffe81a</color>
     <color name="redCard">#FF3D00</color>

@@ -25,4 +25,6 @@ internal interface SharedPreferencesRepository {
 
     fun getBoutLengthMinutes(): Int
 
+    fun darkTimer(): Boolean
+
 }

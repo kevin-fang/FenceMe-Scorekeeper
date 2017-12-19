@@ -224,4 +224,8 @@ class MainPresenterImpl(private val mainView: MainContract.MainView, sp: SharedP
     override fun pauseOnScoreChange(): Boolean {
         return sharedPreferences.pauseOnScoreChange()
     }
+
+    override fun darkTimer(): Boolean {
+        return sharedPreferences.darkTimer()
+    }
 }

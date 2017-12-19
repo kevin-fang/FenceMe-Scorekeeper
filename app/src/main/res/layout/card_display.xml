@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/card_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -7,11 +8,15 @@
 
     <ImageView
         android:id="@+id/card"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_weight="15"
         android:background="@drawable/redcard"
-        android:contentDescription="@string/nav_card_player" />
+        android:contentDescription="@string/nav_card_player"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         style="@style/Widget.AppCompat.ButtonBar"
@@ -19,5 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:onClick="dismissCard"
-        android:text="@string/button_dismiss" />
-</LinearLayout>
+        android:text="@string/button_dismiss"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+</android.support.constraint.ConstraintLayout>

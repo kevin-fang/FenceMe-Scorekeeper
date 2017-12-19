@@ -71,6 +71,8 @@ class MainContract {
         fun pauseOnScoreChange(): Boolean
 
         fun toggleSabreMode()
+
+        fun darkTimer(): Boolean
     }
 
     interface MainView {

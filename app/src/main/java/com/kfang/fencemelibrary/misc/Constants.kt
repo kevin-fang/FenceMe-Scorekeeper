@@ -38,6 +38,7 @@ object Constants {
     val VIBRATE_TIMER = "vibrate_on_timer_change"
     val TOGGLE_DOUBLE_TOUCH = "toggle_double_touch"
     val VOLUME_BUTTON_TIMER_TOGGLE = "volume_button"
+    val DARK_TIMER = "dark_timer"
 
     val TO_CARD_PLAYER = "card_player"
     val COLOR_GREEN = "green"

@@ -33,6 +33,13 @@
             android:summary="@string/restore_status_summary"
             android:title="@string/restore_status_on_exit" />
 
+        <!-- Hasn't been implemented yet; need to create white icons
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="dark_timer"
+            android:summary="Turn the main screen black to save battery (AMOLED devices only)"
+            android:title="Dark timer" />
+         -->
 
         <Preference
             android:key="reset_bout_prefs"

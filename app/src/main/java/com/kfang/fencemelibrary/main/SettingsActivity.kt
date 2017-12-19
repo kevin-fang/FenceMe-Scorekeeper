@@ -65,6 +65,7 @@ class SettingsActivity : AppCompatActivity() {
             val vibratePreference = findPreference(Constants.VIBRATE_AT_END) as CheckBoxPreference
             val doubleTouchPreference = findPreference(Constants.TOGGLE_DOUBLE_TOUCH) as CheckBoxPreference
             val volumeButtonTogglePreference = findPreference(Constants.VOLUME_BUTTON_TIMER_TOGGLE) as CheckBoxPreference
+            val blackTimerPreference = findPreference(Constants.VOLUME_BUTTON_TIMER_TOGGLE) as CheckBoxPreference
             val resetPreferences = findPreference(Constants.RESET_BOUT_PREFERENCES)
 
             resetPreferences.setOnPreferenceClickListener { _ ->
@@ -87,6 +88,7 @@ class SettingsActivity : AppCompatActivity() {
                     Constants.VIBRATE_TIMER -> settingsEditor.putBoolean(Constants.VIBRATE_TIMER, vibrateTimerPreference.isChecked)
                     Constants.TOGGLE_DOUBLE_TOUCH -> settingsEditor.putBoolean(Constants.TOGGLE_DOUBLE_TOUCH, doubleTouchPreference.isChecked)
                     Constants.VOLUME_BUTTON_TIMER_TOGGLE -> settingsEditor.putBoolean(Constants.VOLUME_BUTTON_TIMER_TOGGLE, volumeButtonTogglePreference.isChecked)
+                    Constants.DARK_TIMER -> settingsEditor.putBoolean(Constants.DARK_TIMER, blackTimerPreference.isChecked)
                 }
             }
             settingsEditor.apply()

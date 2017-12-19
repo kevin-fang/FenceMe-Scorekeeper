@@ -49,4 +49,8 @@ internal class SharedPreferencesRepositoryImpl(private val prefs: SharedPreferen
     override fun getBoutLengthMinutes(): Int {
         return prefs.getInt(Constants.BOUT_LENGTH_MINUTES, Constants.DEFAULT_MINUTES)
     }
+
+    override fun darkTimer(): Boolean {
+        return prefs.getBoolean(Constants.DARK_TIMER, false)
+    }
 }

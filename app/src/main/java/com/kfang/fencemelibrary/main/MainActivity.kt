@@ -102,7 +102,6 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, DrawerAdapter.O
             create()
             show()
         }
-
     }
 
     override fun hideTimer() {
@@ -124,6 +123,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, DrawerAdapter.O
         double_touch_divider.visibility = viewState
     }
 
+    // ask for app rating
     override fun onStart() {
         super.onStart()
         RateThisApp.onStart(this)
@@ -166,7 +166,6 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, DrawerAdapter.O
 
         if (savedInstanceState != null) {
             if (savedInstanceState.getBoolean(Constants.TIMER_RUNNING)) {
-                setTimerColor(Constants.COLOR_RED)
                 presenter.startTimer()
             }
             presenter.sabreMode = savedInstanceState.getBoolean(Constants.SABRE_MODE)
@@ -192,6 +191,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, DrawerAdapter.O
         }
     }
 
+    // create and show the first time instructions
     private fun showFirstInstructions() {
         TapTargetSequence(this)
                 .targets(
@@ -257,6 +257,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, DrawerAdapter.O
                 ).start()
     }
 
+    // check if it's the very first time the app is run and if so, change it so it isn't anymore. Used for instructions.
     private fun firstRun(): Boolean {
         val prefs = PreferenceManager.getDefaultSharedPreferences(this)
         val firstRun = prefs.getBoolean(Constants.FIRST_RUN, true)
@@ -270,7 +271,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, DrawerAdapter.O
         return false
     }
 
-
+    // create the simple gestures for changing score.
     private fun setupSwipeDetectors() {
         /* Detector:
          * On down, pause timer.
@@ -366,6 +367,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, DrawerAdapter.O
         return null
     }
 
+    // save the version number in preferences.
     private fun saveNewVersionNum(versionName: String?) {
         versionName?.let {
             val prefs = PreferenceManager.getDefaultSharedPreferences(this)
@@ -406,8 +408,6 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, DrawerAdapter.O
         }
     }
 
-    // set up navigation drawers
-
     // launch intent to rate app
     private fun launchRateApp() {
         val uri = Uri.parse("market://details?id=" + applicationContext.packageName)
@@ -445,6 +445,11 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, DrawerAdapter.O
     }
 
     override fun setTimerColor(color: String) {
+        /*if (presenter.darkTimer()) {
+            coordinator.setBackgroundColor(ContextCompat.getColor(this, R.color.amoledBlack))
+            timer.setTextColor(ContextCompat.getColor(this, R.color.icons))
+            return
+        }*/
         // change the timer button color using transitions.
         val anim = ValueAnimator()
 
