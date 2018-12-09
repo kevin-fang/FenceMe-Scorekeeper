@@ -100,10 +100,8 @@ class MainPresenterImpl(private val mainView: MainContract.MainView, sp: SharedP
     override fun toggleTimer() {
         if (timerRunning && !sabreMode) {
             stopTimer()
-            timerRunning = false
         } else if (!sabreMode) {
             startTimer()
-            timerRunning = true
         }
     }
     private fun setStopButton() {
@@ -114,12 +112,12 @@ class MainPresenterImpl(private val mainView: MainContract.MainView, sp: SharedP
         mainView.setTimerColor(Constants.COLOR_GREEN)
     }
 
-    override fun startTimer() {
-        if (!sabreMode) {
+    override fun startTimer(vibrate: Boolean) {
+        if (!sabreMode && !timerRunning) {
+            if (vibrate) mainView.vibrateStart()
             fenceTimer.startTimer()
             setStopButton()
             timerRunning = true
-            mainView.vibrateStart()
         }
     }
 
@@ -131,10 +129,10 @@ class MainPresenterImpl(private val mainView: MainContract.MainView, sp: SharedP
 
     override fun stopTimer() {
         if (!sabreMode && timerRunning) {
+            mainView.vibrateStop()
             fenceTimer.stopTimer()
             setStartButton()
             timerRunning = false
-            mainView.vibrateStop()
         }
     }
 

@@ -129,6 +129,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, DrawerAdapter.O
         RateThisApp.onStart(this)
     }
 
+    // Copyright Kevin Fang, 2017
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         LOG_TAG = this.packageName // used for debugging
@@ -166,7 +167,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, DrawerAdapter.O
 
         if (savedInstanceState != null) {
             if (savedInstanceState.getBoolean(Constants.TIMER_RUNNING)) {
-                presenter.startTimer()
+                presenter.startTimer(vibrate = false)
             }
             presenter.sabreMode = savedInstanceState.getBoolean(Constants.SABRE_MODE)
         } else {
@@ -509,7 +510,6 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, DrawerAdapter.O
         alarmHandler.post(alarms)
 
         // check for victories
-
         var winnerFencer: Fencer? = presenter.higherPoints()
         when {
             winnerFencer != null -> {
@@ -535,6 +535,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, DrawerAdapter.O
                     show()
                 }
             }
+            // if it is *currently* a tiebreaker, handle victories differently
             presenter.tiebreaker -> {
                 winnerFencer = if (presenter.greenFencer.priority) {
                     presenter.greenFencer
@@ -561,7 +562,8 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, DrawerAdapter.O
                     show()
                 }
             }
-            else -> { // score is tied
+            // score is tied. Start tiebreaker
+            else -> {
                 presenter.stopTimer()
                 val tiebreakerBuilder = AlertDialog.Builder(this)
                 tiebreakerBuilder.apply {
@@ -694,7 +696,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, DrawerAdapter.O
     }
 
     public override fun onDestroy() {
-        presenter.stopTimer()
+        //presenter.stopTimer()
         Utility.saveCurrentMatchPreferences(this, presenter)
         super.onDestroy()
     }
@@ -852,12 +854,14 @@ class MainActivity : AppCompatActivity(), MainContract.MainView, DrawerAdapter.O
     }
 
     override fun dispatchKeyEvent(event: KeyEvent): Boolean {
-        return if (presenter.volumeButtonTimerToggle() && (event.keyCode == KeyEvent.KEYCODE_VOLUME_UP || event.keyCode == KeyEvent.KEYCODE_VOLUME_DOWN)) {
-            if (event.action == KeyEvent.ACTION_DOWN) presenter.toggleTimer()
-            true
-        } else {
-            super.dispatchKeyEvent(event)
+        val keyCode = event.keyCode
+        if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN || keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
+            if (presenter.volumeButtonTimerToggle() && event.action == KeyEvent.ACTION_DOWN) {
+                presenter.toggleTimer()
+                return true
+            }
         }
+        return super.dispatchKeyEvent(event)
     }
 
     override fun onItemSelected(position: Int) {

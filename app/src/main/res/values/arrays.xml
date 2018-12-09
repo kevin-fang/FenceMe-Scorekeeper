@@ -12,5 +12,6 @@
         <item>Long press on the timer to change the time!</item>
         <item>Cards are now full screen</item>
         <item>Scores are now at the bottom for easier access</item>
+        <item>Fixed bug where device would vibrate when it rotated</item>
     </string-array>
 </resources>

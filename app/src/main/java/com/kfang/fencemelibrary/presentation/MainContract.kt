@@ -16,7 +16,7 @@ class MainContract {
 
         fun toggleTimer()
 
-        fun startTimer()
+        fun startTimer(vibrate: Boolean = true)
 
         fun stopTimer()
 

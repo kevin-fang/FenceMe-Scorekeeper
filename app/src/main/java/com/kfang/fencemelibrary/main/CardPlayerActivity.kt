@@ -84,7 +84,7 @@ class CardPlayerActivity : AppCompatActivity() {
         Toast.makeText(applicationContext, "Gave point to " + oppositeFencer.name, Toast.LENGTH_SHORT).show()
 
         setCardBackground(
-                cardColor = ContextCompat.getDrawable(this, R.drawable.redcard),
+                cardColor = ContextCompat.getDrawable(this, R.drawable.redcard)!!,
                 statusBarColor = ContextCompat.getColor(this, R.color.redDark)
         )
 
@@ -97,7 +97,7 @@ class CardPlayerActivity : AppCompatActivity() {
     private fun displayYellow() {
 
         setCardBackground(
-                cardColor = ContextCompat.getDrawable(this, R.drawable.yellowcard),
+                cardColor = ContextCompat.getDrawable(this, R.drawable.yellowcard)!!,
                 statusBarColor = ContextCompat.getColor(this, R.color.yellowDark)
         )
 
@@ -109,7 +109,7 @@ class CardPlayerActivity : AppCompatActivity() {
 
     private fun displayBlack() {
         setCardBackground(
-                cardColor = ContextCompat.getDrawable(this, R.drawable.blackcard),
+                cardColor = ContextCompat.getDrawable(this, R.drawable.blackcard)!!,
                 statusBarColor = ContextCompat.getColor(this, R.color.blackDark)
         )
     }
